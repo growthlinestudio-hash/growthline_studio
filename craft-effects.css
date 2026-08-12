@@ -56,10 +56,14 @@ h1.stroke-heading.is-visible,h2.stroke-heading.is-visible,h3.stroke-heading.is-v
   position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0;
   background:
     radial-gradient(115% 85% at 12% -12%, rgba(98,84,231,.28), transparent 55%),
-    radial-gradient(90% 75% at 105% 112%, rgba(58,107,201,.24), transparent 58%),
+    radial-gradient(90% 75% at 105% 112%, rgba(244,241,255,.16), transparent 58%),
     radial-gradient(65% 60% at 62% 42%, rgba(110,108,122,.20), transparent 62%),
     linear-gradient(160deg, #0E0E12 0%, #18181F 50%, #101014 100%);
 }
+/* Fond plein écran fixe (derrière tout le contenu qui défile) — même
+   composant que .aurora-bg, juste repositionné pour couvrir la page entière
+   au lieu d'un seul conteneur positionné. */
+.aurora-bg--page{position:fixed; z-index:-1;}
 .aurora-bg::after{
   content:""; position:absolute; inset:-20%; opacity:.5; mix-blend-mode:overlay; pointer-events:none;
   background-image:radial-gradient(rgba(255,255,255,.5) 0.6px, transparent 0.6px);
@@ -67,7 +71,7 @@ h1.stroke-heading.is-visible,h2.stroke-heading.is-visible,h3.stroke-heading.is-v
 }
 .aurora-bg span{position:absolute; border-radius:50%; filter:blur(64px); mix-blend-mode:screen; will-change:transform;}
 .aurora-bg span:nth-child(1){width:48vw; height:48vw; max-width:600px; max-height:600px; background:#7567EE; opacity:.55; top:-16%; left:-10%; animation:aur-1 22s ease-in-out infinite;}
-.aurora-bg span:nth-child(2){width:42vw; height:42vw; max-width:540px; max-height:540px; background:#3A6BC9; opacity:.45; bottom:-18%; right:-8%; animation:aur-2 27s ease-in-out infinite;}
+.aurora-bg span:nth-child(2){width:42vw; height:42vw; max-width:540px; max-height:540px; background:#F4F1FF; opacity:.28; bottom:-18%; right:-8%; animation:aur-2 27s ease-in-out infinite;}
 .aurora-bg span:nth-child(3){width:32vw; height:32vw; max-width:420px; max-height:420px; background:#8B8998; opacity:.30; top:20%; right:20%; animation:aur-3 31s ease-in-out infinite;}
 @keyframes aur-1{0%,100%{transform:translate(0,0)}50%{transform:translate(8%,10%)}}
 @keyframes aur-2{0%,100%{transform:translate(0,0)}50%{transform:translate(-7%,-9%)}}
@@ -83,12 +87,6 @@ h1.stroke-heading.is-visible,h2.stroke-heading.is-visible,h3.stroke-heading.is-v
 .plasma-canvas--page{
   position:fixed; inset:0; width:100vw; height:100vh; z-index:-1;
   filter:blur(1.5px); pointer-events:none;
-}
-
-/* ---------- Canvas Lightfall (WebGL1, lightfall-bg.js) ---------- */
-.lightfall-canvas{
-  position:fixed; inset:0; width:100vw; height:100vh; z-index:-1;
-  pointer-events:auto;
 }
 
 /* Variante compacte pour surfaces plus petites (ex. carte de prix vedette) */
