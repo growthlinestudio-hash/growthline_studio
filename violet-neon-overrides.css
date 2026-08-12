@@ -46,6 +46,7 @@ body{background:transparent!important;color:#F3F5F2!important;background-image:n
 
 .hero{background:transparent!important}
 header,.topbar,.mobile-nav,#comment,#avis{background:rgba(10,12,11,.72)!important;border-color:rgba(244,247,244,.10)!important;backdrop-filter:blur(18px)!important}
+header.scrolled{background:rgba(7,9,8,.88)!important;border-color:rgba(255,255,255,.18)!important;box-shadow:0 20px 54px -26px rgba(0,0,0,.8),0 0 0 1px rgba(255,45,158,.18)!important}
 .showcase__bg{background:radial-gradient(58% 48% at 48% 0%,rgba(255,45,158,.14),transparent 70%),radial-gradient(38% 38% at 88% 88%,rgba(255,107,192,.08),transparent 70%),transparent!important}
 
 /* vision.html : texte qui flotte directement sur le fond aurora (sombre), pas dans une carte */

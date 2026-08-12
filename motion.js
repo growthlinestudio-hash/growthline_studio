@@ -40,7 +40,7 @@
   /* ---------- 2. Boutons magnétiques (survol souris fine uniquement) ---------- */
   (function magneticButtons() {
     if (!canHover || reduced) return;
-    var buttons = document.querySelectorAll('.btn-solid, .hero-ctas .btn, .split-cta, .final-cta .btn');
+    var buttons = document.querySelectorAll('.btn-solid, .hero-ctas .btn, .cta-row .btn, .split-cta, .final-cta .btn');
     buttons.forEach(function (btn) {
       var strength = 0.35;
       var xTo = gsap.quickTo(btn, 'x', { duration: 0.5, ease: 'power3.out' });
