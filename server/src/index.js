@@ -59,6 +59,13 @@ const PORT = process.env.PORT || 3001;
 
 app.use(compression());
 app.use(express.json());
+
+// Health check pour l'hébergeur (Render) : simple 200, pas de dépendance
+// externe testée ici pour que le service ne soit jamais marqué "unhealthy"
+// à cause d'un souci tiers (Anthropic/Ollama) sans rapport avec sa santé.
+app.get('/healthz', function (req, res) {
+  res.status(200).json({ status: 'ok' });
+});
 // Sert le site statique (index.html, vision.html, images/, css, js) : tout
 // tourne sur la même origine que l'API, donc aucun souci de CORS.
 app.use(express.static(path.join(__dirname, '..', '..'), {
