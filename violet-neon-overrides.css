@@ -1,0 +1,101 @@
+/* Growthline — thème clair (fond gris clair, cartes blanches, texte noir),
+   avec l'effet néon d'origine réadapté : CTA/actions en noir, accents et
+   halos décoratifs en violet lumineux (badges, indicateurs "live",
+   cartes mises en avant, focus, barres de progression). Le shader animé
+   plein écran (#shaderCanvas) est réactivé et recoloré en tons clairs pour
+   habiller les zones "vides" sans jamais recouvrir le hero (qui reste
+   opaque, avec son propre effet gridscan, volontairement inchangé). */
+:root{
+  --bg:transparent!important;--bg-alt:#F4F5F6!important;--bg-soft:rgba(233,234,237,.6)!important;
+  --surface:#FFFFFF!important;--surface-2:#F1F0F5!important;
+  --border:#D9DBDE!important;--border-strong:#B9BEC4!important;
+  --text:#111111!important;--text-muted:#5F6368!important;--muted:#5F6368!important;--text-dim:#969BA1!important;--muted-2:#969BA1!important;
+  --green:#111111!important;--green-glow:#6254E7!important;--green-deep:#4B3FC7!important;--green-ink:#FFFFFF!important;
+  --green-soft:rgba(98,84,231,.12)!important;--green-dim:#6254E7!important;--cyan:#5B8DEF!important;--amber:#B5790A!important;--red:#C23B4B!important;
+}
+html{background:#E9EAED!important}
+body{background:transparent!important;color:#111111!important;background-image:none!important}
+::selection{background:#6254E7!important;color:#FFFFFF!important}
+#shaderCanvas{display:block!important}
+#violetSmokeCanvas{display:none!important}
+.hero{background:#E9EAED!important}
+header,.topbar,.mobile-nav,#comment,#avis{background:rgba(255,255,255,.85)!important;border-color:#D9DBDE!important;backdrop-filter:blur(18px)!important}
+.showcase__bg{background:radial-gradient(58% 48% at 48% 0%,rgba(98,84,231,.08),transparent 70%),radial-gradient(38% 38% at 88% 88%,rgba(91,141,239,.06),transparent 70%),transparent!important}
+/* vision.html : texte qui flotte directement sur le fond Lightfall (sombre), pas dans une carte */
+h2.sc-title{color:#F5F4FA!important}
+.sc-desc{color:#B9B6C9!important}
+.sc-note{color:#8B899A!important}
+.ai-badge{background:rgba(255,255,255,.08)!important;border-color:rgba(255,255,255,.16)!important;color:#B9B6C9!important;backdrop-filter:blur(8px)!important}
+.ai-badge__engine{color:#8B899A!important}
+.sc-cta h3{color:#F5F4FA!important}
+.sc-cta p{color:#B9B6C9!important}
+.btn--primary{background:#6254E7!important;color:#FFFFFF!important}
+.btn--primary:hover{background:#7567EE!important}
+.btn--ghost{color:#F5F4FA!important;border-color:rgba(255,255,255,.25)!important}
+.btn--ghost:hover{border-color:#6254E7!important;background:rgba(98,84,231,.1)!important}
+h1,h2,h3,h4{color:#111111!important}
+.hero h1{text-shadow:none!important}
+.hero p.sub,.section-head p{color:#5F6368!important}
+.logo .mark,.btn-solid,.chip.active{background:#111111!important;color:#FFF!important;border-color:#111111!important;box-shadow:0 4px 14px rgba(17,17,17,.25)!important}
+.brand .dot{background:#6254E7!important;box-shadow:0 0 10px 3px rgba(98,84,231,.35)!important}
+.btn{background:#FFFFFF!important;color:#111111!important;border-color:#D9DBDE!important;backdrop-filter:blur(10px)!important;box-shadow:0 1px 4px rgba(17,17,17,.06)!important}
+.btn:hover{background:#F8F7FF!important;color:#111111!important;border-color:#6254E7!important;box-shadow:0 0 0 1px rgba(98,84,231,.25),0 4px 16px -4px rgba(98,84,231,.3)!important;transform:translateY(-1px)}
+.btn-solid:hover,.topbar .back-link:hover{background:#2B2B2B!important;color:#FFF!important;border-color:#2B2B2B!important;box-shadow:0 6px 18px rgba(17,17,17,.3)!important;transform:translateY(-1px)}
+.gauge-card,.scan-window,.score-card,.issue-card,.avis-card,.price-card,.audit-panel,.summary-box,.cf-card,.analysis-panel,.upload-zone,.legend-card,.metric-card,.analysis,.upload{background:#FFFFFF!important;border-color:#D9DBDE!important;backdrop-filter:blur(18px)!important;box-shadow:0 8px 24px -12px rgba(17,17,17,.12)!important}
+.gauge-card,.scan-window,.cf-card[data-active="true"],.analysis-panel{box-shadow:0 0 0 1px #6254E7,0 0 34px -8px rgba(98,84,231,.35),0 16px 36px -16px rgba(17,17,17,.15)!important}
+.scan-window-bar{background:#F4F5F6!important;border-color:#D9DBDE!important}
+.scan-window-url{background:#F4F5F6!important;border-color:#D9DBDE!important;color:#5F6368!important}
+.scan-window-live{color:#6254E7!important}
+.scan-window-live::before{background:#6254E7!important;box-shadow:0 0 10px 3px rgba(98,84,231,.5)!important}
+.scan-dot.ok{background:rgba(91,141,239,.14)!important;color:#3A6BC9!important}
+.scan-dot.warn{background:rgba(181,121,10,.12)!important;color:#B5790A!important}
+.scan-cursor{background:#6254E7!important;box-shadow:0 0 8px 2px rgba(98,84,231,.45)!important}
+.scan-line.show{color:#111111!important}
+.eyebrow,.gauge-card-head .live,.step-num,.price-features li svg,.cf-card__demo-tag,.analysis-panel__eyebrow,.upload-zone__icon{color:#6254E7!important}
+.eyebrow::before,.gauge-card-head .live::before{background:#6254E7!important;box-shadow:0 0 10px 3px rgba(98,84,231,.5)!important}
+.mini-bar-fill,.score-card .bar span,.abar__fill{background:linear-gradient(90deg,#4B3FC7,#6254E7)!important;box-shadow:0 0 8px 1px rgba(98,84,231,.4)!important}
+.mini-bar-track,.score-card .bar{background:#E7EAED!important}
+.step-icon{background:rgba(98,84,231,.06)!important;border-color:rgba(98,84,231,.25)!important;box-shadow:none!important}
+.step-icon svg{color:#6254E7!important}
+.avis-card::before,.analysis-panel::before{background:linear-gradient(180deg,#6254E7,#5B8DEF)!important;box-shadow:0 0 8px 1px rgba(98,84,231,.4)!important}
+.field input,.field select{background:#FFFFFF!important;border-color:#D9DBDE!important;color:#111111!important}
+.field input::placeholder{color:#969BA1!important}
+.field input:focus,.field select:focus{border-color:#6254E7!important;box-shadow:0 0 0 3px rgba(98,84,231,.16)!important}
+.audit-progress-dots span{background:#E7EAED!important}
+.audit-progress-dots span.done,.cf-dot[data-active="true"],.cf-card__cat{background:#6254E7!important;box-shadow:0 0 8px 1px rgba(98,84,231,.4)!important}
+.audit-overlay{background:rgba(17,17,17,.45)!important}
+.issue-card.critical{border-left-color:#C23B4B!important}.issue-card.important{border-left-color:#B5790A!important}.issue-card.opportunity{border-left-color:#6254E7!important}
+.issue-card.critical,.issue-card.important,.issue-card.opportunity{box-shadow:0 8px 20px -12px rgba(17,17,17,.15)!important}
+.topbar .back-link{background:#FFFFFF!important;border-color:#D9DBDE!important;color:#5F6368!important}
+.cf-nav:hover,.upload-zone:hover{border-color:#6254E7!important;color:#6254E7!important;background:rgba(98,84,231,.05)!important}
+.cf-card__scanline{opacity:.12!important}
+.growth-item.current b{color:#5F6368!important}
+.growth-item.potential b{color:#6254E7!important;text-shadow:none!important}
+.report-cta{background:linear-gradient(180deg,rgba(98,84,231,.08),#F4F5F6)!important;border-color:#D9DBDE!important}
+@media(prefers-reduced-motion:no-preference){.logo .mark,.btn-solid,.brand .dot,.cf-card[data-active="true"]{animation:none!important}}
+
+/* ===== Rythme visuel : carte de prix vedette + bande de clôture sombres ===== */
+.price-card.featured{
+  position:relative!important;overflow:hidden!important;
+  background:#141319!important;border-color:#141319!important;
+  box-shadow:0 0 0 1px #6254E7,0 0 40px -8px rgba(98,84,231,.5),0 30px 60px -24px rgba(0,0,0,.55)!important;
+}
+.price-card.featured > *{position:relative;z-index:1;}
+.price-card.featured h3,.price-card.featured .price,.price-card.featured .price .price-num,.price-card.featured .desc,.price-card.featured .price-features li{color:#F2F1F6!important}
+.price-card.featured .price>span,.price-card.featured .price-period{color:#8B899A!important}
+.price-card.featured .price-features li svg{color:#9186F2!important}
+.price-card.featured .btn{background:rgba(255,255,255,.06)!important;border-color:rgba(255,255,255,.18)!important;color:#F2F1F6!important}
+.price-card.featured .btn:hover{background:rgba(98,84,231,.16)!important;border-color:#6254E7!important}
+.price-card.featured .btn-solid{background:#6254E7!important;border-color:#6254E7!important;color:#fff!important}
+.price-card.featured .btn-solid:hover{background:#7567EE!important;border-color:#7567EE!important;box-shadow:0 0 26px rgba(98,84,231,.5)!important}
+
+.final-cta,footer{background:#141319!important;border-color:#26242E!important;backdrop-filter:none!important}
+.final-cta h2{color:#F5F4FA!important;text-shadow:0 4px 50px rgba(98,84,231,.4)!important}
+.final-cta p{color:#9C9AA8!important}
+.final-cta .btn-solid{background:#6254E7!important;border-color:#6254E7!important;color:#fff!important;box-shadow:0 0 40px -8px rgba(98,84,231,.65)!important}
+.final-cta .btn-solid:hover{background:#7567EE!important;border-color:#7567EE!important;box-shadow:0 0 55px -6px rgba(98,84,231,.8)!important}
+.final-cta .btn{background:rgba(255,255,255,.06)!important;border-color:rgba(255,255,255,.18)!important;color:#F2F1F6!important}
+.final-cta .btn:hover{background:rgba(98,84,231,.14)!important;border-color:#6254E7!important;box-shadow:0 0 24px rgba(98,84,231,.35)!important}
+footer .logo{color:#F2F1F6!important}
+footer .meta,.footer-links a{color:#8B899A!important}
+.footer-links a:hover{color:#C7C2E8!important}
