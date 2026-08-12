@@ -10,6 +10,34 @@
    CSS et cadré à 1x1px hors champ, pour un gain visuel nul une fois le fond
    aurora (CSS pur) en place — dead code, pas juste caché. */
 
+/* choisir-devis.html / proposition.html / proposition-ponctuel.html utilisent
+   chacune leur propre :root avec des noms de variables différents
+   (--violet/--violet-bright, --gold/--gold-bright, --cyan/--cyan-bright...)
+   — index.html/vision.html s'en sortent déjà avec leur propre :root sombre,
+   donc pas retouché ici, mais ces 3 pages partaient d'un thème clair par
+   défaut : on force leurs propres variables vers les mêmes tons sombres,
+   ce qui les rend visuellement cohérentes avec le reste du site. */
+:root{
+  --bg-alt:rgba(20,20,26,.55)!important;
+  --surface:rgba(255,255,255,.04)!important;
+  --surface-2:rgba(255,255,255,.07)!important;
+  --border:rgba(255,255,255,.10)!important;
+  --border-strong:rgba(255,255,255,.20)!important;
+  --text:#F3F5F2!important;
+  --muted:#9AA39C!important;
+  --muted-2:#6C746D!important;
+  --violet:#7567EE!important;
+  --violet-bright:#9186F2!important;
+  --violet-deep:#4B3FC7!important;
+  --on-accent:#FFFFFF!important;
+  --gold:#7567EE!important;
+  --gold-bright:#9186F2!important;
+  --cyan:#9186F2!important;
+  --cyan-bright:#F3F5F2!important;
+  --amber:#F5A524!important;
+  --red:#F0576B!important;
+}
+
 html{background:#0A0C0B!important}
 body{background:transparent!important;color:#F3F5F2!important;background-image:none!important}
 ::selection{background:#7567EE!important;color:#FFFFFF!important}
