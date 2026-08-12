@@ -757,11 +757,126 @@
     .hero-content > *:nth-child(5){ animation-delay:.45s; }
     .hero-visual{ animation:heroRise .8s var(--ease) both; animation-delay:.3s; }
   }
+
+  /* ===== ÉCRAN D'ENTRÉE (Desktop / Mobile) ===== */
+  .entry-gate{
+    position:fixed; inset:0; z-index:1000; background:#050506;
+    display:flex; align-items:center; justify-content:center; overflow:hidden;
+    padding:32px 24px;
+  }
+  .entry-gate[hidden]{display:none;}
+  .entry-gate__bg{position:absolute; inset:0; z-index:0; overflow:hidden;}
+  .entry-gate__bg .glow{
+    position:absolute; border-radius:50%; filter:blur(90px); mix-blend-mode:screen;
+  }
+  .entry-gate__bg .glow:nth-child(1){width:60vw; height:60vw; max-width:720px; max-height:720px; background:#FF2D9E; opacity:.4; top:-18%; left:-14%;}
+  .entry-gate__bg .glow:nth-child(2){width:46vw; height:46vw; max-width:560px; max-height:560px; background:#FF6BC0; opacity:.28; bottom:-16%; right:-10%;}
+  .entry-gate__grid{
+    position:absolute; inset:-15%; opacity:.4;
+    background-image:linear-gradient(rgba(255,107,192,.16) 1px,transparent 1px), linear-gradient(90deg,rgba(255,107,192,.16) 1px,transparent 1px);
+    background-size:54px 54px; transform:perspective(700px) rotateX(60deg); transform-origin:50% 0%;
+    mask-image:radial-gradient(60% 50% at 50% 10%,#000 0%,transparent 78%);
+    -webkit-mask-image:radial-gradient(60% 50% at 50% 10%,#000 0%,transparent 78%);
+  }
+  .entry-gate__content{position:relative; z-index:1; max-width:760px; width:100%; text-align:center;}
+  .entry-gate__mark{
+    width:56px; height:56px; margin:0 auto 22px; border-radius:16px;
+    background:linear-gradient(135deg,#FF2D9E,#FF6BC0); display:flex; align-items:center; justify-content:center;
+    box-shadow:0 0 40px -6px rgba(255,45,158,.6);
+  }
+  .entry-gate__mark svg{width:30px; height:30px; color:#0A0A0B;}
+  .entry-gate__kicker{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing:.16em; text-transform:uppercase;
+    font-size:.74rem; color:#FF9AD1; margin-bottom:14px;
+  }
+  .entry-gate__title{
+    font-family:'Inter Tight',sans-serif; font-weight:800; letter-spacing:-.02em; line-height:1.1;
+    font-size:clamp(1.8rem,4.4vw,2.7rem); color:#FFFFFF; margin-bottom:12px;
+  }
+  .entry-gate__subtitle{color:rgba(255,255,255,.62); font-size:1rem; margin-bottom:36px;}
+  .entry-gate__cards{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  @media(max-width:640px){.entry-gate__cards{grid-template-columns:1fr;}}
+  .entry-card{
+    position:relative; text-align:left; cursor:pointer; border-radius:20px;
+    background:rgba(255,45,158,.05); border:1px solid rgba(255,255,255,.14); backdrop-filter:blur(16px);
+    padding:26px 24px 24px; font-family:inherit; color:#fff;
+    transition:transform .3s cubic-bezier(.34,1.56,.64,1), border-color .3s ease, box-shadow .3s ease, background .3s ease;
+  }
+  .entry-card:hover, .entry-card:focus-visible{
+    transform:translateY(-4px); border-color:#FF2D9E; background:rgba(255,45,158,.1);
+    box-shadow:0 20px 50px -20px rgba(255,45,158,.5), 0 0 0 1px #FF2D9E;
+    outline:none;
+  }
+  .entry-card__icon{
+    width:42px; height:42px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+    background:rgba(255,45,158,.12); color:#FF6BC0; margin-bottom:16px;
+  }
+  .entry-card__icon svg{width:22px; height:22px;}
+  .entry-card__title{display:block; font-family:'Inter Tight',sans-serif; font-weight:700; font-size:1.15rem; margin-bottom:12px;}
+  .entry-card ul{margin-bottom:20px;}
+  .entry-card li{
+    font-size:.86rem; color:rgba(255,255,255,.6); padding-left:18px; position:relative; margin-bottom:6px;
+  }
+  .entry-card li::before{content:"";position:absolute; left:0; top:.5em; width:6px; height:6px; border-radius:50%; background:#FF2D9E;}
+  .entry-card__cta{
+    display:inline-flex; align-items:center; gap:7px; font-weight:600; font-size:.88rem; color:#FF9AD1;
+  }
+  .entry-card__cta svg{width:15px; height:15px; transition:transform .22s ease;}
+  .entry-card:hover .entry-card__cta svg{transform:translateX(4px);}
+  .entry-gate__foot{margin-top:28px; font-size:.72rem; color:rgba(255,255,255,.35);}
+  @media(prefers-reduced-motion:reduce){.entry-card{transition:none;}}
+  #changeExperience{background:none;border:none;color:inherit;font:inherit;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px;}
 </style>
 <link rel="stylesheet" href="violet-neon-overrides.css">
 <link rel="stylesheet" href="craft-effects.css">
 </head>
 <body>
+
+<div class="entry-gate" id="entryGate" hidden>
+  <div class="entry-gate__bg" aria-hidden="true">
+    <span class="glow"></span><span class="glow"></span>
+    <div class="entry-gate__grid"></div>
+  </div>
+  <div class="entry-gate__content">
+    <div class="entry-gate__mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M4 17l5-6 4 4 7-9"/></svg>
+    </div>
+    <p class="entry-gate__kicker">Growthline Studio</p>
+    <h1 class="entry-gate__title">Bienvenue dans l'écosystème Growthline.</h1>
+    <p class="entry-gate__subtitle">Choisissez votre expérience.</p>
+    <div class="entry-gate__cards">
+      <button type="button" class="entry-card" data-mode="desktop">
+        <span class="entry-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span>
+        <span class="entry-card__title">Expérience Desktop</span>
+        <ul>
+          <li>Interface complète</li>
+          <li>Expérience immersive</li>
+          <li>Navigation avancée</li>
+        </ul>
+        <span class="entry-card__cta">Entrer <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </button>
+      <button type="button" class="entry-card" data-mode="mobile">
+        <span class="entry-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></span>
+        <span class="entry-card__title">Expérience Mobile</span>
+        <ul>
+          <li>Optimisée smartphone</li>
+          <li>Navigation rapide</li>
+          <li>Chargement instantané</li>
+        </ul>
+        <span class="entry-card__cta">Entrer <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </button>
+    </div>
+    <p class="entry-gate__foot">Ton choix reste en mémoire — modifiable à tout moment depuis le pied de page.</p>
+  </div>
+</div>
+<script>
+  /* Synchrone, avant peinture du reste : évite le flash de l'écran d'entrée
+     pour un visiteur qui a déjà choisi une expérience lors d'une visite précédente. */
+  if (!localStorage.getItem('gl_experience')) {
+    document.getElementById('entryGate').hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+</script>
 
 <div class="aurora-bg aurora-bg--page" aria-hidden="true"><span></span><span></span><span></span></div>
 <div class="ai-grid" aria-hidden="true"></div>
@@ -1279,6 +1394,7 @@
       <a href="vision.html">Vision IA</a>
       <a href="#tarifs">Tarifs</a>
       <a href="#avis">Avis</a>
+      <button type="button" id="changeExperience">Changer d'expérience</button>
     </div>
     <span class="meta">© 2026 Growthline. Tous droits réservés.</span>
   </div>
@@ -1525,6 +1641,52 @@
    INTERACTIONS DU SITE (nav mobile, overlay d'audit, simulation de progression)
    ========================================================================= */
 (function(){
+  // ---------- Écran d'entrée (Desktop / Mobile) ----------
+  (function entryGate(){
+    var gate = document.getElementById('entryGate');
+    if (!gate) return;
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function closeGate(){
+      document.body.style.overflow = '';
+      if (window.gsap && !reduced) {
+        gsap.to(gate, {
+          opacity: 0, scale: 1.04, filter: 'blur(6px)', duration: 0.6, ease: 'power2.inOut',
+          onComplete: function(){ gate.hidden = true; gate.style.cssText = ''; }
+        });
+      } else {
+        gate.hidden = true;
+      }
+    }
+    function openGate(){
+      gate.hidden = false;
+      gate.style.cssText = '';
+      document.body.style.overflow = 'hidden';
+      if (window.gsap && !reduced) {
+        gsap.fromTo(gate, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: 'power2.out' });
+        var mark = gate.querySelector('.entry-gate__mark');
+        var lines = gate.querySelectorAll('.entry-gate__kicker, .entry-gate__title, .entry-gate__subtitle, .entry-card, .entry-gate__foot');
+        gsap.fromTo(mark, { opacity: 0, y: -14, scale: 0.7 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'back.out(1.8)', delay: 0.1 });
+        gsap.fromTo(lines, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out', delay: 0.22 });
+      }
+    }
+
+    gate.querySelectorAll('.entry-card').forEach(function(card){
+      card.addEventListener('click', function(){
+        try { localStorage.setItem('gl_experience', card.getAttribute('data-mode')); } catch(e){}
+        closeGate();
+      });
+    });
+
+    var changeBtn = document.getElementById('changeExperience');
+    if (changeBtn) {
+      changeBtn.addEventListener('click', function(){
+        try { localStorage.removeItem('gl_experience'); } catch(e){}
+        openGate();
+      });
+    }
+  })();
+
   // ---------- Mobile nav ----------
   var menuToggle = document.getElementById('menuToggle');
   var mobileNav = document.getElementById('mobileNav');
