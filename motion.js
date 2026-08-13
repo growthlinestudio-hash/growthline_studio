@@ -77,7 +77,31 @@
     stage.addEventListener('mouseleave', function () { rotX(0); rotY(0); });
   })();
 
-  /* ---------- 4. Parallax profondeur au scroll (fond IA en arrière-plan) ---------- */
+  /* ---------- 4. Timeline "Processus" : ligne de connexion qui se remplit au scroll,
+     + halo séquentiel sur chaque icône d'étape (donne l'effet "connexion" sans
+     restructurer la grille existante). ---------- */
+  (function stepsTimeline() {
+    if (!window.ScrollTrigger) return;
+    var fill = document.getElementById('stepsProgressFill');
+    var steps = document.querySelectorAll('.step-card');
+    if (!fill || !steps.length) return;
+
+    if (!reduced) {
+      gsap.to(fill, {
+        width: '100%', ease: 'none',
+        scrollTrigger: { trigger: '.steps', start: 'top 75%', end: 'bottom 60%', scrub: 0.4 }
+      });
+      gsap.set(steps, { opacity: 0, y: 24 });
+      gsap.to(steps, {
+        opacity: 1, y: 0, duration: 0.6, stagger: 0.12, ease: 'power3.out',
+        scrollTrigger: { trigger: '.steps', start: 'top 82%' }
+      });
+    } else {
+      fill.style.width = '100%';
+    }
+  })();
+
+  /* ---------- 5. Parallax profondeur au scroll (fond IA en arrière-plan) ---------- */
   (function bgParallax() {
     if (reduced || !window.ScrollTrigger) return;
     var grid = document.querySelector('.ai-grid');

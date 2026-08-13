@@ -195,6 +195,7 @@
   .mobile-nav.open li:nth-child(4){transition-delay:.2s;}
   .mobile-nav.open li:nth-child(5){transition-delay:.24s;}
   .mobile-nav.open li:nth-child(6){transition-delay:.28s;}
+  .mobile-nav.open li:nth-child(7){transition-delay:.32s;}
   .backdrop{display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:290;}
   .backdrop.open{display:block;}
 
@@ -328,8 +329,44 @@
   .section-head h2{font-size:clamp(2rem,4vw,2.85rem);}
   .section-head p{color:var(--muted); margin-top:16px; font-size:1.02rem;}
 
+  /* ===== SERVICES (offre réelle : audit, rapport complet, intervention) ===== */
+  .services-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  @media(max-width:980px){.services-grid{grid-template-columns:1fr;}}
+  .service-card{
+    position:relative; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg);
+    padding:32px 28px; overflow:hidden; isolation:isolate;
+    transition:transform .4s cubic-bezier(.22,.9,.32,1), border-color .35s ease, box-shadow .4s ease;
+  }
+  .service-card::before{
+    content:""; position:absolute; inset:-1px; z-index:-1; opacity:0; border-radius:inherit;
+    background:radial-gradient(120% 100% at 50% 0%, rgba(255,45,158,.16), transparent 65%);
+    transition:opacity .4s ease;
+  }
+  .service-card:hover{transform:translateY(-6px); border-color:rgba(255,45,158,.4); box-shadow:0 30px 60px -30px rgba(255,45,158,.35);}
+  .service-card:hover::before{opacity:1;}
+  .service-card__icon{
+    width:52px; height:52px; border-radius:14px; display:flex; align-items:center; justify-content:center;
+    background:rgba(255,45,158,.1); color:var(--green-glow); margin-bottom:22px;
+    box-shadow:0 0 22px -8px rgba(255,45,158,.4); transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  .service-card:hover .service-card__icon{transform:scale(1.1) rotate(-6deg);}
+  .service-card__icon svg{width:26px; height:26px;}
+  .service-card__badge{
+    position:absolute; top:26px; right:26px; font-size:.68rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+    color:var(--green-glow); background:rgba(255,45,158,.1); border:1px solid rgba(255,45,158,.3);
+    padding:5px 11px; border-radius:99px;
+  }
+  .service-card h3{font-size:1.24rem; margin-bottom:10px;}
+  .service-card p.service-desc{font-size:.92rem; color:var(--muted); margin-bottom:20px; line-height:1.55;}
+  .service-card ul{margin-bottom:24px;}
+  .service-card li{font-size:.86rem; color:var(--muted); padding-left:20px; position:relative; margin-bottom:8px;}
+  .service-card li::before{content:"";position:absolute; left:0; top:.55em; width:6px; height:6px; border-radius:50%; background:var(--green-glow); box-shadow:0 0 8px rgba(255,45,158,.5);}
+  .service-card .btn{width:100%; justify-content:center;}
+
   /* ===== COMMENT CA MARCHE (panneau verre) ===== */
   #comment{background:var(--bg-soft); backdrop-filter:blur(var(--blur)); -webkit-backdrop-filter:blur(var(--blur)); border-top:1px solid var(--border); border-bottom:1px solid var(--border);}
+  .steps-progress{height:2px; background:var(--border); border-radius:2px; margin-bottom:2px; overflow:hidden;}
+  .steps-progress span{display:block; height:100%; width:0%; background:linear-gradient(90deg,#B5117A,#FF2D9E,#FF6BC0); box-shadow:0 0 10px rgba(255,45,158,.6);}
   .steps{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border-radius:var(--radius-md); overflow:hidden;}
   .step-card{background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-md); padding:34px 26px; position:relative;}
   .step-num{font-family:'Inter Tight',sans-serif; font-size:0.78rem; font-weight:700; color:var(--green-glow); letter-spacing:0.05em; margin-bottom:20px;}
@@ -899,6 +936,7 @@
       Growthline
     </a>
     <nav class="main-nav">
+      <a href="#services">Services</a>
       <a href="#comment">Comment ça marche</a>
       <a href="#exemple">Exemple d'audit</a>
       <a href="#preuve">Preuve visuelle</a>
@@ -925,6 +963,7 @@
     </button>
   </div>
   <ul>
+    <li><a href="#services">Services</a></li>
     <li><a href="#comment">Comment ça marche</a></li>
     <li><a href="#exemple">Exemple d'audit</a></li>
     <li><a href="#preuve">Preuve visuelle</a></li>
@@ -1003,6 +1042,55 @@
     </div>
   </section>
 
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="container">
+      <div class="section-head center" data-reveal>
+        <span class="eyebrow">Ce que Growthline fait réellement</span>
+        <h2 class="stroke-heading">Trois façons concrètes d'avancer.</h2>
+        <p>Pas de forfait générique : chaque offre correspond à une étape précise de votre audit.</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card glow-border" data-reveal data-reveal-delay="1">
+          <span class="service-card__badge">Gratuit</span>
+          <div class="service-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+          <h3>Audit digital IA</h3>
+          <p class="service-desc">Un scan complet de votre présence en ligne, analysé par le même moteur que celui utilisé pour chaque client.</p>
+          <ul>
+            <li>Score global sur 6 catégories</li>
+            <li>3 problèmes prioritaires détectés</li>
+            <li>Rapport en environ 5 minutes</li>
+          </ul>
+          <button class="btn btn-solid" id="ctaServiceAudit">Lancer mon audit gratuit</button>
+        </div>
+        <div class="service-card glow-border" data-reveal data-reveal-delay="2">
+          <span class="service-card__badge">Le plus demandé</span>
+          <div class="service-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg></div>
+          <h3>Rapport complet</h3>
+          <p class="service-desc">L'analyse détaillée de votre audit, avec toutes les recommandations classées par impact et par effort.</p>
+          <ul>
+            <li>Détail par catégorie et par page</li>
+            <li>Recommandations priorisées</li>
+            <li>Paiement unique, sans abonnement</li>
+          </ul>
+          <a class="btn btn-solid" href="choisir-devis.html">Voir un exemple de rapport</a>
+        </div>
+        <div class="service-card glow-border" data-reveal data-reveal-delay="3">
+          <span class="service-card__badge">Sur devis</span>
+          <div class="service-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.1-3.1a4 4 0 01-5.4 5.4L5.4 21.6a2 2 0 01-2.8-2.8L12.6 8.8a4 4 0 015.4-5.4l-3.1 3.1z"/></svg></div>
+          <h3>Intervention ponctuelle</h3>
+          <p class="service-desc">On corrige ou on refait les points bloquants identifiés par l'audit — sans engagement mensuel.</p>
+          <ul>
+            <li>Corrections ciblées sur votre site</li>
+            <li>Devis gratuit avant intervention</li>
+            <li>Aucun abonnement requis</li>
+          </ul>
+          <a class="btn btn-solid" href="proposition-ponctuel.html">Demander mon devis</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- COMMENT CA MARCHE -->
   <section id="comment">
     <div class="container">
@@ -1011,6 +1099,7 @@
         <h2 class="stroke-heading">Un audit complet en 4 étapes</h2>
         <p>Aucune donnée inventée : chaque score vient d'une analyse réellement effectuée sur votre présence digitale.</p>
       </div>
+      <div class="steps-progress" aria-hidden="true"><span id="stepsProgressFill"></span></div>
       <div class="steps">
         <div class="step-card glow-border">
           <div class="step-num">Étape 1</div>
@@ -1806,7 +1895,7 @@
     document.body.style.overflow = '';
   }
 
-  ['ctaNav','ctaHero','ctaFinal','ctaMobile'].forEach(function(id){
+  ['ctaNav','ctaHero','ctaFinal','ctaMobile','ctaServiceAudit'].forEach(function(id){
     var el = document.getElementById(id);
     if(el) el.addEventListener('click', function(){ closeMobileNav(); openAudit(); });
   });
