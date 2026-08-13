@@ -595,6 +595,25 @@
   .step-actions{display:flex; justify-content:space-between; align-items:center; margin-top:30px; gap:12px;}
   .step-actions .spacer{flex:1;}
 
+  /* ===== Carte de paiement (verre premium, inspirée d'un glass checkout card) ===== */
+  .pay-card{
+    position:relative; border-radius:var(--radius-lg); border:1px solid var(--border);
+    background:rgba(255,255,255,0.025); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+    padding:24px; transition:border-color .3s ease, box-shadow .3s ease;
+  }
+  .pay-card:hover{border-color:rgba(255,255,255,.28); box-shadow:0 24px 60px -30px rgba(0,0,0,.6);}
+  .pay-card__method{
+    display:flex; align-items:center; gap:10px; padding:12px 14px; margin-bottom:18px;
+    border:1px solid var(--border); border-radius:var(--radius-md); background:rgba(255,255,255,0.04);
+    font-size:0.86rem; color:var(--muted);
+  }
+  .pay-card__method svg{width:20px; height:20px; flex:none; color:var(--text);}
+  .pay-card__method b{color:var(--text); font-weight:700;}
+  .pay-card__secure{
+    display:flex; align-items:center; justify-content:center; gap:7px; margin-top:18px;
+    font-size:0.74rem; color:var(--muted-2); text-align:center;
+  }
+  .pay-card__secure svg{width:14px; height:14px; flex:none;}
   .summary-box{background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:var(--radius-md); padding:20px 22px; margin-bottom:24px;}
   .summary-row{display:flex; justify-content:space-between; padding:8px 0; font-size:0.88rem; border-bottom:1px solid var(--border);}
   .summary-row:last-child{border-bottom:none;}
@@ -1656,10 +1675,22 @@
     <!-- PAIEMENT (forfaits payants uniquement) -->
     <div class="audit-step" data-step="payment">
       <h2>Paiement du forfait <span id="paymentTierLabel">Pro</span></h2>
-      <p class="hint">Paiement unique et sécurisé via PayPal — l'analyse démarre automatiquement dès la confirmation du paiement.</p>
-      <div class="summary-box" id="paymentSummary"></div>
-      <div id="paypalButtons" class="paypal-buttons-wrap"></div>
-      <div id="paymentError" style="display:none; color:var(--red); font-size:0.86rem; margin-top:14px;"></div>
+      <p class="hint">Paiement unique et sécurisé — l'analyse démarre automatiquement dès la confirmation.</p>
+
+      <div class="pay-card">
+        <div class="pay-card__method">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20"/></svg>
+          <span>Paiement via <b>PayPal</b></span>
+        </div>
+        <div class="summary-box" id="paymentSummary"></div>
+        <div id="paypalButtons" class="paypal-buttons-wrap"></div>
+        <div id="paymentError" style="display:none; color:var(--red); font-size:0.86rem; margin-top:14px;"></div>
+        <p class="pay-card__secure">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+          Paiement sécurisé et chiffré, vérifié côté serveur
+        </p>
+      </div>
+
       <div class="step-actions">
         <button type="button" class="btn" id="paymentBackBtn">Retour</button>
         <span class="spacer"></span>
