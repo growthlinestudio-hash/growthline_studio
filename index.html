@@ -820,6 +820,52 @@
     .hero-visual{ animation:heroRise .8s var(--ease) both; animation-delay:.3s; }
   }
 
+  /* ===== ÉCRAN DE CHARGEMENT ("boot" façon HUD/IA) — joué après le choix
+     Desktop/Mobile, avant de révéler le site. Texte "GROWTHLINE" en effet de
+     décodage (caractères aléatoires qui se stabilisent), anneaux façon radar,
+     balayage lumineux. 100% CSS/vanilla + GSAP déjà chargé, pas de dépendance
+     ajoutée. ===== */
+  .boot-loader{
+    position:fixed; inset:0; z-index:1001; background:#020202;
+    display:flex; align-items:center; justify-content:center; overflow:hidden;
+  }
+  .boot-loader[hidden]{display:none;}
+  .boot-loader__scan{
+    position:absolute; left:0; right:0; top:-160px; height:160px; pointer-events:none;
+    background:linear-gradient(180deg, transparent, rgba(255,255,255,.09), transparent);
+  }
+  .boot-loader__ring{
+    position:absolute; width:min(60vw,520px); height:min(60vw,520px); border-radius:50%;
+    border:1px solid rgba(255,255,255,.07); pointer-events:none;
+  }
+  .boot-loader__ring::before,.boot-loader__ring::after{
+    content:""; position:absolute; inset:13%; border-radius:50%; border:1px solid transparent;
+  }
+  .boot-loader__ring::before{ border-top-color:rgba(255,255,255,.6); border-right-color:rgba(255,255,255,.16); }
+  .boot-loader__ring::after{ inset:25%; border-bottom-color:rgba(255,255,255,.35); }
+  @media(prefers-reduced-motion:no-preference){
+    .boot-loader__scan{animation:boot-scan 2.2s ease-in-out infinite;}
+    .boot-loader__ring::before{animation:boot-spin 2.6s linear infinite;}
+    .boot-loader__ring::after{animation:boot-spin 4s linear infinite reverse;}
+    @keyframes boot-spin{to{transform:rotate(360deg);}}
+    @keyframes boot-scan{0%{transform:translateY(0); opacity:0;} 10%{opacity:1;} 100%{transform:translateY(calc(100vh + 160px)); opacity:0;}}
+  }
+  .boot-loader__content{position:relative; z-index:1; text-align:center; padding:0 24px;}
+  .boot-loader__word{
+    font-family:'Inter Tight',sans-serif; font-weight:900; text-transform:uppercase; letter-spacing:.08em;
+    font-size:clamp(1.7rem,5.4vw,3.2rem); color:#FFFFFF; margin-bottom:30px;
+    font-variant-numeric:tabular-nums; text-shadow:0 0 30px rgba(255,255,255,.25);
+  }
+  .boot-loader__bar{width:min(72vw,320px); height:2px; background:rgba(255,255,255,.1); margin:0 auto 14px; overflow:hidden; border-radius:2px;}
+  .boot-loader__bar span{display:block; height:100%; width:0%; background:#FFFFFF; box-shadow:0 0 10px rgba(255,255,255,.6);}
+  .boot-loader__row{
+    display:flex; align-items:center; justify-content:space-between; width:min(72vw,320px); margin:0 auto;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.66rem; letter-spacing:.06em;
+    text-transform:uppercase; color:rgba(255,255,255,.4); gap:12px;
+  }
+  .boot-loader__status{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .boot-loader__pct{flex:none; color:rgba(255,255,255,.7);}
+
   /* ===== ÉCRAN D'ENTRÉE (Desktop / Mobile) ===== */
   .entry-gate{
     position:fixed; inset:0; z-index:1000; background:#050506;
@@ -929,6 +975,19 @@
       </button>
     </div>
     <p class="entry-gate__foot">Ton choix reste en mémoire — modifiable à tout moment depuis le pied de page.</p>
+  </div>
+</div>
+
+<div class="boot-loader" id="bootLoader" hidden aria-hidden="true">
+  <div class="boot-loader__scan" aria-hidden="true"></div>
+  <div class="boot-loader__ring" aria-hidden="true"></div>
+  <div class="boot-loader__content">
+    <h1 class="boot-loader__word" id="bootWord">GROWTHLINE</h1>
+    <div class="boot-loader__bar"><span id="bootBarFill"></span></div>
+    <div class="boot-loader__row">
+      <span class="boot-loader__status" id="bootStatus">Initialisation du système</span>
+      <span class="boot-loader__pct" id="bootPct">0%</span>
+    </div>
   </div>
 </div>
 <script>
@@ -1756,6 +1815,86 @@
    INTERACTIONS DU SITE (nav mobile, overlay d'audit, simulation de progression)
    ========================================================================= */
 (function(){
+  // ---------- Chargement "boot" (GROWTHLINE en effet de décodage) ----------
+  var runBoot = null;
+  (function bootLoader(){
+    var loader = document.getElementById('bootLoader');
+    if (!loader) return;
+    var wordEl = document.getElementById('bootWord');
+    var barEl = document.getElementById('bootBarFill');
+    var statusEl = document.getElementById('bootStatus');
+    var pctEl = document.getElementById('bootPct');
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var statuses = ['Initialisation du système', 'Connexion au moteur IA', "Chargement de l'interface", 'Prêt'];
+
+    function scramble(el, text, duration){
+      var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      var totalFrames = Math.max(1, Math.round(duration * 60));
+      var revealAt = text.split('').map(function(_, i){ return Math.floor((i / text.length) * totalFrames * 0.65); });
+      var frame = 0;
+      function step(){
+        var out = '';
+        for (var i = 0; i < text.length; i++){
+          out += (text[i] === ' ' || frame >= revealAt[i]) ? text[i] : chars[Math.floor(Math.random() * chars.length)];
+        }
+        el.textContent = out;
+        frame++;
+        if (frame <= totalFrames) requestAnimationFrame(step);
+        else el.textContent = text;
+      }
+      step();
+    }
+
+    runBoot = function(onDone){
+      loader.hidden = false;
+      loader.style.opacity = '';
+      document.body.style.overflow = 'hidden';
+
+      if (reduced || !window.gsap) {
+        wordEl.textContent = 'GROWTHLINE';
+        barEl.style.width = '100%';
+        pctEl.textContent = '100%';
+        statusEl.textContent = 'Prêt';
+        setTimeout(function(){
+          loader.hidden = true;
+          document.body.style.overflow = '';
+          if (onDone) onDone();
+        }, 250);
+        return;
+      }
+
+      scramble(wordEl, 'GROWTHLINE', 1.1);
+      var si = 0;
+      statusEl.textContent = statuses[0];
+      var statusTimer = setInterval(function(){
+        si = Math.min(si + 1, statuses.length - 1);
+        statusEl.textContent = statuses[si];
+      }, 550);
+
+      var progress = { v: 0 };
+      gsap.to(progress, {
+        v: 100, duration: 2.1, ease: 'power2.inOut',
+        onUpdate: function(){
+          var val = Math.round(progress.v);
+          barEl.style.width = val + '%';
+          pctEl.textContent = val + '%';
+        },
+        onComplete: function(){
+          clearInterval(statusTimer);
+          gsap.to(loader, {
+            opacity: 0, duration: 0.5, ease: 'power2.inOut', delay: 0.15,
+            onComplete: function(){
+              loader.hidden = true;
+              loader.style.opacity = '';
+              document.body.style.overflow = '';
+              if (onDone) onDone();
+            }
+          });
+        }
+      });
+    };
+  })();
+
   // ---------- Écran d'entrée (Desktop / Mobile) ----------
   (function entryGate(){
     var gate = document.getElementById('entryGate');
@@ -1789,7 +1928,9 @@
     gate.querySelectorAll('.entry-card').forEach(function(card){
       card.addEventListener('click', function(){
         try { localStorage.setItem('gl_experience', card.getAttribute('data-mode')); } catch(e){}
-        closeGate();
+        gate.hidden = true;
+        gate.style.cssText = '';
+        if (runBoot) { runBoot(); } else { document.body.style.overflow = ''; }
       });
     });
 
