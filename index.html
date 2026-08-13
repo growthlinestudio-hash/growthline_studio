@@ -213,24 +213,15 @@
   .hero{
     position:relative; min-height:100vh; display:flex; align-items:center; padding-top:110px;
     overflow:hidden;
-    background:linear-gradient(to bottom, #020202 0%, #020202 32%, #333333 78%, #4d4d4d 99%)!important;
-  }
-  .hero::before{
-    content:""; position:absolute; inset:0; pointer-events:none; z-index:0; height:600px;
-    background-image:
-      linear-gradient(to right, rgba(255,255,255,.06) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255,255,255,.06) 1px, transparent 1px);
-    background-size:6rem 5rem;
-    -webkit-mask-image:radial-gradient(ellipse 80% 50% at 50% 0%, #000 70%, transparent 110%);
-    mask-image:radial-gradient(ellipse 80% 50% at 50% 0%, #000 70%, transparent 110%);
+    background:linear-gradient(to bottom, #020202 0%, #020202 32%, #232323 78%, #333333 99%)!important;
   }
   .hero-glow{
     position:absolute; left:50%; top:calc(100% - 150px); z-index:0; pointer-events:none;
     height:750px; width:140%; transform:translateX(-50%); border-radius:100%;
-    background:radial-gradient(closest-side, #020202 82%, #5c5c5c 100%);
+    background:radial-gradient(closest-side, #020202 82%, #444444 100%);
   }
   #heroGridScan{
-    position:absolute; inset:0; z-index:1; pointer-events:none; display:block; width:100%; height:100%; opacity:.6; mix-blend-mode:screen;
+    position:absolute; inset:0; z-index:1; pointer-events:none; display:block; width:100%; height:100%; opacity:.4; mix-blend-mode:screen;
   }
   .hero-grid{position:relative; z-index:2; display:grid; grid-template-columns:1.05fr 0.95fr; gap:54px; align-items:center; padding-bottom:70px;}
   .hero .eyebrow{
