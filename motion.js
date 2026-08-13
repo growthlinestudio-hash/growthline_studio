@@ -15,6 +15,7 @@
      proposition*.html l'ont déjà en CSS pur, vision.html a son propre système). */
   (function heroEntrance() {
     var hero = document.querySelector('.hero .hero-content');
+    var grid = document.querySelector('.hero .hero-grid');
     if (!hero || reduced) return;
 
     var eyebrow = hero.querySelector('.eyebrow');
@@ -27,12 +28,18 @@
     var targets = [eyebrow, h1, sub, ctas].filter(Boolean);
     if (!targets.length) return;
 
+    var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+    if (grid) {
+      gsap.set(grid, { opacity: 0, scale: 1.02, filter: 'blur(24px)' });
+      tl.to(grid, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.6, ease: 'expo.out' });
+    }
+
     gsap.set(targets, { opacity: 0, y: 26 });
     if (stats.length) gsap.set(stats, { opacity: 0, y: 16 });
     if (visual) gsap.set(visual, { opacity: 0, y: 30, scale: 0.97 });
 
-    var tl = gsap.timeline({ defaults: { ease: 'power3.out' }, delay: 0.15 });
-    tl.to(targets, { opacity: 1, y: 0, duration: 0.8, stagger: 0.12 });
+    tl.to(targets, { opacity: 1, y: 0, duration: 0.8, stagger: 0.12 }, grid ? '-=0.9' : 0.15);
     if (stats.length) tl.to(stats, { opacity: 1, y: 0, duration: 0.6, stagger: 0.08 }, '-=0.4');
     if (visual) tl.to(visual, { opacity: 1, y: 0, scale: 1, duration: 1 }, '-=0.9');
   })();

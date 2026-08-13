@@ -46,6 +46,7 @@ body{background:transparent!important;color:#F3F5F2!important;background-image:n
 ::selection{background:#FF2D9E!important;color:#FFFFFF!important}
 
 .hero{background:transparent!important}
+.hero#top{background:#020202!important}
 header,.topbar,.mobile-nav,#comment,#avis{background:rgba(10,12,11,.72)!important;border-color:rgba(244,247,244,.10)!important;backdrop-filter:blur(18px)!important}
 header.scrolled{background:rgba(7,9,8,.88)!important;border-color:rgba(255,255,255,.18)!important;box-shadow:0 20px 54px -26px rgba(0,0,0,.8),0 0 0 1px rgba(255,45,158,.18)!important}
 .showcase__bg{background:radial-gradient(58% 48% at 48% 0%,rgba(255,45,158,.14),transparent 70%),radial-gradient(38% 38% at 88% 88%,rgba(255,107,192,.08),transparent 70%),transparent!important}
@@ -132,6 +133,27 @@ h1,h2,h3,h4{color:#F3F5F2!important}
 .final-cta .btn-solid:hover{background:#FF6BC0!important;border-color:#FF6BC0!important;box-shadow:0 0 55px -6px rgba(255,45,158,.8)!important}
 .final-cta .btn{background:rgba(255,45,158,.06)!important;border-color:rgba(255,255,255,.18)!important;color:#F2F1F6!important}
 .final-cta .btn:hover{background:rgba(255,45,158,.14)!important;border-color:#FF2D9E!important;box-shadow:0 0 24px rgba(255,45,158,.35)!important}
+
+/* ===== Hero monochrome (noir/blanc pur, sans accent) — uniquement le hero, le
+   reste du site garde le magenta. Sélecteurs préfixés .hero pour gagner sur les
+   règles génériques ci-dessus (mêmes classes réutilisées ailleurs en magenta). ===== */
+.hero .gauge-card,.hero .scan-window{background:rgba(255,255,255,.03)!important;border-color:rgba(255,255,255,.14)!important;box-shadow:0 30px 70px -30px rgba(0,0,0,.7)!important}
+.hero .scan-window-bar,.hero .scan-window-url{background:rgba(255,255,255,.03)!important;border-color:rgba(255,255,255,.10)!important}
+.hero .scan-window-live{color:#FFFFFF!important}
+.hero .scan-window-live::before{background:#FFFFFF!important;box-shadow:0 0 10px 3px rgba(255,255,255,.5)!important}
+.hero .scan-dot.ok{background:rgba(255,255,255,.12)!important;color:#FFFFFF!important}
+.hero .scan-cursor{background:#FFFFFF!important;box-shadow:0 0 8px 2px rgba(255,255,255,.5)!important}
+.hero .mini-bar-fill{background:linear-gradient(90deg,#4a4a4a,#FFFFFF)!important;box-shadow:0 0 8px rgba(255,255,255,.3)!important}
+.hero .mini-bar-track{background:rgba(255,255,255,.08)!important}
+.hero .gauge-floating-tag{color:#FFFFFF!important;background:rgba(20,20,20,.85)!important;border-color:rgba(255,255,255,.16)!important}
+.hero .hero-ctas .btn-solid{background:#FFFFFF!important;border-color:#FFFFFF!important;color:#020202!important;box-shadow:none!important}
+.hero .hero-ctas .btn-solid:hover{background:#E5E5E5!important;border-color:#E5E5E5!important;box-shadow:0 0 30px rgba(255,255,255,.25)!important}
+.hero .hero-ctas .btn{background:transparent!important;border-color:rgba(255,255,255,.25)!important;color:#FFFFFF!important}
+.hero .hero-ctas .btn:hover{border-color:#FFFFFF!important;background:rgba(255,255,255,.06)!important;box-shadow:none!important}
+.hero .hero-stat b{color:#FFFFFF!important}
+.hero .hero-stat span{color:rgba(255,255,255,.45)!important}
+.hero .hero-stats{border-top-color:rgba(255,255,255,.14)!important}
+.hero .hero-stat+.hero-stat{border-left-color:rgba(255,255,255,.14)!important}
 footer .logo{color:#F2F1F6!important}
 footer .meta,.footer-links a{color:#8B899A!important}
 .footer-links a:hover{color:#C7C2E8!important}

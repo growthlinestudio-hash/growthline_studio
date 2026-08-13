@@ -174,7 +174,7 @@
     'uGridScale', 'uScanOpacity', 'uScanDuration', 'uScanDelay', 'uNoise'
   ].forEach(function (name) { uniforms[name] = gl.getUniformLocation(program, name); });
 
-  // Palette Growthline : lignes magenta sourdes, faisceau de scan magenta-clair lumineux.
+  // Hero monochrome : lignes gris clair sourdes, faisceau de scan blanc lumineux.
   function srgbToLinear(c) { return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); }
   function hexToLinear(hex) {
     var r = parseInt(hex.slice(1, 3), 16) / 255;
@@ -182,8 +182,8 @@
     var b = parseInt(hex.slice(5, 7), 16) / 255;
     return [srgbToLinear(r), srgbToLinear(g), srgbToLinear(b)];
   }
-  var LINES_COLOR = hexToLinear('#F2B8DA');
-  var SCAN_COLOR = hexToLinear('#FF2D9E');
+  var LINES_COLOR = hexToLinear('#8A8A8A');
+  var SCAN_COLOR = hexToLinear('#FFFFFF');
 
   gl.uniform3f(uniforms.uLinesColor, LINES_COLOR[0], LINES_COLOR[1], LINES_COLOR[2]);
   gl.uniform3f(uniforms.uScanColor, SCAN_COLOR[0], SCAN_COLOR[1], SCAN_COLOR[2]);
