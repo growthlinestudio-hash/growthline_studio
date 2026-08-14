@@ -155,6 +155,47 @@
     });
   })();
 
+  /* ---------- 9. Pluie d'icônes discrète (fond décoratif, hero + CTA final) ---------- */
+  (function emojiRain() {
+    var zones = document.querySelectorAll('[data-emoji-rain]');
+    if (!zones.length || reduced) return;
+    var defaultEmojis = ['📈', '🚀', '✨'];
+
+    zones.forEach(function (zone) {
+      var list = (zone.getAttribute('data-emoji-rain') || '').trim();
+      var emojis = list ? list.split(/\s+/) : defaultEmojis;
+      var count = parseInt(zone.getAttribute('data-emoji-count'), 10) || 5;
+      var h = zone.offsetHeight || 400;
+
+      for (var i = 0; i < count; i++) {
+        var span = document.createElement('span');
+        span.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        var size = gsap.utils.random(16, 26);
+        span.style.left = gsap.utils.random(4, 94) + '%';
+        span.style.fontSize = size + 'px';
+        span.style.opacity = gsap.utils.random(.22, .42);
+        zone.appendChild(span);
+
+        gsap.set(span, { y: -40, rotation: gsap.utils.random(-20, 20) });
+        gsap.to(span, {
+          y: h + 60,
+          rotation: '+=' + gsap.utils.random(-40, 40),
+          duration: gsap.utils.random(10, 16),
+          delay: gsap.utils.random(0, 5),
+          ease: 'none',
+          repeat: -1
+        });
+        gsap.to(span, {
+          x: gsap.utils.random(-20, 20),
+          duration: gsap.utils.random(3, 5),
+          yoyo: true,
+          repeat: -1,
+          ease: 'sine.inOut'
+        });
+      }
+    });
+  })();
+
   /* ---------- 10. Fondu d'entrée de page (léger, pas un vrai preloader) ---------- */
   (function pageFadeIn() {
     if (reduced) return;

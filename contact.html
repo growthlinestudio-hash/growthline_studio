@@ -116,6 +116,7 @@
         <p class="lede" style="margin-top:10px;">Choisissez comment et quand vous préférez qu'on échange — on confirme le créneau par retour d'email.</p>
 
         <form id="bookingForm" class="audit-form" style="margin-top:26px;">
+          <input type="hidden" name="type" id="bookingTypeInput" value="Appel téléphonique">
           <div class="slot-toggle" role="radiogroup" aria-label="Type de rendez-vous">
             <button type="button" class="slot-toggle-btn is-active" data-type="Appel téléphonique" aria-pressed="true">Appel téléphonique</button>
             <button type="button" class="slot-toggle-btn" data-type="Rendez-vous physique" aria-pressed="false">Rendez-vous physique</button>
@@ -124,32 +125,34 @@
           <div class="tool-form-grid" style="margin-top:6px;">
             <div class="audit-field">
               <label for="bookingDate">Date souhaitée</label>
-              <input id="bookingDate" type="date" required>
+              <input id="bookingDate" name="date" type="date" required>
             </div>
             <div class="audit-field">
               <label for="bookingTime">Heure souhaitée</label>
-              <input id="bookingTime" type="time" required>
+              <input id="bookingTime" name="heure" type="time" required>
             </div>
             <div class="audit-field full">
               <label for="bookingName">Votre nom</label>
-              <input id="bookingName" type="text" required>
+              <input id="bookingName" name="nom" type="text" required>
             </div>
             <div class="audit-field full">
               <label for="bookingEmail">Votre email</label>
-              <input id="bookingEmail" type="email" required>
+              <input id="bookingEmail" name="email" type="email" required>
             </div>
             <div class="audit-field full">
               <label for="bookingNote">Un mot sur votre projet</label>
-              <input id="bookingNote" type="text" placeholder="Facultatif">
+              <input id="bookingNote" name="projet" type="text" placeholder="Facultatif">
             </div>
           </div>
 
           <button type="submit" class="btn btn-solid btn-lg audit-submit">
-            Confirmer ma demande de créneau
+            <span class="btn-spinner" aria-hidden="true"></span>
+            <span class="btn-label">Confirmer ma demande de créneau</span>
             <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </button>
+          <p class="form-status" id="bookingFormStatus" role="status" aria-live="polite"></p>
         </form>
-        <p class="audit-note">Ouvre votre messagerie pré-remplie · le créneau n'est confirmé qu'après notre retour par email.</p>
+        <p class="audit-note">Le créneau n'est confirmé qu'après notre retour par email.</p>
       </div>
     </div>
   </section>

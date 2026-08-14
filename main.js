@@ -53,7 +53,43 @@
     });
   });
 
-  /* ---------- Formulaire audit (index.html#audit) : ouvre le mail client pré-rempli ---------- */
+  /* ---------- Envoi fiable d'un formulaire (FormSubmit, sans compte requis) ----------
+     Un lien mailto: ne fonctionne pas pour les visiteurs sans client mail configuré
+     sur leur appareil (fréquent sur mobile/webmail) — on envoie donc réellement le
+     message via un service gratuit, avec un mini-spinner pendant l'envoi, et on ne
+     retombe sur mailto qu'en dernier recours si la requête échoue. */
+  function submitFormReliably(form, statusEl, subject, mailtoBody) {
+    var btn = form.querySelector('button[type="submit"]');
+    var formData = new FormData(form);
+    formData.append('_subject', subject);
+    formData.append('_captcha', 'false');
+    formData.append('_template', 'table');
+
+    btn.classList.add('is-loading');
+    statusEl.textContent = '';
+    statusEl.className = 'form-status';
+
+    fetch('https://formsubmit.co/ajax/growthline.studio@gmail.com', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: formData
+    })
+      .then(function (res) { if (!res.ok) throw new Error('bad status'); return res.json(); })
+      .then(function () {
+        btn.classList.remove('is-loading');
+        statusEl.textContent = 'Envoyé ! On vous répond rapidement par email.';
+        statusEl.className = 'form-status is-success';
+        form.reset();
+      })
+      .catch(function () {
+        btn.classList.remove('is-loading');
+        statusEl.textContent = "L'envoi automatique a échoué — ouverture de votre messagerie...";
+        statusEl.className = 'form-status is-error';
+        window.location.href = 'mailto:growthline.studio@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(mailtoBody);
+      });
+  }
+
+  /* ---------- Formulaire audit (index.html#audit) ---------- */
   var auditForm = document.getElementById('auditForm');
   if (auditForm) {
     auditForm.addEventListener('submit', function (e) {
@@ -62,7 +98,7 @@
       var email = auditForm.email.value.trim();
       var subject = 'Demande d\'audit gratuit - ' + site;
       var body = 'Site à auditer : ' + site + '\nEmail de contact : ' + email;
-      window.location.href = 'mailto:growthline.studio@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      submitFormReliably(auditForm, document.getElementById('auditFormStatus'), subject, body);
     });
   }
 
@@ -82,6 +118,7 @@
   var bookingForm = document.getElementById('bookingForm');
   if (bookingForm) {
     var bookingType = 'Appel téléphonique';
+    var bookingTypeInput = document.getElementById('bookingTypeInput');
     var toggleBtns = bookingForm.querySelectorAll('.slot-toggle-btn');
     toggleBtns.forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -89,6 +126,7 @@
         btn.classList.add('is-active');
         btn.setAttribute('aria-pressed', 'true');
         bookingType = btn.getAttribute('data-type');
+        if (bookingTypeInput) bookingTypeInput.value = bookingType;
       });
     });
 
@@ -111,7 +149,7 @@
       if (note) bodyLines.push('Projet : ' + note);
       var body = bodyLines.join('\n');
 
-      window.location.href = 'mailto:growthline.studio@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      submitFormReliably(bookingForm, document.getElementById('bookingFormStatus'), subject, body);
     });
   }
 

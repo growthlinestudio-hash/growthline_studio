@@ -70,6 +70,7 @@
   <section class="hero" id="top">
     <div class="hero-glow" aria-hidden="true"></div>
     <div class="hero-grid-lines" aria-hidden="true"></div>
+    <div class="emoji-rain" data-emoji-rain="🚀 ✨ 📈" data-emoji-count="6" aria-hidden="true"></div>
     <div class="container hero-inner">
       <div class="hero-eyebrow-row">
         <span class="eyebrow">Agence digitale · Audit &amp; performance</span>
@@ -339,9 +340,11 @@
             <input id="auditEmail" name="email" type="email" placeholder="vous@entreprise.com" required>
           </div>
           <button type="submit" class="btn btn-solid btn-lg audit-submit" data-magnetic>
-            Lancer mon audit gratuit
+            <span class="btn-spinner" aria-hidden="true"></span>
+            <span class="btn-label">Lancer mon audit gratuit</span>
             <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </button>
+          <p class="form-status" id="auditFormStatus" role="status" aria-live="polite"></p>
         </form>
         <p class="audit-note">Ouvre votre messagerie pré-remplie · réponse sous 24h ouvrées.</p>
       </div>
@@ -353,6 +356,7 @@
     <div class="container">
       <div class="cta-final" data-reveal>
         <div class="cta-final-orb" aria-hidden="true"></div>
+        <div class="emoji-rain" data-emoji-rain="🚀 ✨ 📈" data-emoji-count="4" aria-hidden="true"></div>
         <div class="cta-final-inner">
           <span class="eyebrow">Vous avez un projet ?</span>
           <h2>Voyons ce qui freine votre site aujourd'hui.</h2>
