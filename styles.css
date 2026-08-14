@@ -90,6 +90,24 @@ h1,h2,h3,h4,p{ margin:0; }
   padding-right:var(--container-pad);
 }
 
+/* --- Écran de bienvenue au chargement (logo qui apparaît en douceur) --- */
+.page-loader{
+  position:fixed; inset:0; z-index:9999; background:var(--bg);
+  display:flex; align-items:center; justify-content:center;
+  transition:opacity .5s var(--ease), visibility .5s var(--ease);
+}
+.page-loader .mark{
+  width:56px; height:56px; border-radius:16px; flex:none;
+  background:linear-gradient(135deg, var(--accent), #6fe0a8);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; transform:scale(.7);
+  transition:opacity .55s var(--ease-spring), transform .55s var(--ease-spring);
+}
+.page-loader .mark svg{ width:30px; height:30px; color:var(--accent-ink); }
+.page-loader.is-in .mark{ opacity:1; transform:scale(1); }
+.page-loader.is-out{ opacity:0; visibility:hidden; }
+@media (prefers-reduced-motion:reduce){ .page-loader{ display:none; } }
+
 /* --- Grain de fond, texture premium discrète --- */
 .grain{
   position:fixed; inset:0; z-index:2; pointer-events:none; opacity:.045; mix-blend-mode:overlay;

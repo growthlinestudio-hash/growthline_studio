@@ -3,6 +3,15 @@
 (function () {
   'use strict';
 
+  /* ---------- Écran de bienvenue au chargement ---------- */
+  var pageLoader = document.getElementById('pageLoader');
+  if (pageLoader) {
+    requestAnimationFrame(function () { pageLoader.classList.add('is-in'); });
+    var hideLoader = function () { pageLoader.classList.add('is-out'); };
+    window.addEventListener('load', function () { setTimeout(hideLoader, 380); });
+    setTimeout(hideLoader, 2200); // filet de sécurité si "load" tarde
+  }
+
   /* ---------- Navbar : réduction au scroll ---------- */
   var header = document.querySelector('header');
   if (header) {
