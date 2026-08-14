@@ -1,7 +1,6 @@
-/* Growthline — couche d'interactions premium (GSAP + ScrollTrigger, en plus du
-   système de reveal CSS existant, pas à sa place : IntersectionObserver reste
-   pour les sections, GSAP gère ce que le CSS seul ne peut pas bien faire —
-   chorégraphie d'entrée du hero, boutons magnétiques, parallax profondeur). */
+/* Growthline — couche d'animation premium (GSAP + ScrollTrigger).
+   Curseur personnalisé, reveals au scroll, split-text, hero, boutons
+   magnétiques, marquees, ligne de progression du processus. */
 (function () {
   'use strict';
   if (!window.gsap) return;
@@ -10,113 +9,137 @@
   var canHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   if (window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
 
-  /* ---------- 1. Chorégraphie d'entrée du hero (page d'accueil uniquement :
-     seule page dont le hero n'a aucune animation d'apparition aujourd'hui —
-     proposition*.html l'ont déjà en CSS pur, vision.html a son propre système). */
-  (function heroEntrance() {
-    var hero = document.querySelector('.hero .hero-content');
-    var grid = document.querySelector('.hero .hero-grid');
-    if (!hero || reduced) return;
+  /* ---------- 1. Curseur personnalisé (desktop, hover fin uniquement) ---------- */
+  (function customCursor() {
+    if (!canHover || reduced) return;
+    var dot = document.querySelector('.cursor-dot');
+    var ring = document.querySelector('.cursor-ring');
+    if (!dot || !ring) return;
 
-    var eyebrow = hero.querySelector('.eyebrow');
-    var h1 = hero.querySelector('h1');
-    var sub = hero.querySelector('p.sub');
-    var ctas = hero.querySelector('.hero-ctas');
-    var stats = hero.querySelectorAll('.hero-stat');
-    var visual = document.querySelector('.hero-visual');
+    var dotX = gsap.quickTo(dot, 'x', { duration: .12, ease: 'power3.out' });
+    var dotY = gsap.quickTo(dot, 'y', { duration: .12, ease: 'power3.out' });
+    var ringX = gsap.quickTo(ring, 'x', { duration: .35, ease: 'power3.out' });
+    var ringY = gsap.quickTo(ring, 'y', { duration: .35, ease: 'power3.out' });
 
-    var targets = [eyebrow, h1, sub, ctas].filter(Boolean);
-    if (!targets.length) return;
+    window.addEventListener('mousemove', function (e) {
+      dotX(e.clientX); dotY(e.clientY);
+      ringX(e.clientX); ringY(e.clientY);
+    });
 
-    var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-
-    if (grid) {
-      gsap.set(grid, { opacity: 0, scale: 1.02, filter: 'blur(24px)' });
-      tl.to(grid, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.6, ease: 'expo.out' });
-    }
-
-    gsap.set(targets, { opacity: 0, y: 26 });
-    if (stats.length) gsap.set(stats, { opacity: 0, y: 16 });
-    if (visual) gsap.set(visual, { opacity: 0, y: 30, scale: 0.97 });
-
-    tl.to(targets, { opacity: 1, y: 0, duration: 0.8, stagger: 0.12 }, grid ? '-=0.9' : 0.15);
-    if (stats.length) tl.to(stats, { opacity: 1, y: 0, duration: 0.6, stagger: 0.08 }, '-=0.4');
-    if (visual) tl.to(visual, { opacity: 1, y: 0, scale: 1, duration: 1 }, '-=0.9');
+    document.querySelectorAll('a, button, [data-cursor-hover]').forEach(function (el) {
+      el.addEventListener('mouseenter', function () { ring.classList.add('is-hover'); });
+      el.addEventListener('mouseleave', function () { ring.classList.remove('is-hover'); });
+    });
+    document.querySelectorAll('[data-cursor-view]').forEach(function (el) {
+      el.addEventListener('mouseenter', function () { ring.classList.add('is-view'); });
+      el.addEventListener('mouseleave', function () { ring.classList.remove('is-view'); });
+    });
   })();
 
-  /* ---------- 2. Boutons magnétiques (survol souris fine uniquement) ---------- */
+  /* ---------- 2. Reveal générique au scroll ([data-reveal]) ---------- */
+  (function scrollReveals() {
+    var els = gsap.utils.toArray('[data-reveal]');
+    if (!els.length) return;
+    if (reduced) { gsap.set(els, { opacity: 1 }); return; }
+    gsap.set(els, { opacity: 0, y: 28 });
+    if (!window.ScrollTrigger) { gsap.set(els, { opacity: 1, y: 0 }); return; }
+    ScrollTrigger.batch(els, {
+      start: 'top 88%',
+      onEnter: function (batch) {
+        gsap.to(batch, { opacity: 1, y: 0, duration: .9, ease: 'power3.out', stagger: .1 });
+      },
+      once: true
+    });
+  })();
+
+  /* ---------- 3. Split-text mot par mot ([data-split]) ---------- */
+  function splitWords(el) {
+    var words = el.textContent.trim().split(/\s+/);
+    el.innerHTML = words.map(function (w) {
+      return '<span class="split-word"><span>' + w + '</span></span> ';
+    }).join('');
+    return el.querySelectorAll('.split-word > span');
+  }
+
+  (function splitReveals() {
+    var targets = document.querySelectorAll('[data-split]');
+    if (!targets.length) return;
+    targets.forEach(function (el) {
+      var spans = splitWords(el);
+      if (reduced) return;
+      gsap.set(spans, { yPercent: 110, opacity: 0 });
+      if (el.hasAttribute('data-split-immediate')) return; // animé par la timeline hero
+      if (!window.ScrollTrigger) { gsap.set(spans, { yPercent: 0, opacity: 1 }); return; }
+      ScrollTrigger.create({
+        trigger: el, start: 'top 85%', once: true,
+        onEnter: function () { gsap.to(spans, { yPercent: 0, opacity: 1, duration: .8, stagger: .025, ease: 'power3.out' }); }
+      });
+    });
+  })();
+
+  /* ---------- 4. Chorégraphie d'entrée du hero ---------- */
+  (function heroEntrance() {
+    var hero = document.querySelector('.hero');
+    if (!hero || reduced) return;
+    var h1 = hero.querySelector('h1[data-split-immediate]');
+    var eyebrowRow = hero.querySelector('.hero-eyebrow-row');
+    var subCol = hero.querySelector('.hero-sub-col');
+    var visual = hero.querySelector('.signal-card');
+    var cue = hero.querySelector('.scroll-cue');
+
+    var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    if (eyebrowRow) { gsap.set(eyebrowRow, { opacity: 0, y: 16 }); tl.to(eyebrowRow, { opacity: 1, y: 0, duration: .7 }, 0.1); }
+    if (h1) {
+      var spans = h1.querySelectorAll('.split-word > span');
+      tl.to(spans, { yPercent: 0, opacity: 1, duration: 1, stagger: .035 }, 0.25);
+    }
+    if (subCol) { gsap.set(subCol, { opacity: 0, y: 22 }); tl.to(subCol, { opacity: 1, y: 0, duration: .9 }, '-=0.6'); }
+    if (visual) { gsap.set(visual, { opacity: 0, y: 30, scale: .97 }); tl.to(visual, { opacity: 1, y: 0, scale: 1, duration: 1.1 }, '-=0.9'); }
+    if (cue) { gsap.set(cue, { opacity: 0 }); tl.to(cue, { opacity: 1, duration: .6 }, '-=0.3'); }
+  })();
+
+  /* ---------- 5. Boutons magnétiques ---------- */
   (function magneticButtons() {
     if (!canHover || reduced) return;
-    var buttons = document.querySelectorAll('.btn-solid, .hero-ctas .btn, .cta-row .btn, .split-cta, .final-cta .btn, .cta-price');
-    buttons.forEach(function (btn) {
-      var strength = 0.35;
-      var xTo = gsap.quickTo(btn, 'x', { duration: 0.5, ease: 'power3.out' });
-      var yTo = gsap.quickTo(btn, 'y', { duration: 0.5, ease: 'power3.out' });
+    document.querySelectorAll('[data-magnetic]').forEach(function (btn) {
+      var strength = 0.3;
+      var xTo = gsap.quickTo(btn, 'x', { duration: .5, ease: 'power3.out' });
+      var yTo = gsap.quickTo(btn, 'y', { duration: .5, ease: 'power3.out' });
       btn.addEventListener('mousemove', function (e) {
-        var rect = btn.getBoundingClientRect();
-        var relX = e.clientX - (rect.left + rect.width / 2);
-        var relY = e.clientY - (rect.top + rect.height / 2);
-        xTo(relX * strength);
-        yTo(relY * strength);
+        var r = btn.getBoundingClientRect();
+        xTo((e.clientX - (r.left + r.width / 2)) * strength);
+        yTo((e.clientY - (r.top + r.height / 2)) * strength);
       });
       btn.addEventListener('mouseleave', function () { xTo(0); yTo(0); });
     });
   })();
 
-  /* ---------- 3. Parallax profondeur souris sur la carte hero (dashboard mock) ---------- */
-  (function heroVisualParallax() {
-    if (!canHover || reduced) return;
-    var stage = document.querySelector('.hero-visual');
-    var card = stage && stage.querySelector('.scan-window, .gauge-card');
-    if (!stage || !card) return;
-
-    var rotX = gsap.quickTo(card, 'rotationX', { duration: 0.6, ease: 'power3.out' });
-    var rotY = gsap.quickTo(card, 'rotationY', { duration: 0.6, ease: 'power3.out' });
-    gsap.set(card, { transformPerspective: 900, transformOrigin: 'center' });
-
-    stage.addEventListener('mousemove', function (e) {
-      var rect = stage.getBoundingClientRect();
-      var px = (e.clientX - rect.left) / rect.width - 0.5;
-      var py = (e.clientY - rect.top) / rect.height - 0.5;
-      rotY(px * 8);
-      rotX(py * -8);
+  /* ---------- 6. Marquees en boucle continue (contenu déjà dupliqué par main.js) ---------- */
+  (function marquees() {
+    document.querySelectorAll('[data-marquee-track]').forEach(function (track) {
+      if (reduced) return;
+      var speed = parseFloat(track.getAttribute('data-marquee-speed')) || 40;
+      var distance = track.scrollWidth / 2;
+      gsap.fromTo(track, { x: track.hasAttribute('data-marquee-reverse') ? -distance : 0 },
+        { x: track.hasAttribute('data-marquee-reverse') ? 0 : -distance, duration: distance / speed, ease: 'none', repeat: -1 });
     });
-    stage.addEventListener('mouseleave', function () { rotX(0); rotY(0); });
   })();
 
-  /* ---------- 4. Timeline "Processus" : ligne de connexion qui se remplit au scroll,
-     + halo séquentiel sur chaque icône d'étape (donne l'effet "connexion" sans
-     restructurer la grille existante). ---------- */
-  (function stepsTimeline() {
+  /* ---------- 7. Ligne de progression du processus ---------- */
+  (function processFill() {
     if (!window.ScrollTrigger) return;
-    var fill = document.getElementById('stepsProgressFill');
-    var steps = document.querySelectorAll('.step-card');
-    if (!fill || !steps.length) return;
-
-    if (!reduced) {
-      gsap.to(fill, {
-        width: '100%', ease: 'none',
-        scrollTrigger: { trigger: '.steps', start: 'top 75%', end: 'bottom 60%', scrub: 0.4 }
-      });
-      gsap.set(steps, { opacity: 0, y: 24 });
-      gsap.to(steps, {
-        opacity: 1, y: 0, duration: 0.6, stagger: 0.12, ease: 'power3.out',
-        scrollTrigger: { trigger: '.steps', start: 'top 82%' }
-      });
-    } else {
-      fill.style.width = '100%';
-    }
+    var fill = document.querySelector('.process-track-fill');
+    var track = document.querySelector('.process-track');
+    if (!fill || !track || reduced) return;
+    gsap.to(fill, {
+      height: '100%', ease: 'none',
+      scrollTrigger: { trigger: track, start: 'top 70%', end: 'bottom 65%', scrub: .4 }
+    });
   })();
 
-  /* ---------- 5. Parallax profondeur au scroll (fond IA en arrière-plan) ---------- */
-  (function bgParallax() {
-    if (reduced || !window.ScrollTrigger) return;
-    var grid = document.querySelector('.ai-grid');
-    if (!grid) return;
-    gsap.to(grid, {
-      yPercent: 14,
-      ease: 'none',
-      scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 0.6 }
-    });
+  /* ---------- 10. Fondu d'entrée de page (léger, pas un vrai preloader) ---------- */
+  (function pageFadeIn() {
+    if (reduced) return;
+    gsap.from('body', { opacity: 0, duration: .5, ease: 'power1.out' });
   })();
 })();

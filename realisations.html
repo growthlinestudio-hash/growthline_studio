@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Réalisations — Growthline</title>
+<meta name="description" content="Voyez à quoi ressemble un rapport d'audit Growthline : score par catégorie, points forts et problèmes détectés, sur un exemple illustratif.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+
+<header>
+  <div class="container nav-inner">
+    <a href="index.html" class="brand">
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 17l5-6 4 4 7-9"/></svg></span>
+      Growthline
+    </a>
+    <nav class="main-nav">
+      <a href="index.html">Accueil</a>
+      <a href="services.html">Services</a>
+      <a href="realisations.html">Réalisations</a>
+      <a href="a-propos.html">À propos</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <a href="index.html#audit" class="btn btn-solid btn-sm nav-cta" data-magnetic>Démarrer un audit</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Ouvrir le menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <nav class="mobile-menu-links">
+    <a href="index.html">Accueil <span>01</span></a>
+    <a href="services.html">Services <span>02</span></a>
+    <a href="realisations.html">Réalisations <span>03</span></a>
+    <a href="a-propos.html">À propos <span>04</span></a>
+    <a href="contact.html">Contact <span>05</span></a>
+  </nav>
+  <div class="mobile-menu-foot">
+    <a href="index.html#audit" class="btn btn-solid btn-lg">Démarrer un audit gratuit</a>
+    <div class="meta-row">
+      <span>growthline.studio@gmail.com</span>
+      <span>© 2026</span>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow" data-reveal>Réalisations</span>
+      <h1 class="display-1" data-reveal>Voici à quoi ressemble un audit Growthline.</h1>
+      <p class="lede" data-reveal>Un exemple concret pour comprendre ce que vous recevrez : un score par catégorie, et des problèmes classés par priorité.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="example-banner" data-reveal>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+        Ce rapport a été généré pour une entreprise fictive à titre d'exemple, avec le même moteur d'analyse que celui utilisé pour votre audit — il ne s'agit pas d'un client réel.
+      </div>
+
+      <div class="score-breakdown" data-reveal>
+        <div class="score-card"><div class="cat">Site web</div><div class="num">72</div><div class="bar"><span style="width:72%"></span></div></div>
+        <div class="score-card"><div class="cat">SEO</div><div class="num">68</div><div class="bar"><span style="width:68%"></span></div></div>
+        <div class="score-card"><div class="cat">Conversion</div><div class="num">54</div><div class="bar"><span style="width:54%"></span></div></div>
+        <div class="score-card"><div class="cat">SEO local</div><div class="num">81</div><div class="bar"><span style="width:81%"></span></div></div>
+        <div class="score-card"><div class="cat">Réseaux sociaux</div><div class="num">76</div><div class="bar"><span style="width:76%"></span></div></div>
+        <div class="score-card"><div class="cat">Performance</div><div class="num">73</div><div class="bar"><span style="width:73%"></span></div></div>
+      </div>
+
+      <div class="issues-list" data-reveal>
+        <div class="issue-card strength">
+          <div class="issue-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <div class="issue-body"><span class="tag">Point fort</span><h4>La fiche Google Business est complète et à jour</h4><p>Horaires, catégorie, photos et coordonnées sont cohérents avec le site — un signal de confiance apprécié par Google et les visiteurs.</p></div>
+        </div>
+        <div class="issue-card critical">
+          <div class="issue-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9L2.6 17.5a1.8 1.8 0 001.6 2.7h15.6a1.8 1.8 0 001.6-2.7L13.7 3.9a1.8 1.8 0 00-3.4 0z"/></svg></div>
+          <div class="issue-body"><span class="tag">Critique</span><h4>Le CTA principal n'est pas suffisamment visible</h4><p>Le bouton d'action se trouve sous la ligne de flottaison sur mobile, ce qui réduit fortement le taux de clics.</p></div>
+        </div>
+        <div class="issue-card important">
+          <div class="issue-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg></div>
+          <div class="issue-body"><span class="tag">Important</span><h4>La page mobile manque de points de conversion</h4><p>Un seul formulaire de contact est présent, sans numéro de téléphone cliquable ni prise de rendez-vous directe.</p></div>
+        </div>
+        <div class="issue-card opportunity">
+          <div class="issue-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c4-3 7-6.5 7-11a7 7 0 10-14 0c0 4.5 3 8 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+          <div class="issue-body"><span class="tag">Opportunité</span><h4>La présence locale pourrait être davantage exploitée</h4><p>Les signaux de cohérence nom / adresse / téléphone sont incomplets sur les pages analysées.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA FINAL ============ -->
+  <section class="section">
+    <div class="container">
+      <div class="cta-final" data-reveal>
+        <div class="cta-final-orb" aria-hidden="true"></div>
+        <div class="cta-final-inner">
+          <span class="eyebrow">Votre tour</span>
+          <h2>Lancez votre propre audit, gratuitement.</h2>
+          <div class="cta-final-actions">
+            <a href="index.html#audit" class="btn btn-solid btn-lg" data-magnetic>Démarrer mon audit gratuit</a>
+            <a href="services.html" class="btn btn-lg" data-magnetic>Voir les tarifs</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="brand">
+          <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 17l5-6 4 4 7-9"/></svg></span>
+          Growthline
+        </a>
+        <p>Agence digitale : audit automatisé, corrections et refontes orientées performance et conversion.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Navigation</h5>
+        <a href="index.html">Accueil</a>
+        <a href="services.html">Services</a>
+        <a href="realisations.html">Réalisations</a>
+        <a href="a-propos.html">À propos</a>
+      </div>
+      <div class="footer-col">
+        <h5>Produit</h5>
+        <a href="index.html#audit">Audit gratuit</a>
+        <a href="services.html#tarifs">Tarifs</a>
+        <a href="realisations.html">Exemple de rapport</a>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <a href="mailto:growthline.studio@gmail.com">growthline.studio@gmail.com</a>
+        <a href="contact.html">Formulaire de contact</a>
+      </div>
+    </div>
+    <div class="footer-wordmark" aria-hidden="true">GROWTHLINE</div>
+    <div class="footer-bottom">
+      <span class="meta">© 2026 Growthline. Tous droits réservés.</span>
+      <span class="meta">Conçu &amp; développé par Growthline.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<script src="main.js" defer></script>
+<script src="motion.js" defer></script>
+</body>
+</html>
