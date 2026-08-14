@@ -66,6 +66,18 @@
     });
   }
 
+  /* ---------- Cartes secteur (realisations.html) : tap pour révéler l'image sur tactile ---------- */
+  var isTouchDevice = window.matchMedia && window.matchMedia('(hover: none), (pointer: coarse)').matches;
+  if (isTouchDevice) {
+    document.querySelectorAll('.sector-card').forEach(function (card) {
+      card.addEventListener('click', function () {
+        var wasActive = card.classList.contains('is-active');
+        document.querySelectorAll('.sector-card.is-active').forEach(function (c) { c.classList.remove('is-active'); });
+        if (!wasActive) card.classList.add('is-active');
+      });
+    });
+  }
+
   /* ---------- Formulaire de rendez-vous (contact.html) : type + créneau -> mail pré-rempli ---------- */
   var bookingForm = document.getElementById('bookingForm');
   if (bookingForm) {
@@ -100,20 +112,6 @@
       var body = bodyLines.join('\n');
 
       window.location.href = 'mailto:growthline.studio@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-    });
-  }
-
-  /* ---------- Cases visuelles des services : tap pour révéler l'image sur tactile ---------- */
-  var isTouch = window.matchMedia && window.matchMedia('(hover: none), (pointer: coarse)').matches;
-  if (isTouch) {
-    document.querySelectorAll('.service-row').forEach(function (row) {
-      var visual = row.querySelector('.service-visual');
-      if (!visual) return;
-      row.addEventListener('click', function () {
-        var wasActive = visual.classList.contains('is-active');
-        document.querySelectorAll('.service-visual.is-active').forEach(function (v) { v.classList.remove('is-active'); });
-        if (!wasActive) visual.classList.add('is-active');
-      });
     });
   }
 

@@ -95,6 +95,24 @@
     }
     if (subCol) { gsap.set(subCol, { opacity: 0, y: 22 }); tl.to(subCol, { opacity: 1, y: 0, duration: .9 }, '-=0.6'); }
     if (visual) { gsap.set(visual, { opacity: 0, y: 30, scale: .97 }); tl.to(visual, { opacity: 1, y: 0, scale: 1, duration: 1.1 }, '-=0.9'); }
+
+    /* Graphique du signal-card : les barres se remplissent, le score compte jusqu'à sa valeur */
+    var bars = hero.querySelectorAll('.signal-bar i');
+    var scoreEl = hero.querySelector('#heroScoreNum');
+    if (bars.length) {
+      gsap.set(bars, { scaleX: 0, transformOrigin: 'left center' });
+      tl.to(bars, { scaleX: 1, duration: .9, stagger: .12, ease: 'power2.out' }, '-=0.5');
+    }
+    if (scoreEl) {
+      var target = { val: 0 };
+      var finalScore = parseInt(scoreEl.textContent, 10) || 66;
+      scoreEl.textContent = '0';
+      tl.to(target, {
+        val: finalScore, duration: 1.1, ease: 'power1.out',
+        onUpdate: function () { scoreEl.textContent = Math.round(target.val); }
+      }, '-=0.8');
+    }
+
     if (cue) { gsap.set(cue, { opacity: 0 }); tl.to(cue, { opacity: 1, duration: .6 }, '-=0.3'); }
   })();
 
