@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outil d'audit (interne) — Growthline</title>
+<meta name="description" content="Outil interne Growthline : analyse un site en profondeur avec des agents IA, en local, et affiche un rapport complet.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+
+<header>
+  <div class="container nav-inner">
+    <a href="index.html" class="brand">
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 17l5-6 4 4 7-9"/></svg></span>
+      Growthline
+    </a>
+    <nav class="main-nav">
+      <a href="index.html">Accueil</a>
+      <a href="services.html">Services</a>
+      <a href="realisations.html">Réalisations</a>
+      <a href="a-propos.html">À propos</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <a href="index.html#audit" class="btn btn-solid btn-sm nav-cta" data-magnetic>Démarrer un audit</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Ouvrir le menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <nav class="mobile-menu-links">
+    <a href="index.html">Accueil <span>01</span></a>
+    <a href="services.html">Services <span>02</span></a>
+    <a href="realisations.html">Réalisations <span>03</span></a>
+    <a href="a-propos.html">À propos <span>04</span></a>
+    <a href="contact.html">Contact <span>05</span></a>
+  </nav>
+  <div class="mobile-menu-foot">
+    <a href="index.html#audit" class="btn btn-solid btn-lg">Démarrer un audit gratuit</a>
+    <div class="meta-row">
+      <span>growthline.studio@gmail.com</span>
+      <span>© 2026</span>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow" data-reveal>Outil interne · usage local</span>
+      <h1 class="display-1" data-reveal>Analyser un site en profondeur.</h1>
+      <p class="lede" data-reveal>Entrez une adresse de site : des agents IA (qui tournent en local sur cet ordinateur, gratuitement, via Ollama) l'examinent sur 6 catégories et rédigent un rapport en français simple, sans jargon.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+
+      <div class="tool-card" data-reveal>
+        <form id="toolAuditForm" class="audit-form tool-form-grid">
+          <div class="audit-field full">
+            <label for="toolUrl">Adresse du site (obligatoire)</label>
+            <input id="toolUrl" name="url" type="text" placeholder="exemple-entreprise.fr" required>
+          </div>
+          <div class="audit-field">
+            <label for="toolName">Nom de l'entreprise</label>
+            <input id="toolName" name="name" type="text" placeholder="Facultatif">
+          </div>
+          <div class="audit-field">
+            <label for="toolCity">Ville</label>
+            <input id="toolCity" name="city" type="text" placeholder="Facultatif, utile pour le SEO local">
+          </div>
+          <button type="submit" class="btn btn-solid btn-lg audit-submit tool-form-grid-full" style="grid-column:1/-1;">
+            Lancer l'analyse
+            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </form>
+      </div>
+
+      <div class="tool-loading" id="toolLoading" hidden>
+        <div class="tool-loading-ring" aria-hidden="true"></div>
+        <p class="tool-loading-text" id="toolLoadingText">Récupération du site…</p>
+        <p class="tool-loading-note">Ça tourne en local sur cet ordinateur (pas de cloud, pas de coût) — comptez plusieurs minutes selon la taille du site. Ne fermez pas cette page.</p>
+      </div>
+
+      <div class="tool-error" id="toolError" hidden></div>
+
+      <div id="toolResults" hidden>
+
+        <div class="tool-legend" data-reveal>
+          <div class="tool-legend-item"><b>Site web</b><span>La base technique : le site s'affiche-t-il correctement et de façon sécurisée ?</span></div>
+          <div class="tool-legend-item"><b>SEO</b><span>Est-ce que Google comprend bien votre site, pour vous montrer dans ses résultats ?</span></div>
+          <div class="tool-legend-item"><b>Conversion</b><span>Une fois sur votre site, est-ce facile de vous contacter ou de passer à l'action ?</span></div>
+          <div class="tool-legend-item"><b>SEO local</b><span>Les habitants de votre ville peuvent-ils facilement vous trouver et vous faire confiance ?</span></div>
+          <div class="tool-legend-item"><b>Réseaux sociaux</b><span>Vos réseaux sociaux sont-ils bien reliés à votre site ?</span></div>
+          <div class="tool-legend-item"><b>Performance</b><span>Le site se charge-t-il vite ? Un site lent fait fuir les visiteurs.</span></div>
+        </div>
+
+        <div class="tool-severity-legend" data-reveal>
+          <span class="tool-severity-chip strength"><i></i>Point fort — à garder tel quel</span>
+          <span class="tool-severity-chip critical"><i></i>Critique — à corriger en priorité</span>
+          <span class="tool-severity-chip important"><i></i>Important — un vrai souci, moins urgent</span>
+          <span class="tool-severity-chip opportunity"><i></i>Opportunité — une amélioration possible</span>
+        </div>
+
+        <div class="tool-summary" data-reveal>
+          <div class="signal-score" id="toolScoreOverall">–<span>/100 aujourd'hui</span></div>
+          <div class="signal-score" id="toolScorePotential" style="color:var(--accent);">–<span>/100 potentiel estimé</span></div>
+        </div>
+
+        <div class="score-breakdown" id="toolScoreBreakdown" data-reveal></div>
+
+        <div class="issues-list" id="toolIssuesList" data-reveal></div>
+
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="brand">
+          <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 17l5-6 4 4 7-9"/></svg></span>
+          Growthline
+        </a>
+        <p>Agence digitale : audit manuel, corrections et refontes orientées performance et conversion.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Navigation</h5>
+        <a href="index.html">Accueil</a>
+        <a href="services.html">Services</a>
+        <a href="realisations.html">Réalisations</a>
+        <a href="a-propos.html">À propos</a>
+      </div>
+      <div class="footer-col">
+        <h5>Produit</h5>
+        <a href="index.html#audit">Audit gratuit</a>
+        <a href="services.html#tarifs">Tarifs</a>
+        <a href="realisations.html">Exemple de rapport</a>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <a href="mailto:growthline.studio@gmail.com">growthline.studio@gmail.com</a>
+        <a href="contact.html">Formulaire de contact</a>
+      </div>
+    </div>
+    <div class="footer-wordmark" aria-hidden="true">GROWTHLINE</div>
+    <div class="footer-bottom">
+      <span class="meta">© 2026 Growthline. Tous droits réservés.</span>
+      <span class="meta">Conçu &amp; développé par Growthline.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<script src="main.js" defer></script>
+<script src="motion.js" defer></script>
+<script src="outil-audit.js" defer></script>
+</body>
+</html>
