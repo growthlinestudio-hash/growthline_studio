@@ -66,6 +66,43 @@
     });
   }
 
+  /* ---------- Formulaire de rendez-vous (contact.html) : type + créneau -> mail pré-rempli ---------- */
+  var bookingForm = document.getElementById('bookingForm');
+  if (bookingForm) {
+    var bookingType = 'Appel téléphonique';
+    var toggleBtns = bookingForm.querySelectorAll('.slot-toggle-btn');
+    toggleBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        toggleBtns.forEach(function (b) { b.classList.remove('is-active'); b.setAttribute('aria-pressed', 'false'); });
+        btn.classList.add('is-active');
+        btn.setAttribute('aria-pressed', 'true');
+        bookingType = btn.getAttribute('data-type');
+      });
+    });
+
+    bookingForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var date = bookingForm.querySelector('#bookingDate').value;
+      var time = bookingForm.querySelector('#bookingTime').value;
+      var name = bookingForm.querySelector('#bookingName').value.trim();
+      var email = bookingForm.querySelector('#bookingEmail').value.trim();
+      var note = bookingForm.querySelector('#bookingNote').value.trim();
+
+      var subject = 'Demande de rendez-vous - ' + bookingType;
+      var bodyLines = [
+        'Type : ' + bookingType,
+        'Date souhaitée : ' + date,
+        'Heure souhaitée : ' + time,
+        'Nom : ' + name,
+        'Email : ' + email
+      ];
+      if (note) bodyLines.push('Projet : ' + note);
+      var body = bodyLines.join('\n');
+
+      window.location.href = 'mailto:growthline.studio@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    });
+  }
+
   /* ---------- Cases visuelles des services : tap pour révéler l'image sur tactile ---------- */
   var isTouch = window.matchMedia && window.matchMedia('(hover: none), (pointer: coarse)').matches;
   if (isTouch) {

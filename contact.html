@@ -98,6 +98,53 @@
     </div>
   </section>
 
+  <!-- ============ RENDEZ-VOUS ============ -->
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="tool-card" data-reveal>
+        <span class="eyebrow">Rendez-vous</span>
+        <h2 class="display-3" style="margin-top:14px;">Réservez un créneau.</h2>
+        <p class="lede" style="margin-top:10px;">Choisissez comment et quand vous préférez qu'on échange — on confirme le créneau par retour d'email.</p>
+
+        <form id="bookingForm" class="audit-form" style="margin-top:26px;">
+          <div class="slot-toggle" role="radiogroup" aria-label="Type de rendez-vous">
+            <button type="button" class="slot-toggle-btn is-active" data-type="Appel téléphonique" aria-pressed="true">Appel téléphonique</button>
+            <button type="button" class="slot-toggle-btn" data-type="Rendez-vous physique" aria-pressed="false">Rendez-vous physique</button>
+          </div>
+
+          <div class="tool-form-grid" style="margin-top:6px;">
+            <div class="audit-field">
+              <label for="bookingDate">Date souhaitée</label>
+              <input id="bookingDate" type="date" required>
+            </div>
+            <div class="audit-field">
+              <label for="bookingTime">Heure souhaitée</label>
+              <input id="bookingTime" type="time" required>
+            </div>
+            <div class="audit-field full">
+              <label for="bookingName">Votre nom</label>
+              <input id="bookingName" type="text" required>
+            </div>
+            <div class="audit-field full">
+              <label for="bookingEmail">Votre email</label>
+              <input id="bookingEmail" type="email" required>
+            </div>
+            <div class="audit-field full">
+              <label for="bookingNote">Un mot sur votre projet</label>
+              <input id="bookingNote" type="text" placeholder="Facultatif">
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-solid btn-lg audit-submit">
+            Confirmer ma demande de créneau
+            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </form>
+        <p class="audit-note">Ouvre votre messagerie pré-remplie · le créneau n'est confirmé qu'après notre retour par email.</p>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <footer>
