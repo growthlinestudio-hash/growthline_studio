@@ -128,30 +128,37 @@
         <div class="sector-card">
           <div class="sector-card-face" style="background:linear-gradient(160deg,#2F9C8C,#1E6B5F)"><b>Immobilier</b><span>Exemple illustratif</span></div>
           <div class="sector-card-image"><img src="images/secteur-immobilier.png" alt="Exemple illustratif de style de site pour le secteur immobilier" loading="lazy"></div>
+          <button type="button" class="sector-card-expand" data-label="Immobilier" data-img="images/secteur-immobilier.png" aria-label="Voir en grand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
         </div>
         <div class="sector-card">
           <div class="sector-card-face" style="background:linear-gradient(160deg,#E06544,#C2502F)"><b>Restaurant</b><span>Exemple illustratif</span></div>
           <div class="sector-card-image"><img src="images/secteur-restaurant.png" alt="Exemple illustratif de style de site pour un restaurant" loading="lazy"></div>
+          <button type="button" class="sector-card-expand" data-label="Restaurant" data-img="images/secteur-restaurant.png" aria-label="Voir en grand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
         </div>
         <div class="sector-card">
           <div class="sector-card-face" style="background:linear-gradient(160deg,#D1548C,#B03E70)"><b>Salon &amp; beauté</b><span>Exemple illustratif</span></div>
           <div class="sector-card-image"><img src="images/secteur-beaute.png" alt="Exemple illustratif de style de site pour un salon de beauté" loading="lazy"></div>
+          <button type="button" class="sector-card-expand" data-label="Salon &amp; beauté" data-img="images/secteur-beaute.png" aria-label="Voir en grand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
         </div>
         <div class="sector-card">
           <div class="sector-card-face" style="background:linear-gradient(160deg,#8A69C9,#6C4FA8)"><b>Boutique en ligne</b><span>Exemple illustratif</span></div>
           <div class="sector-card-image"><img src="images/secteur-boutique.png" alt="Exemple illustratif de style de site pour une boutique en ligne" loading="lazy"></div>
+          <button type="button" class="sector-card-expand" data-label="Boutique en ligne" data-img="images/secteur-boutique.png" aria-label="Voir en grand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
         </div>
         <div class="sector-card">
           <div class="sector-card-face" style="background:linear-gradient(160deg,#E3B23C,#C2932A)"><b>Artisan</b><span>Exemple illustratif</span></div>
           <div class="sector-card-image"><img src="images/secteur-artisan.png" alt="Exemple illustratif de style de site pour un artisan" loading="lazy"></div>
+          <button type="button" class="sector-card-expand" data-label="Artisan" data-img="images/secteur-artisan.png" aria-label="Voir en grand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
         </div>
         <div class="sector-card">
           <div class="sector-card-face" style="background:linear-gradient(160deg,#5279AD,#3D5F8A)"><b>BTP &amp; Construction</b><span>Exemple illustratif</span></div>
           <div class="sector-card-image"><img src="images/secteur-btp.png" alt="Exemple illustratif de style de site pour une entreprise de BTP" loading="lazy"></div>
+          <button type="button" class="sector-card-expand" data-label="BTP &amp; Construction" data-img="images/secteur-btp.png" aria-label="Voir en grand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
         </div>
         <div class="sector-card">
           <div class="sector-card-face" style="background:linear-gradient(160deg,#63A67E,#478061)"><b>Santé &amp; bien-être</b><span>Exemple illustratif</span></div>
           <div class="sector-card-image"><img src="images/secteur-sante.png" alt="Exemple illustratif de style de site pour un cabinet de santé ou bien-être" loading="lazy"></div>
+          <button type="button" class="sector-card-expand" data-label="Santé &amp; bien-être" data-img="images/secteur-sante.png" aria-label="Voir en grand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
         </div>
       </div>
       <p class="disclaimer-note" data-reveal>
@@ -160,6 +167,15 @@
       </p>
     </div>
   </section>
+
+  <div class="gallery-lightbox" id="galleryLightbox" aria-hidden="true">
+    <div class="gallery-lightbox-backdrop"></div>
+    <div class="gallery-lightbox-panel">
+      <button type="button" class="gallery-lightbox-close" aria-label="Fermer">&times;</button>
+      <img id="galleryLightboxImg" src="" alt="">
+      <div class="gallery-lightbox-label" id="galleryLightboxLabel"></div>
+    </div>
+  </div>
 
   <!-- ============ CTA FINAL ============ -->
   <section class="section">

@@ -111,6 +111,37 @@
     });
   }
 
+  /* ---------- Galerie immersive (realisations.html) : lightbox plein écran ---------- */
+  var lightbox = document.getElementById('galleryLightbox');
+  if (lightbox) {
+    var lbImg = document.getElementById('galleryLightboxImg');
+    var lbLabel = document.getElementById('galleryLightboxLabel');
+    var openLightbox = function (src, label) {
+      lbImg.src = src;
+      lbImg.alt = label;
+      lbLabel.textContent = label;
+      lightbox.classList.add('is-open');
+      lightbox.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    };
+    var closeLightbox = function () {
+      lightbox.classList.remove('is-open');
+      lightbox.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    };
+    document.querySelectorAll('.sector-card-expand').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        openLightbox(btn.getAttribute('data-img'), btn.getAttribute('data-label'));
+      });
+    });
+    lightbox.querySelector('.gallery-lightbox-backdrop').addEventListener('click', closeLightbox);
+    lightbox.querySelector('.gallery-lightbox-close').addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeLightbox();
+    });
+  }
+
   /* ---------- Cartes secteur (realisations.html) : tap pour révéler l'image sur tactile ---------- */
   var isTouchDevice = window.matchMedia && window.matchMedia('(hover: none), (pointer: coarse)').matches;
   if (isTouchDevice) {
