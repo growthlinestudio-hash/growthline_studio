@@ -95,30 +95,47 @@
           </div>
         </div>
 
-        <div class="signal-card" data-reveal>
-          <div class="signal-card-head">
-            <div class="dots"><span></span><span></span><span></span></div>
-            <span class="tag">Exemple de rapport</span>
+        <div class="signal-card-wrap">
+          <div class="spin-badge spin-badge--corner" aria-hidden="true">
+            <svg class="spin-badge-ring" viewBox="0 0 200 200">
+              <defs><path id="spinCirclePath2" d="M100,100 m-82,0 a82,82 0 1,1 164,0 a82,82 0 1,1 -164,0"/></defs>
+              <text><textPath href="#spinCirclePath2">Growth • Conversion • Intelligence • Performance • Growth • Conversion • Intelligence • Performance • </textPath></text>
+            </svg>
+            <div class="spin-badge-center spin-badge-center--mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l5-6 4 4 7-9"/></svg></div>
           </div>
-          <div class="signal-row">
-            <div class="signal-row-label"><b>Performance</b><span>Vitesse de chargement</span></div>
-            <div class="signal-bar"><i style="--val:82%"></i></div>
-          </div>
-          <div class="signal-row">
-            <div class="signal-row-label"><b>SEO technique</b><span>Structure &amp; méta-données</span></div>
-            <div class="signal-bar"><i style="--val:64%"></i></div>
-          </div>
-          <div class="signal-row">
-            <div class="signal-row-label"><b>Conversion</b><span>Parcours &amp; appels à l'action</span></div>
-            <div class="signal-bar"><i style="--val:47%"></i></div>
-          </div>
-          <div class="signal-row">
-            <div class="signal-row-label"><b>Accessibilité</b><span>Lisibilité &amp; contraste</span></div>
-            <div class="signal-bar"><i style="--val:71%"></i></div>
-          </div>
-          <div class="signal-card-foot">
-            <div class="signal-score"><span id="heroScoreNum" class="signal-score-num">66</span><span>/100</span></div>
-            <p class="note">Exemple illustratif du rapport Growthline</p>
+          <div class="signal-card" data-reveal>
+            <div class="signal-card-head">
+              <div class="dots"><span></span><span></span><span></span></div>
+              <span class="tag">Growthline Intelligence™</span>
+            </div>
+            <div class="signal-row">
+              <div class="signal-row-label"><b>Site web</b><span>Qualité technique globale</span></div>
+              <div class="signal-bar"><i style="--val:72%"></i></div>
+            </div>
+            <div class="signal-row">
+              <div class="signal-row-label"><b>SEO</b><span>Structure &amp; méta-données</span></div>
+              <div class="signal-bar"><i style="--val:68%"></i></div>
+            </div>
+            <div class="signal-row">
+              <div class="signal-row-label"><b>Conversion</b><span>Parcours &amp; appels à l'action</span></div>
+              <div class="signal-bar"><i style="--val:54%"></i></div>
+            </div>
+            <div class="signal-row">
+              <div class="signal-row-label"><b>SEO local</b><span>Visibilité dans votre zone</span></div>
+              <div class="signal-bar"><i style="--val:81%"></i></div>
+            </div>
+            <div class="signal-row">
+              <div class="signal-row-label"><b>Réseaux sociaux</b><span>Présence &amp; cohérence</span></div>
+              <div class="signal-bar"><i style="--val:76%"></i></div>
+            </div>
+            <div class="signal-row">
+              <div class="signal-row-label"><b>Performance</b><span>Vitesse de chargement</span></div>
+              <div class="signal-bar"><i style="--val:73%"></i></div>
+            </div>
+            <div class="signal-card-foot">
+              <div class="signal-score"><span id="heroScoreNum" class="signal-score-num">66</span><span>/100</span></div>
+              <p class="note">Exemple illustratif du rapport Growthline</p>
+            </div>
           </div>
         </div>
       </div>
@@ -277,6 +294,39 @@
       <div class="statement" data-reveal>
         <p>On ne devine pas ce qui cloche sur votre site. <span class="accent-script">On le mesure</span>, on vous le montre, et on corrige ce qui compte vraiment.</p>
       </div>
+    </div>
+  </section>
+
+  <!-- ============ AVANT / APRÈS ============ -->
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <div class="section-head-title">
+          <span class="eyebrow">La différence</span>
+          <h2 class="display-2" style="margin-top:14px;">Glissez pour voir ce qui change.</h2>
+        </div>
+        <p class="lede">Un exemple illustratif de transformation — glissez le curseur ou touchez l'image.</p>
+      </div>
+
+      <div class="compare-slider" id="compareSlider" data-reveal>
+        <span class="compare-label compare-label--before">Avant</span>
+        <span class="compare-label compare-label--after">Après</span>
+        <div class="compare-after"><img src="images/secteur-immobilier.png" alt="Après : exemple illustratif de site premium" loading="lazy"></div>
+        <div class="compare-before" id="compareBefore">
+          <div class="compare-before-content">
+            <span class="compare-tag-x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>Pas de site, ou obsolète</span>
+            <span class="compare-tag-x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>Peu crédible aux yeux des visiteurs</span>
+            <span class="compare-tag-x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>Aucune stratégie de conversion</span>
+          </div>
+        </div>
+        <div class="compare-handle" id="compareHandle" aria-hidden="true">
+          <span class="compare-handle-grip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4"/></svg></span>
+        </div>
+      </div>
+      <p class="disclaimer-note" data-reveal>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+        Exemple illustratif de style, pas un cas client réel.
+      </p>
     </div>
   </section>
 

@@ -571,15 +571,53 @@ header.scrolled .brand .mark{ width:25px; height:25px; }
 /* --- Badge circulaire tournant (façon "tampon") --- */
 .spin-badge{ position:relative; width:118px; height:118px; flex:none; }
 .spin-badge-ring{ width:100%; height:100%; animation:spin-badge-turn 16s linear infinite; }
-.spin-badge-ring text{ font-family:var(--font-accent); font-size:15px; font-weight:600; letter-spacing:.4px; }
+.spin-badge-ring text{ font-family:var(--font-accent); font-size:15px; font-weight:600; letter-spacing:.4px; fill:var(--ink-mute); }
 .spin-badge-center{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
-.spin-badge-center svg{ width:24px; height:24px; }
+.spin-badge-center svg{ width:24px; height:24px; color:var(--ink-dim); }
 @keyframes spin-badge-turn{ to{ transform:rotate(360deg); } }
 @media (prefers-reduced-motion:reduce){ .spin-badge-ring{ animation:none; } }
 .cta-final .spin-badge{ position:absolute; left:28px; bottom:28px; z-index:1; }
 .cta-final .spin-badge-ring text{ fill:rgba(10,10,11,.55); }
 .cta-final .spin-badge-center svg{ color:var(--inverse-ink); }
 @media (max-width:768px){ .cta-final .spin-badge{ display:none; } }
+
+/* --- Variante du badge tournant : coin du dashboard hero --- */
+.signal-card-wrap{ position:relative; }
+.spin-badge--corner{ position:absolute; top:-22px; right:-22px; z-index:2; width:92px; height:92px; }
+.spin-badge--corner .spin-badge-center--mark{
+  width:34px; height:34px; margin:auto; border-radius:10px;
+  background:linear-gradient(135deg, var(--accent), #6fe0a8); color:var(--accent-ink);
+}
+.spin-badge--corner .spin-badge-center--mark svg{ width:18px; height:18px; color:inherit; }
+.spin-badge--corner .spin-badge-ring text{ fill:rgba(243,241,234,.65); font-size:14px; }
+@media (max-width:900px){ .spin-badge--corner{ display:none; } }
+
+/* --- Slider Avant / Après --- */
+.compare-slider{
+  position:relative; aspect-ratio:16/8; border-radius:var(--radius-lg); overflow:hidden;
+  cursor:ew-resize; user-select:none; border:1px solid var(--border-soft); touch-action:pan-y;
+}
+.compare-after, .compare-before{ position:absolute; inset:0; }
+.compare-after img{ width:100%; height:100%; object-fit:cover; display:block; }
+.compare-before{ background:var(--bg-elevated); clip-path:inset(0 50% 0 0); }
+.compare-before-content{ height:100%; display:flex; flex-direction:column; justify-content:center; gap:20px; padding:0 5% 0 6%; max-width:420px; }
+.compare-tag-x{ display:flex; align-items:center; gap:12px; font-family:var(--font-display); font-weight:600; font-size:clamp(.95rem,1.6vw,1.15rem); color:var(--ink-dim); }
+.compare-tag-x svg{ color:#ff8f8f; flex:none; width:22px; height:22px; }
+.compare-handle{ position:absolute; top:0; bottom:0; left:50%; width:0; z-index:2; pointer-events:none; }
+.compare-handle::before{ content:""; position:absolute; top:0; bottom:0; left:0; width:2px; background:var(--accent); transform:translateX(-50%); }
+.compare-handle-grip{
+  position:absolute; top:50%; left:0; transform:translate(-50%,-50%); width:46px; height:46px; border-radius:50%;
+  background:var(--accent); color:var(--accent-ink); display:flex; align-items:center; justify-content:center;
+  box-shadow:var(--shadow-lift); pointer-events:auto; cursor:ew-resize;
+}
+.compare-handle-grip svg{ width:20px; height:20px; }
+.compare-label{ position:absolute; top:20px; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; padding:6px 14px; border-radius:var(--radius-full); z-index:1; }
+.compare-label--before{ left:20px; background:rgba(10,10,11,.6); color:#fff; }
+.compare-label--after{ right:20px; background:var(--accent); color:var(--accent-ink); }
+@media (max-width:640px){
+  .compare-slider{ aspect-ratio:4/5; }
+  .compare-before-content{ padding:0 8% 0 8%; max-width:none; }
+}
 
 .cta-final-orb{ position:absolute; width:520px; height:520px; border-radius:50%; background:radial-gradient(closest-side, var(--accent-dim), transparent 70%); top:-160px; right:-140px; z-index:0; }
 

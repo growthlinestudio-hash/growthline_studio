@@ -111,6 +111,38 @@
     });
   }
 
+  /* ---------- Slider avant/après (index.html) ---------- */
+  (function compareSlider() {
+    var slider = document.getElementById('compareSlider');
+    if (!slider) return;
+    var before = document.getElementById('compareBefore');
+    var handle = document.getElementById('compareHandle');
+    var dragging = false;
+
+    function setPos(pct) {
+      pct = Math.max(6, Math.min(94, pct));
+      before.style.clipPath = 'inset(0 ' + (100 - pct) + '% 0 0)';
+      handle.style.left = pct + '%';
+    }
+    function pointerToPct(clientX) {
+      var r = slider.getBoundingClientRect();
+      return ((clientX - r.left) / r.width) * 100;
+    }
+    function onMove(e) {
+      if (!dragging) return;
+      var x = e.touches ? e.touches[0].clientX : e.clientX;
+      setPos(pointerToPct(x));
+    }
+    slider.addEventListener('mousedown', function (e) { dragging = true; setPos(pointerToPct(e.clientX)); });
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', function () { dragging = false; });
+    slider.addEventListener('touchstart', function (e) { dragging = true; setPos(pointerToPct(e.touches[0].clientX)); }, { passive: true });
+    window.addEventListener('touchmove', onMove, { passive: true });
+    window.addEventListener('touchend', function () { dragging = false; });
+
+    setPos(50);
+  })();
+
   /* ---------- Galerie immersive (realisations.html) : lightbox plein écran ---------- */
   var lightbox = document.getElementById('galleryLightbox');
   if (lightbox) {
