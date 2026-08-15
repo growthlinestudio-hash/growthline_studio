@@ -9,6 +9,25 @@
   var canHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   if (window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
 
+  /* Flottement continu + léger tilt vers la souris (dashboard du hero) */
+  function floatAndParallax(el) {
+    if (reduced) return;
+    gsap.to(el, { y: '+=10', duration: 2.8, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+    if (!canHover) return;
+    var wrap = el.closest('.hero-inner') || el.parentElement;
+    gsap.set(el, { transformPerspective: 900, transformOrigin: 'center' });
+    var rotX = gsap.quickTo(el, 'rotationX', { duration: .7, ease: 'power3.out' });
+    var rotY = gsap.quickTo(el, 'rotationY', { duration: .7, ease: 'power3.out' });
+    wrap.addEventListener('mousemove', function (e) {
+      var r = wrap.getBoundingClientRect();
+      var px = (e.clientX - r.left) / r.width - .5;
+      var py = (e.clientY - r.top) / r.height - .5;
+      rotY(px * 7);
+      rotX(-py * 7);
+    });
+    wrap.addEventListener('mouseleave', function () { rotX(0); rotY(0); });
+  }
+
   /* ---------- 1. Curseur personnalisé (desktop, hover fin uniquement) ---------- */
   (function customCursor() {
     if (!canHover || reduced) return;
@@ -41,12 +60,12 @@
     var els = gsap.utils.toArray('[data-reveal]');
     if (!els.length) return;
     if (reduced) { gsap.set(els, { opacity: 1 }); return; }
-    gsap.set(els, { opacity: 0, y: 28 });
-    if (!window.ScrollTrigger) { gsap.set(els, { opacity: 1, y: 0 }); return; }
+    gsap.set(els, { opacity: 0, y: 28, filter: 'blur(9px)' });
+    if (!window.ScrollTrigger) { gsap.set(els, { opacity: 1, y: 0, filter: 'blur(0px)' }); return; }
     ScrollTrigger.batch(els, {
       start: 'top 88%',
       onEnter: function (batch) {
-        gsap.to(batch, { opacity: 1, y: 0, duration: .9, ease: 'power3.out', stagger: .1 });
+        gsap.to(batch, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1, ease: 'power3.out', stagger: .1 });
       },
       once: true
     });
@@ -88,13 +107,17 @@
     var cue = hero.querySelector('.scroll-cue');
 
     var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-    if (eyebrowRow) { gsap.set(eyebrowRow, { opacity: 0, y: 16 }); tl.to(eyebrowRow, { opacity: 1, y: 0, duration: .7 }, 0.1); }
+    if (eyebrowRow) { gsap.set(eyebrowRow, { opacity: 0, y: 16, filter: 'blur(6px)' }); tl.to(eyebrowRow, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .7 }, 0.1); }
     if (h1) {
       var spans = h1.querySelectorAll('.split-word > span');
       tl.to(spans, { yPercent: 0, opacity: 1, duration: 1, stagger: .035 }, 0.25);
     }
     if (subCol) { gsap.set(subCol, { opacity: 0, y: 22 }); tl.to(subCol, { opacity: 1, y: 0, duration: .9 }, '-=0.6'); }
-    if (visual) { gsap.set(visual, { opacity: 0, y: 30, scale: .97 }); tl.to(visual, { opacity: 1, y: 0, scale: 1, duration: 1.1 }, '-=0.9'); }
+    if (visual) {
+      gsap.set(visual, { opacity: 0, x: 40, y: 30, scale: .96, filter: 'blur(10px)' });
+      tl.to(visual, { opacity: 1, x: 0, y: 0, scale: 1, filter: 'blur(0px)', duration: 1.2 }, '-=0.9');
+      tl.call(function () { floatAndParallax(visual); });
+    }
 
     /* Graphique du signal-card : les barres se remplissent, le score compte jusqu'à sa valeur */
     var bars = hero.querySelectorAll('.signal-bar i');
@@ -114,6 +137,28 @@
     }
 
     if (cue) { gsap.set(cue, { opacity: 0 }); tl.to(cue, { opacity: 1, duration: .6 }, '-=0.3'); }
+  })();
+
+  /* ---------- 4bis. Tilt 3D + spotlight sur les cartes tarifs ---------- */
+  (function priceCardTilt() {
+    if (!canHover || reduced) return;
+    document.querySelectorAll('.price-card').forEach(function (card) {
+      gsap.set(card, { transformPerspective: 800 });
+      var rotX = gsap.quickTo(card, 'rotationX', { duration: .5, ease: 'power3.out' });
+      var rotY = gsap.quickTo(card, 'rotationY', { duration: .5, ease: 'power3.out' });
+      var liftY = gsap.quickTo(card, 'y', { duration: .5, ease: 'power3.out' });
+      card.addEventListener('mousemove', function (e) {
+        var r = card.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width;
+        var py = (e.clientY - r.top) / r.height;
+        rotY((px - .5) * 10);
+        rotX(-(py - .5) * 10);
+        liftY(-6);
+        card.style.setProperty('--mx', (px * 100) + '%');
+        card.style.setProperty('--my', (py * 100) + '%');
+      });
+      card.addEventListener('mouseleave', function () { rotX(0); rotY(0); liftY(0); });
+    });
   })();
 
   /* ---------- 5. Boutons magnétiques ---------- */

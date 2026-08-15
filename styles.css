@@ -374,6 +374,11 @@ header.scrolled .brand .mark{ width:25px; height:25px; }
 .service-visual{
   position:relative; width:104px; height:104px; border-radius:var(--radius-md); overflow:hidden; flex:none;
   border:1px solid var(--border-soft);
+  transition:transform .5s var(--ease), box-shadow .5s var(--ease), border-color .4s ease;
+}
+.service-row:hover .service-visual{
+  transform:rotate(-2deg) scale(1.04); border-color:var(--accent-line);
+  box-shadow:0 18px 40px -20px rgba(185,255,102,.35);
 }
 .service-visual-face{
   position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
@@ -607,18 +612,28 @@ footer{ padding:var(--space-9) 0 var(--space-6); }
 .pricing-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px; }
 .pricing-grid--single{ grid-template-columns:minmax(260px,340px); }
 .price-badge.is-soon{ color:var(--ink-mute); border-color:var(--border); }
+.pricing-grid{ perspective:1400px; }
 .price-card{
-  position:relative; overflow:hidden;
+  position:relative; overflow:hidden; will-change:transform;
   background:linear-gradient(165deg,#15161A,#0A0A0B); border:1px solid var(--border-soft); border-radius:var(--radius-lg);
-  padding:30px; display:flex; flex-direction:column; gap:16px; transition:border-color .4s ease, transform .4s var(--ease);
+  padding:30px; display:flex; flex-direction:column; gap:16px;
+  transition:border-color .4s ease, box-shadow .4s ease, transform .5s var(--ease);
+  transform-style:preserve-3d;
 }
 .price-card::before{
   content:""; position:absolute; left:-20%; right:-20%; bottom:-55%; height:65%;
   background:radial-gradient(closest-side, rgba(255,255,255,.07), transparent 72%);
   pointer-events:none;
 }
-.price-card:hover{ border-color:var(--border); transform:translateY(-4px); }
+.price-card::after{
+  content:""; position:absolute; inset:0; z-index:0; pointer-events:none; opacity:0;
+  background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.09), transparent 65%);
+  transition:opacity .4s ease; border-radius:inherit;
+}
+.price-card:hover{ border-color:var(--border); box-shadow:0 30px 60px -30px rgba(0,0,0,.6); }
+.price-card:hover::after{ opacity:1; }
 .price-card.featured{ background:linear-gradient(165deg,#1A1B15,#0A0A0B); border-color:var(--accent-line); }
+.price-card.featured::after{ background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%), rgba(185,255,102,.14), transparent 65%); }
 .price-card.featured::before{ background:radial-gradient(closest-side, var(--accent-dim), transparent 72%); }
 .price-card-art{
   position:absolute; right:-22px; bottom:-22px; width:170px; height:170px;
