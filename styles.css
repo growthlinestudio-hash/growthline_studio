@@ -752,6 +752,7 @@ footer{ padding:var(--space-9) 0 var(--space-6); }
   font-size:clamp(1.6rem,3.6vw,3rem); max-width:22ch; margin:0 auto; color:var(--ink);
 }
 .statement p em{ font-style:normal; color:var(--ink-mute); }
+.statement p .accent-script{ font-family:var(--font-accent); font-weight:700; color:var(--accent); font-size:1.3em; }
 
 /* ==========================================================================
    VALEURS / MÉTHODE (page à propos)
