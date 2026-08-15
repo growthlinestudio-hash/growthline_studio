@@ -90,7 +90,7 @@
   /* ---------- 1ter. Smooth scroll premium (Lenis, si chargé) ---------- */
   (function smoothScroll() {
     if (!window.Lenis || reduced) return;
-    var lenis = new window.Lenis({ lerp: 0.11, wheelMultiplier: 1 });
+    var lenis = new window.Lenis({ lerp: 0.5, wheelMultiplier: 1 });
     if (window.ScrollTrigger) {
       lenis.on('scroll', ScrollTrigger.update);
       gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
