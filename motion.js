@@ -53,6 +53,51 @@
       el.addEventListener('mouseenter', function () { ring.classList.add('is-view'); });
       el.addEventListener('mouseleave', function () { ring.classList.remove('is-view'); });
     });
+
+    /* Texte contextuel dans le curseur selon l'élément survolé */
+    var textEl = ring.querySelector('.cursor-text');
+    if (textEl) {
+      var textTargets = [
+        { selector: '.btn-solid', text: 'OUVRIR' },
+        { selector: '.service-row', text: 'VOIR' },
+        { selector: '.sector-card', text: 'VOIR' },
+        { selector: '.price-card', text: 'CHOISIR' }
+      ];
+      textTargets.forEach(function (t) {
+        document.querySelectorAll(t.selector).forEach(function (el) {
+          el.addEventListener('mouseenter', function () {
+            textEl.textContent = t.text;
+            ring.classList.add('is-text');
+          });
+          el.addEventListener('mouseleave', function () {
+            ring.classList.remove('is-text');
+          });
+        });
+      });
+    }
+  })();
+
+  /* ---------- 1bis. Barre de progression du scroll ---------- */
+  (function scrollProgress() {
+    var bar = document.querySelector('.scroll-progress span');
+    if (!bar || reduced || !window.ScrollTrigger) return;
+    gsap.to(bar, {
+      scaleX: 1, ease: 'none',
+      scrollTrigger: { start: 0, end: 'max', scrub: 0.3 }
+    });
+  })();
+
+  /* ---------- 1ter. Smooth scroll premium (Lenis, si chargé) ---------- */
+  (function smoothScroll() {
+    if (!window.Lenis || reduced) return;
+    var lenis = new window.Lenis({ lerp: 0.11, wheelMultiplier: 1 });
+    if (window.ScrollTrigger) {
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
+      gsap.ticker.lagSmoothing(0);
+    } else {
+      requestAnimationFrame(function raf(time) { lenis.raf(time); requestAnimationFrame(raf); });
+    }
   })();
 
   /* ---------- 2. Reveal générique au scroll ([data-reveal]) ---------- */
