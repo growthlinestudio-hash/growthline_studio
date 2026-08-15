@@ -30,6 +30,7 @@
   /* --- Typographie --- */
   --font-display: 'Bricolage Grotesque', 'Inter', sans-serif;
   --font-body: 'Inter', sans-serif;
+  --font-accent: 'Caveat', cursive;
 
   /* --- Rythme --- */
   --space-1: 4px;
@@ -287,11 +288,6 @@ header.scrolled .brand .mark{ width:25px; height:25px; }
   position:relative; min-height:100svh; display:flex; flex-direction:column; justify-content:center;
   padding:150px 0 80px; overflow:hidden;
 }
-
-/* --- Pluie d'icônes décorative, discrète (hero + CTA final) --- */
-.emoji-rain{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
-.emoji-rain span{ position:absolute; top:-10%; display:block; will-change:transform, opacity; filter:drop-shadow(0 4px 10px rgba(0,0,0,.3)); }
-.cta-final .emoji-rain span{ filter:drop-shadow(0 4px 8px rgba(0,0,0,.15)); }
 
 .hero-glow{
   position:absolute; top:-20%; left:50%; width:1100px; height:1100px; transform:translateX(-50%);
@@ -572,6 +568,19 @@ header.scrolled .brand .mark{ width:25px; height:25px; }
 .cta-final .btn:hover{ background:rgba(10,10,11,.06); }
 .cta-final .btn-solid{ background:var(--inverse-ink); color:var(--inverse-bg); border-color:var(--inverse-ink); }
 .cta-final .btn-solid:hover{ background:#000; }
+/* --- Badge circulaire tournant (façon "tampon") --- */
+.spin-badge{ position:relative; width:118px; height:118px; flex:none; }
+.spin-badge-ring{ width:100%; height:100%; animation:spin-badge-turn 16s linear infinite; }
+.spin-badge-ring text{ font-family:var(--font-accent); font-size:15px; font-weight:600; letter-spacing:.4px; }
+.spin-badge-center{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+.spin-badge-center svg{ width:24px; height:24px; }
+@keyframes spin-badge-turn{ to{ transform:rotate(360deg); } }
+@media (prefers-reduced-motion:reduce){ .spin-badge-ring{ animation:none; } }
+.cta-final .spin-badge{ position:absolute; left:28px; bottom:28px; z-index:1; }
+.cta-final .spin-badge-ring text{ fill:rgba(10,10,11,.55); }
+.cta-final .spin-badge-center svg{ color:var(--inverse-ink); }
+@media (max-width:768px){ .cta-final .spin-badge{ display:none; } }
+
 .cta-final-orb{ position:absolute; width:520px; height:520px; border-radius:50%; background:radial-gradient(closest-side, var(--accent-dim), transparent 70%); top:-160px; right:-140px; z-index:0; }
 
 /* ==========================================================================
