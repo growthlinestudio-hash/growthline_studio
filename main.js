@@ -3,13 +3,27 @@
 (function () {
   'use strict';
 
-  /* ---------- Écran de bienvenue au chargement ---------- */
+  /* ---------- Écran de bienvenue au chargement (mini séquence "usine") ---------- */
   var pageLoader = document.getElementById('pageLoader');
   if (pageLoader) {
+    var loaderText = document.getElementById('pageLoaderText');
+    var loaderBar = document.getElementById('pageLoaderBar');
+    var messages = ['Chargement...', 'Construction de votre présence digitale...'];
+
     requestAnimationFrame(function () { pageLoader.classList.add('is-in'); });
+
+    if (loaderText) {
+      setTimeout(function () { loaderText.textContent = messages[1]; }, 550);
+    }
+    if (loaderBar) {
+      setTimeout(function () { loaderBar.style.width = '38%'; }, 120);
+      setTimeout(function () { loaderBar.style.width = '72%'; }, 600);
+      setTimeout(function () { loaderBar.style.width = '100%'; }, 950);
+    }
+
     var hideLoader = function () { pageLoader.classList.add('is-out'); };
-    window.addEventListener('load', function () { setTimeout(hideLoader, 380); });
-    setTimeout(hideLoader, 2200); // filet de sécurité si "load" tarde
+    window.addEventListener('load', function () { setTimeout(hideLoader, 950); });
+    setTimeout(hideLoader, 2600); // filet de sécurité si "load" tarde
   }
 
   /* ---------- Navbar : réduction au scroll ---------- */

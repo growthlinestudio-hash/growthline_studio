@@ -14,14 +14,17 @@
 <meta name="twitter:title" content="Services — Growthline">
 <meta name="twitter:description" content="Audit digital, rapport priorisé, corrections ciblées ou refonte complète : les quatre services Growthline, avec des tarifs transparents.">
 <meta name="twitter:image" content="https://growthline-studio-9izc.onrender.com/og-image.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Inter:wght@400;500;600&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<div id="pageLoader" class="page-loader" aria-hidden="true"><div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l5-6 4 4 7-9"/></svg></div></div>
+<div id="pageLoader" class="page-loader" aria-hidden="true">
+  <div class="mark"><img src="images/logo-growthline-pastel-icon.png" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"></div>
+  <p class="page-loader-text" id="pageLoaderText">Chargement...</p>
+  <div class="page-loader-bar"><span id="pageLoaderBar"></span></div>
+</div>
 <div class="scroll-progress" aria-hidden="true"><span></span></div>
 <div class="grain" aria-hidden="true"></div>
 <div class="cursor-dot" aria-hidden="true"></div>
@@ -30,7 +33,7 @@
 <header>
   <div class="container nav-inner">
     <a href="index.html" class="brand">
-      <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 17l5-6 4 4 7-9"/></svg></span>
+      <span class="mark"><img src="images/logo-growthline-pastel-icon.png" alt="Growthline"></span>
       Growthline
     </a>
     <nav class="main-nav">
@@ -81,7 +84,7 @@
     <div class="container">
       <div data-service-list>
         <a class="service-row" data-reveal href="index.html#audit">
-          <div class="service-visual" style="background:linear-gradient(160deg,#16171A,#0A0A0B)">
+          <div class="service-visual" style="background:linear-gradient(160deg,#D7E4D6,#BFD3BE)">
             <div class="service-visual-face">01</div>
             <div class="service-visual-image"><svg viewBox="0 0 96 96" aria-hidden="true">
               <rect x="6" y="52" width="14" height="34" rx="3" fill="var(--ink-mute)"/>
@@ -103,7 +106,7 @@
         </a>
 
         <a class="service-row" data-reveal href="realisations.html">
-          <div class="service-visual" style="background:linear-gradient(160deg,#182018,#0A0A0B)">
+          <div class="service-visual" style="background:linear-gradient(160deg,#E3DBF2,#CFC3E8)">
             <div class="service-visual-face">02</div>
             <div class="service-visual-image"><svg viewBox="0 0 96 96" aria-hidden="true">
               <rect x="8" y="14" width="80" height="16" rx="8" fill="#C23B4B"/>
@@ -123,7 +126,7 @@
         </a>
 
         <a class="service-row" data-reveal href="#tarifs">
-          <div class="service-visual" style="background:linear-gradient(160deg,#1A1816,#0A0A0B)">
+          <div class="service-visual" style="background:linear-gradient(160deg,#F3DDE2,#EBC4CC)">
             <div class="service-visual-face">03</div>
             <div class="service-visual-image"><svg viewBox="0 0 96 96" aria-hidden="true">
               <rect x="4" y="30" width="34" height="34" rx="4" fill="none" stroke="var(--ink-mute)" stroke-width="2"/>
@@ -145,7 +148,7 @@
         </a>
 
         <a class="service-row" data-reveal href="#tarifs">
-          <div class="service-visual" style="background:linear-gradient(160deg,#141820,#0A0A0B)">
+          <div class="service-visual" style="background:linear-gradient(160deg,#F3E4CE,#EBCFAF)">
             <div class="service-visual-face">04</div>
             <div class="service-visual-image"><svg viewBox="0 0 96 96" aria-hidden="true">
               <rect x="6" y="8" width="84" height="18" rx="4" fill="var(--accent)"/>
@@ -334,7 +337,7 @@
     <div class="footer-top">
       <div class="footer-brand">
         <a href="index.html" class="brand">
-          <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 17l5-6 4 4 7-9"/></svg></span>
+          <span class="mark"><img src="images/logo-growthline-pastel-icon.png" alt="Growthline"></span>
           Growthline
         </a>
         <p>Agence digitale : audit manuel, corrections et refontes orientées performance et conversion.</p>
