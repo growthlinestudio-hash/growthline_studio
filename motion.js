@@ -199,10 +199,13 @@
     if (cue) { gsap.set(cue, { opacity: 0 }); tl.to(cue, { opacity: 1, duration: .6 }, '-=0.3'); }
   })();
 
-  /* ---------- 4bis. Tilt 3D + spotlight sur les cartes tarifs ---------- */
-  (function priceCardTilt() {
+  /* ---------- 4bis. Tilt 3D discret : les cartes réagissent à la perspective ---------- */
+  function tiltCards(selector, opts) {
     if (!canHover || reduced) return;
-    document.querySelectorAll('.price-card').forEach(function (card) {
+    opts = opts || {};
+    var strength = opts.strength || 8;
+    var lift = opts.lift || -5;
+    document.querySelectorAll(selector).forEach(function (card) {
       gsap.set(card, { transformPerspective: 800 });
       var rotX = gsap.quickTo(card, 'rotationX', { duration: .5, ease: 'power3.out' });
       var rotY = gsap.quickTo(card, 'rotationY', { duration: .5, ease: 'power3.out' });
@@ -211,15 +214,18 @@
         var r = card.getBoundingClientRect();
         var px = (e.clientX - r.left) / r.width;
         var py = (e.clientY - r.top) / r.height;
-        rotY((px - .5) * 10);
-        rotX(-(py - .5) * 10);
-        liftY(-6);
+        rotY((px - .5) * strength);
+        rotX(-(py - .5) * strength);
+        liftY(lift);
         card.style.setProperty('--mx', (px * 100) + '%');
         card.style.setProperty('--my', (py * 100) + '%');
       });
       card.addEventListener('mouseleave', function () { rotX(0); rotY(0); liftY(0); });
     });
-  })();
+  }
+  tiltCards('.price-card', { strength: 10, lift: -6 });
+  tiltCards('.craft-card', { strength: 7, lift: -4 });
+  tiltCards('.proof-cell', { strength: 6, lift: -3 });
 
   /* ---------- 5. Boutons magnétiques ---------- */
   (function magneticButtons() {
@@ -356,36 +362,61 @@
     });
   })();
 
-  /* ---------- 13. Éclat final : petites formes qui se dispersent depuis le logo du CTA ---------- */
-  (function ctaBurst() {
+  /* ---------- 13. Convergence finale : les formes du site reviennent se rassembler dans le logo ---------- */
+  (function ctaConverge() {
     var cta = document.querySelector('.cta-final');
     var sticker = document.querySelector('.cta-final-sticker');
     if (!cta || !sticker || !window.ScrollTrigger || reduced) return;
     var colors = ['var(--sage)', 'var(--lavender)', 'var(--sky)', 'var(--pink)', 'var(--peach)'];
-    var burst = document.createElement('div');
-    burst.setAttribute('aria-hidden', 'true');
-    burst.style.cssText = 'position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden;';
-    cta.appendChild(burst);
+    var field = document.createElement('div');
+    field.setAttribute('aria-hidden', 'true');
+    field.style.cssText = 'position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden;';
+    cta.appendChild(field);
+
     var particles = [];
-    for (var i = 0; i < 14; i++) {
+    var count = 18;
+    for (var i = 0; i < count; i++) {
       var p = document.createElement('span');
-      var size = 6 + Math.random() * 8;
-      p.style.cssText = 'position:absolute; top:82px; right:82px; width:' + size + 'px; height:' + size + 'px; border-radius:50%; background:' + colors[i % colors.length] + '; opacity:0;';
-      burst.appendChild(p);
+      var size = 6 + Math.random() * 10;
+      var startTop = 10 + Math.random() * 75;
+      var startLeft = 8 + Math.random() * 78;
+      var shape = i % 3 === 0 ? '30%' : '50%';
+      p.style.cssText = 'position:absolute; top:' + startTop + '%; left:' + startLeft + '%; width:' + size + 'px; height:' + size + 'px; border-radius:' + shape + '; background:' + colors[i % colors.length] + '; opacity:0;';
+      p.dataset.startTop = startTop;
+      p.dataset.startLeft = startLeft;
+      field.appendChild(p);
       particles.push(p);
     }
+
     ScrollTrigger.create({
-      trigger: cta, start: 'top 70%', once: true,
+      trigger: cta, start: 'top 65%', once: true,
       onEnter: function () {
+        var r = cta.getBoundingClientRect();
+        var s = sticker.getBoundingClientRect();
+        var targetX = s.left + s.width / 2 - r.left;
+        var targetY = s.top + s.height / 2 - r.top;
+
+        var tl = gsap.timeline();
         particles.forEach(function (p, i) {
-          var angle = (i / particles.length) * Math.PI * 2;
-          var dist = 60 + Math.random() * 90;
-          gsap.fromTo(p, { opacity: 0, scale: .3, x: 0, y: 0 }, {
-            opacity: .9, scale: 1, x: Math.cos(angle) * dist, y: Math.sin(angle) * dist,
-            duration: .8, ease: 'power3.out', delay: i * .02,
-            onComplete: function () { gsap.to(p, { opacity: 0, duration: .6, delay: .3 }); }
-          });
+          var pr = cta.getBoundingClientRect();
+          var fromX = (parseFloat(p.dataset.startLeft) / 100) * pr.width;
+          var fromY = (parseFloat(p.dataset.startTop) / 100) * pr.height;
+          tl.fromTo(p,
+            { opacity: 0, scale: .4, x: 0, y: 0 },
+            {
+              opacity: .85, scale: 1, duration: .5, ease: 'power2.out',
+              onStart: function () { gsap.set(p, { x: 0, y: 0 }); }
+            }, i * .035)
+            .to(p, {
+              x: targetX - fromX, y: targetY - fromY, scale: .2, opacity: 0,
+              duration: .7, ease: 'power2.inOut'
+            }, i * .035 + .35);
         });
+        tl.fromTo(sticker,
+          { scale: 1 },
+          { scale: 1.16, duration: .35, ease: 'power2.out', transformOrigin: '50% 50%' },
+          '-=0.5')
+          .to(sticker, { scale: 1, duration: .5, ease: 'elastic.out(1, .5)' });
       }
     });
   })();

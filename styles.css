@@ -579,9 +579,9 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .craft-card{
   background:var(--bg-elevated); border:1px solid var(--border-soft); border-radius:var(--radius-md);
   padding:30px 18px; display:flex; flex-direction:column; align-items:center; gap:12px; text-align:center;
-  box-shadow:var(--soft-shadow); transition:transform .4s var(--ease-spring);
+  box-shadow:var(--soft-shadow); transition:box-shadow .4s ease; transform-style:preserve-3d;
 }
-.craft-card:hover{ transform:translateY(-6px); }
+.craft-card:hover{ box-shadow:0 26px 46px -22px rgba(46,43,39,.22); }
 .craft-emoji{ font-size:2.1rem; line-height:1; }
 .craft-card b{ font-family:var(--font-display); font-weight:500; font-size:.92rem; letter-spacing:0; }
 @media (max-width:900px){ .craft-grid{ grid-template-columns:repeat(2,1fr); } }
@@ -663,7 +663,7 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
    PROOF — chiffres réels + retours illustratifs
    ========================================================================== */
 .proof-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
-.proof-cell{ background:var(--bg-elevated); padding:var(--space-7) var(--space-6); border:1px solid var(--border-soft); border-radius:var(--radius-md); }
+.proof-cell{ background:var(--bg-elevated); padding:var(--space-7) var(--space-6); border:1px solid var(--border-soft); border-radius:var(--radius-md); transform-style:preserve-3d; }
 .proof-cell:nth-child(1){ box-shadow:0 22px 44px -26px rgba(143,174,141,.7); }
 .proof-cell:nth-child(2){ box-shadow:0 22px 44px -26px rgba(207,195,232,.7); }
 .proof-cell:nth-child(3){ box-shadow:0 22px 44px -26px rgba(235,196,204,.7); }
@@ -673,14 +673,31 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .disclaimer-note{ display:flex; align-items:center; gap:8px; font-size:.82rem; color:var(--ink-mute); margin-top:var(--space-5); }
 .disclaimer-note svg{ flex:none; width:18px; height:18px; }
 
-.quote-marquee-wrap{ margin-top:var(--space-7); }
-.quote-row{ display:flex; gap:18px; width:max-content; }
+.quote-marquee-wrap{ margin-top:var(--space-7); position:relative; }
+.quote-marquee-wrap::before{
+  content:""; position:absolute; left:0; right:0; top:50%; height:1px; z-index:0;
+  background:repeating-linear-gradient(to right, var(--border) 0 6px, transparent 6px 14px);
+  opacity:.6; pointer-events:none;
+}
+.quote-row{ display:flex; gap:18px; width:max-content; position:relative; z-index:1; }
 .quote-card{
   width:340px; flex:none; background:var(--bg-elevated); border:1px solid var(--border-soft); border-radius:var(--radius-md);
   padding:24px; display:flex; flex-direction:column; gap:14px; box-shadow:var(--soft-shadow);
+  position:relative; animation:bubbleFloat var(--bubble-dur,5s) ease-in-out infinite;
 }
+.quote-card::after{
+  content:""; position:absolute; left:36px; bottom:-9px; width:18px; height:18px;
+  background:var(--bg-elevated); border-right:1px solid var(--border-soft); border-bottom:1px solid var(--border-soft);
+  transform:rotate(45deg); border-radius:0 0 4px 0;
+}
+.quote-row .quote-card:nth-child(1){ --bubble-dur:5.4s; animation-delay:0s; }
+.quote-row .quote-card:nth-child(2){ --bubble-dur:6.2s; animation-delay:.4s; }
+.quote-row .quote-card:nth-child(3){ --bubble-dur:4.8s; animation-delay:.9s; }
+.quote-row .quote-card:nth-child(4){ --bubble-dur:5.8s; animation-delay:.2s; }
+@keyframes bubbleFloat{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-9px); } }
 .quote-card p{ font-size:.94rem; color:var(--ink-dim); line-height:1.55; }
 .quote-card .who{ font-size:.78rem; color:var(--ink-mute); }
+@media (prefers-reduced-motion:reduce){ .quote-card{ animation:none; } }
 
 /* ==========================================================================
    RÉALISATIONS — teaser (renvoie vers l'exemple d'audit)
@@ -854,7 +871,14 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
   border-radius:50%; box-shadow:0 20px 40px -14px rgba(0,0,0,.45);
   object-fit:cover;
 }
-@media (max-width:768px){ .cta-final-sticker{ display:none; } }
+.cta-final-sticker-glow{
+  position:absolute; top:26px; right:26px; z-index:1; width:112px; height:112px; border-radius:50%;
+  background:radial-gradient(closest-side, rgba(184,255,208,.5), transparent 72%);
+  animation:stickerGlow 3.2s ease-in-out infinite; pointer-events:none;
+}
+@keyframes stickerGlow{ 0%,100%{ transform:scale(1); opacity:.7; } 50%{ transform:scale(1.35); opacity:1; } }
+@media (prefers-reduced-motion:reduce){ .cta-final-sticker-glow{ animation:none; } }
+@media (max-width:768px){ .cta-final-sticker, .cta-final-sticker-glow{ display:none; } }
 .cta-final-orb{
   position:absolute; width:620px; height:520px; top:-160px; right:-160px; z-index:0;
   background:
