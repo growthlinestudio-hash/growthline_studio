@@ -604,21 +604,6 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .craft-card b{ font-family:var(--font-display); font-weight:500; font-size:.92rem; letter-spacing:0; }
 @media (max-width:900px){ .craft-grid{ grid-template-columns:repeat(2,1fr); } }
 
-/* --- Preuve visuelle : vraies images, présentées comme des fenêtres de navigateur --- */
-.device-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:22px; margin-top:var(--space-7); }
-.device-frame{
-  background:var(--bg-elevated); border:1px solid var(--border-soft); border-radius:var(--radius-md);
-  overflow:hidden; box-shadow:var(--soft-shadow);
-  animation:deviceFloat var(--device-dur,6s) ease-in-out infinite;
-}
-.device-frame-bar{ display:flex; align-items:center; gap:5px; padding:9px 12px; background:var(--bg-soft); }
-.device-frame-bar span{ width:6px; height:6px; border-radius:50%; background:var(--border); }
-.device-frame img{ width:100%; aspect-ratio:4/3; object-fit:cover; display:block; }
-.device-frame-label{ padding:10px 12px; font-size:.78rem; color:var(--ink-mute); }
-@keyframes deviceFloat{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-8px); } }
-@media (prefers-reduced-motion:reduce){ .device-frame{ animation:none; } }
-@media (max-width:900px){ .device-row{ grid-template-columns:repeat(2,1fr); } }
-
 /* ==========================================================================
    PEU IMPORTE VOTRE ACTIVITÉ — mot qui défile
    ========================================================================== */
