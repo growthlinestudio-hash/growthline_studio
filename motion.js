@@ -350,6 +350,17 @@
     });
   })();
 
+  /* ---------- 11bis. Le logo réagit très légèrement au scroll de la page ---------- */
+  (function logoScrollReact() {
+    if (reduced || !window.ScrollTrigger) return;
+    var img = document.querySelector('.brand .mark img');
+    if (!img) return;
+    gsap.to(img, {
+      rotation: 14, ease: 'none',
+      scrollTrigger: { start: 'top top', end: 'max', scrub: .6 }
+    });
+  })();
+
   /* ---------- 12. Ambiance qui glisse doucement au fil du scroll (sauge → pêche) ---------- */
   (function scrollMoodShift() {
     if (reduced || !window.ScrollTrigger) return;
