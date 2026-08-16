@@ -354,10 +354,12 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
   animation:driftDown var(--drift-dur,9s) ease-in var(--drift-delay,0s) infinite;
 }
 @keyframes driftDown{
-  0%{ transform:translateY(-20px) rotate(0deg); opacity:0; }
-  12%{ opacity:.7; }
-  85%{ opacity:.5; }
-  100%{ transform:translateY(340px) rotate(50deg); opacity:0; }
+  0%{ transform:translateY(-20px) scale(.9) rotate(0deg); opacity:0; }
+  10%{ opacity:.7; }
+  55%{ transform:translateY(215px) scale(1.06) rotate(28deg); }
+  64%{ transform:translateY(190px) scale(.97) rotate(24deg); }
+  74%{ transform:translateY(225px) scale(1.01) rotate(32deg); opacity:.55; }
+  100%{ transform:translateY(340px) scale(.92) rotate(50deg); opacity:0; }
 }
 @media (prefers-reduced-motion:reduce){ .drift-shape{ display:none; } }
 
@@ -387,21 +389,28 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
   transform:rotate(var(--angle,0deg)) translateX(var(--r,180px));
 }
 .orbit-chip{
-  width:60px; height:44px; margin-left:-30px; margin-top:-22px; border-radius:10px;
+  width:66px; height:52px; margin-left:-33px; margin-top:-26px; border-radius:11px;
   background:var(--bg-elevated); box-shadow:var(--soft-shadow); overflow:hidden; position:relative;
-  padding:6px 7px 5px; display:flex; flex-direction:column; gap:3px;
+  padding:7px 8px 6px; display:flex; flex-direction:column; gap:3px;
   animation:orbitCounter var(--orbit-dur,26s) linear infinite;
 }
-.orbit-chip::before{ content:""; position:absolute; top:0; left:0; right:0; height:4px; }
+.orbit-chip::before{ content:""; position:absolute; top:0; left:0; right:0; height:5px; }
+.orbit-chip::after{ content:""; position:absolute; top:5px; left:6px; width:3px; height:3px; border-radius:50%; background:rgba(46,43,39,.18); box-shadow:7px 0 rgba(46,43,39,.18); }
 .orbit-chip--sage::before{ background:var(--sage); }
 .orbit-chip--lavender::before{ background:var(--lavender); }
 .orbit-chip--sky::before{ background:var(--sky); }
 .orbit-chip--pink::before{ background:var(--pink); }
 .orbit-chip--peach::before{ background:var(--peach); }
-.orbit-chip-emoji{ font-size:.82rem; line-height:1; }
+.orbit-chip-emoji{ font-size:.86rem; line-height:1; margin-top:3px; }
 .orbit-chip i{ display:block; height:3px; border-radius:2px; background:rgba(46,43,39,.15); }
 .orbit-chip i:nth-of-type(1){ width:78%; }
 .orbit-chip i:nth-of-type(2){ width:48%; }
+.orbit-chip-btn{ width:18px; height:6px; border-radius:3px; margin-top:auto; }
+.orbit-chip--sage .orbit-chip-btn{ background:var(--sage); }
+.orbit-chip--lavender .orbit-chip-btn{ background:var(--lavender); }
+.orbit-chip--sky .orbit-chip-btn{ background:var(--sky); }
+.orbit-chip--pink .orbit-chip-btn{ background:var(--pink); }
+.orbit-chip--peach .orbit-chip-btn{ background:var(--peach); }
 @keyframes orbitCounter{ from{ transform:rotate(0deg); } to{ transform:rotate(-360deg); } }
 @media (prefers-reduced-motion:reduce){ .orbit-spin, .orbit-chip{ animation:none; } }
 @media (max-width:900px){ .orbit{ display:none; } }

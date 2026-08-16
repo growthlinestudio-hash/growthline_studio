@@ -432,6 +432,33 @@
     });
   })();
 
+  /* ---------- 14. Petite surprise cachée : le badge du dashboard réagit au clic ---------- */
+  (function heroEasterEgg() {
+    var badge = document.querySelector('.spin-badge--corner');
+    var wrap = badge && badge.closest('.signal-card-wrap');
+    if (!badge || !wrap || reduced) return;
+    badge.style.cursor = 'pointer';
+    var colors = ['var(--sage)', 'var(--lavender)', 'var(--sky)', 'var(--pink)', 'var(--peach)'];
+    badge.addEventListener('click', function () {
+      gsap.fromTo(badge, { scale: 1 }, { scale: 1.22, duration: .16, ease: 'power2.out', yoyo: true, repeat: 1 });
+      for (var i = 0; i < 10; i++) {
+        (function () {
+          var p = document.createElement('span');
+          var size = 5 + Math.random() * 7;
+          p.style.cssText = 'position:absolute; top:0; right:14px; width:' + size + 'px; height:' + size + 'px; border-radius:50%; background:' + colors[i % colors.length] + '; opacity:0; pointer-events:none; z-index:5;';
+          wrap.appendChild(p);
+          var angle = Math.random() * Math.PI * 2;
+          var dist = 40 + Math.random() * 70;
+          gsap.fromTo(p, { opacity: 0, scale: .4, x: 0, y: 0 }, {
+            opacity: .9, scale: 1, x: Math.cos(angle) * dist, y: Math.sin(angle) * dist,
+            duration: .6, ease: 'power2.out',
+            onComplete: function () { gsap.to(p, { opacity: 0, duration: .4, onComplete: function () { p.remove(); } }); }
+          });
+        })();
+      }
+    });
+  })();
+
   /* ---------- 10. Fondu d'entrée de page (léger, pas un vrai preloader) ---------- */
   (function pageFadeIn() {
     if (reduced) return;
