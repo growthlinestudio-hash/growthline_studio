@@ -373,22 +373,23 @@
     });
   })();
 
-  /* ---------- 13. Convergence finale : les formes du site reviennent se rassembler dans le logo ---------- */
-  (function ctaConverge() {
-    var cta = document.querySelector('.cta-final');
-    var sticker = document.querySelector('.cta-final-sticker');
-    if (!cta || !sticker || !window.ScrollTrigger || reduced) return;
+  /* ---------- 13. Geste signature Growthline : les formes convergent vers un point ---------- */
+  /* Réutilisé à deux moments clés (fin du "Construction en direct", puis CTA finale)
+     pour devenir un motif reconnaissable plutôt qu'un effet isolé. */
+  function growthlineConverge(container, target, opts) {
+    if (!container || !target || !window.ScrollTrigger || reduced) return;
+    opts = opts || {};
+    var count = opts.count || 18;
     var colors = ['var(--sage)', 'var(--lavender)', 'var(--sky)', 'var(--pink)', 'var(--peach)'];
     var field = document.createElement('div');
     field.setAttribute('aria-hidden', 'true');
     field.style.cssText = 'position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden;';
-    cta.appendChild(field);
+    container.appendChild(field);
 
     var particles = [];
-    var count = 18;
     for (var i = 0; i < count; i++) {
       var p = document.createElement('span');
-      var size = 6 + Math.random() * 10;
+      var size = 5 + Math.random() * (opts.maxSize || 10);
       var startTop = 10 + Math.random() * 75;
       var startLeft = 8 + Math.random() * 78;
       var shape = i % 3 === 0 ? '30%' : '50%';
@@ -399,35 +400,53 @@
       particles.push(p);
     }
 
-    ScrollTrigger.create({
-      trigger: cta, start: 'top 65%', once: true,
-      onEnter: function () {
-        var r = cta.getBoundingClientRect();
-        var s = sticker.getBoundingClientRect();
-        var targetX = s.left + s.width / 2 - r.left;
-        var targetY = s.top + s.height / 2 - r.top;
+    return function fire() {
+      var r = container.getBoundingClientRect();
+      var s = target.getBoundingClientRect();
+      var targetX = s.left + s.width / 2 - r.left;
+      var targetY = s.top + s.height / 2 - r.top;
 
-        var tl = gsap.timeline();
-        particles.forEach(function (p, i) {
-          var pr = cta.getBoundingClientRect();
-          var fromX = (parseFloat(p.dataset.startLeft) / 100) * pr.width;
-          var fromY = (parseFloat(p.dataset.startTop) / 100) * pr.height;
-          tl.fromTo(p,
-            { opacity: 0, scale: .4, x: 0, y: 0 },
-            {
-              opacity: .85, scale: 1, duration: .5, ease: 'power2.out',
-              onStart: function () { gsap.set(p, { x: 0, y: 0 }); }
-            }, i * .035)
-            .to(p, {
-              x: targetX - fromX, y: targetY - fromY, scale: .2, opacity: 0,
-              duration: .7, ease: 'power2.inOut'
-            }, i * .035 + .35);
-        });
-        tl.fromTo(sticker,
-          { scale: 1 },
-          { scale: 1.16, duration: .35, ease: 'power2.out', transformOrigin: '50% 50%' },
-          '-=0.5')
-          .to(sticker, { scale: 1, duration: .5, ease: 'elastic.out(1, .5)' });
+      var tl = gsap.timeline();
+      particles.forEach(function (p, i) {
+        var fromX = (parseFloat(p.dataset.startLeft) / 100) * r.width;
+        var fromY = (parseFloat(p.dataset.startTop) / 100) * r.height;
+        tl.fromTo(p,
+          { opacity: 0, scale: .4, x: 0, y: 0 },
+          {
+            opacity: .85, scale: 1, duration: .45, ease: 'power2.out',
+            onStart: function () { gsap.set(p, { x: 0, y: 0 }); }
+          }, i * .03)
+          .to(p, {
+            x: targetX - fromX, y: targetY - fromY, scale: .2, opacity: 0,
+            duration: .6, ease: 'power2.inOut'
+          }, i * .03 + .3);
+      });
+      tl.fromTo(target,
+        { scale: 1 },
+        { scale: (opts.punch || 1.16), duration: .32, ease: 'power2.out', transformOrigin: '50% 50%' },
+        '-=0.45')
+        .to(target, { scale: 1, duration: .5, ease: 'elastic.out(1, .5)' });
+    };
+  }
+
+  (function ctaConverge() {
+    var cta = document.querySelector('.cta-final');
+    var sticker = document.querySelector('.cta-final-sticker');
+    var fire = growthlineConverge(cta, sticker, { count: 18, maxSize: 10, punch: 1.16 });
+    if (!fire) return;
+    ScrollTrigger.create({ trigger: cta, start: 'top 65%', once: true, onEnter: fire });
+  })();
+
+  (function buildStoryConverge() {
+    var stage = document.getElementById('buildStage');
+    var finalTarget = stage && stage.querySelector('.build-frame--clients .build-avatar:last-child');
+    var fire = growthlineConverge(stage, finalTarget, { count: 10, maxSize: 7, punch: 1.1 });
+    if (!fire || !stage) return;
+    var done = false;
+    ScrollTrigger.create({
+      trigger: stage, start: 'top 75%', end: 'bottom 45%',
+      onUpdate: function (self) {
+        if (!done && self.progress > .96) { done = true; fire(); }
       }
     });
   })();
