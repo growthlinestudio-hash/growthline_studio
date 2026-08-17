@@ -8,12 +8,13 @@
   if (pageLoader) {
     var loaderText = document.getElementById('pageLoaderText');
     var loaderBar = document.getElementById('pageLoaderBar');
-    var messages = ['Chargement...', 'Construction de votre présence digitale...'];
+    var messages = ['Initialisation...', 'Construction de votre présence digitale...', 'Bienvenue.'];
 
     requestAnimationFrame(function () { pageLoader.classList.add('is-in'); });
 
     if (loaderText) {
       setTimeout(function () { loaderText.textContent = messages[1]; }, 550);
+      setTimeout(function () { loaderText.textContent = messages[2]; }, 1250);
     }
     if (loaderBar) {
       setTimeout(function () { loaderBar.style.width = '38%'; }, 120);
@@ -22,7 +23,8 @@
     }
 
     var hideLoader = function () { pageLoader.classList.add('is-out'); };
-    window.addEventListener('load', function () { setTimeout(hideLoader, 950); });
+    // délai assez long pour laisser voir le dernier message ("Bienvenue.") affiché à 1250ms
+    window.addEventListener('load', function () { setTimeout(hideLoader, 1650); });
     setTimeout(hideLoader, 2600); // filet de sécurité si "load" tarde
   }
 
@@ -34,6 +36,32 @@
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  /* ---------- Transition entre pages : petit "wipe" avant de quitter la page
+     (réutilise l'écran de chargement existant comme sortie, pas un effet à part) ---------- */
+  if (pageLoader) {
+    document.querySelectorAll('a[href$=".html"]').forEach(function (a) {
+      if (a.target === '_blank' || a.hasAttribute('download')) return;
+      var href = a.getAttribute('href');
+      var here = (location.pathname.split('/').pop() || 'index.html');
+      if (href === here) return; // déjà sur cette page
+      a.addEventListener('click', function (e) {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return; // laisser ouvrir dans un nouvel onglet si demandé
+        e.preventDefault();
+        pageLoader.classList.remove('is-out');
+        if (loaderText) loaderText.textContent = 'Chargement...';
+        if (loaderBar) {
+          loaderBar.style.transition = 'none';
+          loaderBar.style.width = '0%';
+          requestAnimationFrame(function () {
+            loaderBar.style.transition = '';
+            loaderBar.style.width = '85%';
+          });
+        }
+        setTimeout(function () { window.location.href = href; }, 420);
+      });
+    });
   }
 
   /* ---------- Lien de nav actif selon la page courante ---------- */

@@ -143,6 +143,25 @@
     });
   })();
 
+  /* ---------- 3bis. Masque qui révèle le titre (bande qui glisse, pas un simple fondu) ---------- */
+  (function maskReveals() {
+    var targets = document.querySelectorAll('[data-mask]');
+    if (!targets.length) return;
+    targets.forEach(function (el) {
+      var text = el.textContent;
+      el.innerHTML = '<span class="mask-reveal-inner">' + text + '</span>';
+      el.classList.add('mask-reveal-wrap');
+      var inner = el.firstElementChild;
+      if (reduced) return;
+      gsap.set(inner, { yPercent: 105 });
+      if (!window.ScrollTrigger) { gsap.set(inner, { yPercent: 0 }); return; }
+      ScrollTrigger.create({
+        trigger: el, start: 'top 85%', once: true,
+        onEnter: function () { gsap.to(inner, { yPercent: 0, duration: .9, ease: 'power4.out' }); }
+      });
+    });
+  })();
+
   /* ---------- 4. Chorégraphie d'entrée du hero ---------- */
   (function heroEntrance() {
     var hero = document.querySelector('.hero');
@@ -196,6 +215,23 @@
       }, '-=0.8');
     }
 
+    /* Les 3 vrais chiffres du hero (0€ / 6 / 24h) comptent jusqu'à leur valeur —
+       ce sont les seules stats du site, pas d'inventer de faux compteurs ailleurs */
+    var statEls = hero.querySelectorAll('.hero-stat b');
+    if (statEls.length) {
+      statEls.forEach(function (el) {
+        var m = el.textContent.match(/^(\d+)(.*)$/);
+        if (!m) return;
+        var finalVal = parseInt(m[1], 10), suffix = m[2];
+        var counter = { val: 0 };
+        el.textContent = '0' + suffix;
+        tl.to(counter, {
+          val: finalVal, duration: 1, ease: 'power1.out',
+          onUpdate: function () { el.textContent = Math.round(counter.val) + suffix; }
+        }, '-=0.9');
+      });
+    }
+
     if (cue) { gsap.set(cue, { opacity: 0 }); tl.to(cue, { opacity: 1, duration: .6 }, '-=0.3'); }
   })();
 
@@ -226,6 +262,19 @@
   tiltCards('.price-card', { strength: 10, lift: -6 });
   tiltCards('.craft-card', { strength: 7, lift: -4 });
   tiltCards('.proof-cell', { strength: 6, lift: -3 });
+
+  /* ---------- 4ter. Glow qui suit la souris, sans le tilt 3D (lignes de service : trop larges pour un tilt cohérent) ---------- */
+  function glowTrack(selector) {
+    if (!canHover || reduced) return;
+    document.querySelectorAll(selector).forEach(function (el) {
+      el.addEventListener('mousemove', function (e) {
+        var r = el.getBoundingClientRect();
+        el.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+        el.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+      });
+    });
+  }
+  glowTrack('.service-row');
 
   /* ---------- 5. Boutons magnétiques ---------- */
   (function magneticButtons() {
@@ -474,6 +523,27 @@
             onComplete: function () { gsap.to(p, { opacity: 0, duration: .4, onComplete: function () { p.remove(); } }); }
           });
         })();
+      }
+    });
+  })();
+
+  /* ---------- 14bis. Deuxième easter egg : le badge du footer révèle un message après 5 clics ---------- */
+  (function footerEasterEgg() {
+    var badge = document.querySelector('.spin-badge--footer');
+    if (!badge) return;
+    badge.style.cursor = 'pointer';
+    var count = 0;
+    var msg = document.createElement('div');
+    msg.textContent = "Vous êtes arrivé·e jusqu'ici — merci 👋";
+    msg.style.cssText = 'position:absolute; bottom:100%; right:0; margin-bottom:12px; padding:8px 14px; border-radius:999px; background:var(--ink); color:var(--bg); font-size:.78rem; white-space:nowrap; opacity:0; transform:translateY(6px); transition:opacity .4s ease, transform .4s ease; pointer-events:none;';
+    badge.appendChild(msg);
+    badge.addEventListener('click', function () {
+      count++;
+      if (window.gsap && !reduced) gsap.fromTo(badge, { scale: 1 }, { scale: 1.15, duration: .15, ease: 'power2.out', yoyo: true, repeat: 1 });
+      if (count === 5) {
+        msg.style.opacity = '1';
+        msg.style.transform = 'translateY(0)';
+        setTimeout(function () { msg.style.opacity = '0'; msg.style.transform = 'translateY(6px)'; }, 3200);
       }
     });
   })();
