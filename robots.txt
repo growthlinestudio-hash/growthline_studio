@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://growthline-studio-9izc.onrender.com/sitemap.xml

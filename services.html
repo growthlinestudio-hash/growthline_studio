@@ -14,6 +14,9 @@
 <meta name="twitter:title" content="Services — Growthline">
 <meta name="twitter:description" content="Audit digital, rapport priorisé, corrections ciblées ou refonte complète : les quatre services Growthline, avec des tarifs transparents.">
 <meta name="twitter:image" content="https://growthline-studio-9izc.onrender.com/og-image.png">
+<link rel="canonical" href="https://growthline-studio-9izc.onrender.com/services.html">
+<link rel="icon" type="image/png" href="images/logo-growthline-pastel-icon.png">
+<link rel="apple-touch-icon" href="images/logo-growthline-pastel-icon.png">
 <link rel="preconnect" href="https://api.fontshare.com">
 <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
@@ -27,9 +30,6 @@
 </div>
 <div class="scroll-progress" aria-hidden="true"><span></span></div>
 <div class="grain" aria-hidden="true"></div>
-<div class="cursor-dot" aria-hidden="true"></div>
-<div class="cursor-ring" aria-hidden="true"><span class="cursor-text"></span></div>
-
 <header>
   <div class="container nav-inner">
     <a href="index.html" class="brand">
@@ -82,19 +82,25 @@
   <!-- ============ DÉTAIL DES SERVICES ============ -->
   <section class="section" id="detail" style="padding-top:0;">
     <div class="container">
+      <div class="services-signature" data-reveal>
+        <img src="images/services-signature.png" alt="Illustration : les fondations d'une présence digitale Growthline — stratégie, design, technologie, croissance." loading="lazy">
+      </div>
+
       <div data-service-list>
         <a class="service-row" data-reveal href="index.html#audit">
           <div class="service-visual" style="background:linear-gradient(160deg,#D7E4D6,#BFD3BE)">
-            <div class="service-visual-face">01</div>
-            <div class="service-visual-image"><svg viewBox="0 0 96 96" aria-hidden="true">
-              <rect x="6" y="52" width="14" height="34" rx="3" fill="var(--ink-mute)"/>
-              <rect x="27" y="34" width="14" height="52" rx="3" fill="var(--accent)"/>
-              <rect x="48" y="20" width="14" height="66" rx="3" fill="var(--ink-mute)"/>
-              <rect x="69" y="42" width="14" height="44" rx="3" fill="var(--ink-mute)"/>
-              <circle cx="48" cy="12" r="6" fill="none" stroke="var(--accent)" stroke-width="2"/>
-            </svg></div>
+            <div class="service-visual-image svc-scene--scan"><svg viewBox="0 0 200 150" aria-hidden="true">
+              <rect x="20" y="16" width="160" height="118" rx="10" fill="none" stroke="var(--ink-mute)" stroke-width="2" opacity=".5"/>
+              <rect x="34" y="34" width="90" height="8" rx="4" fill="var(--ink-mute)" opacity=".35"/>
+              <rect x="34" y="52" width="130" height="8" rx="4" fill="var(--ink-mute)" opacity=".35"/>
+              <rect x="34" y="70" width="70" height="8" rx="4" fill="var(--ink-mute)" opacity=".35"/>
+              <rect x="34" y="96" width="50" height="34" rx="6" fill="var(--ink-mute)" opacity=".18"/>
+              <rect x="96" y="96" width="68" height="34" rx="6" fill="var(--ink-mute)" opacity=".18"/>
+              <circle class="svc-scan-dot" cx="60" cy="56" r="4" fill="#ff8f8f"/>
+              <circle class="svc-scan-dot svc-scan-dot--2" cx="140" cy="74" r="4" fill="var(--accent)"/>
+              <circle class="svc-scan-dot svc-scan-dot--3" cx="70" cy="113" r="4" fill="#8fb4ff"/>
+            </svg><div class="svc-scan-beam" aria-hidden="true"></div></div>
           </div>
-          <span class="service-num">01</span>
           <div class="service-main">
             <h3>Audit digital détaillé</h3>
             <p>Notre équipe analyse votre site sur six catégories : performance, SEO technique, accessibilité, sécurité, présence locale et conversion. Chaque problème détecté est expliqué en langage clair, avec son niveau de priorité.</p>
@@ -107,14 +113,12 @@
 
         <a class="service-row" data-reveal href="realisations.html">
           <div class="service-visual" style="background:linear-gradient(160deg,#E3DBF2,#CFC3E8)">
-            <div class="service-visual-face">02</div>
-            <div class="service-visual-image"><svg viewBox="0 0 96 96" aria-hidden="true">
-              <rect x="8" y="14" width="80" height="16" rx="8" fill="#C23B4B"/>
-              <rect x="8" y="40" width="80" height="16" rx="8" fill="#B5790A"/>
-              <rect x="8" y="66" width="56" height="16" rx="8" fill="var(--accent)"/>
+            <div class="service-visual-image"><svg viewBox="0 0 200 150" aria-hidden="true">
+              <rect class="svc-ticket svc-ticket--1" x="30" y="26" width="140" height="26" rx="8" fill="#ff8f8f"/>
+              <rect class="svc-ticket svc-ticket--2" x="30" y="62" width="140" height="26" rx="8" fill="#ffc27a"/>
+              <rect class="svc-ticket svc-ticket--3" x="30" y="98" width="100" height="26" rx="8" fill="var(--accent)"/>
             </svg></div>
           </div>
-          <span class="service-num">02</span>
           <div class="service-main">
             <h3>Rapport &amp; plan d'action</h3>
             <p>Le rapport complet liste tous les problèmes détectés, sans limite, avec un score par catégorie et un ordre de priorité clair : ce qui doit être corrigé en premier, et pourquoi.</p>
@@ -127,16 +131,13 @@
 
         <a class="service-row" data-reveal href="#tarifs">
           <div class="service-visual" style="background:linear-gradient(160deg,#F3DDE2,#EBC4CC)">
-            <div class="service-visual-face">03</div>
-            <div class="service-visual-image"><svg viewBox="0 0 96 96" aria-hidden="true">
-              <rect x="4" y="30" width="34" height="34" rx="4" fill="none" stroke="var(--ink-mute)" stroke-width="2"/>
-              <path d="M44 47h12" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
-              <path d="M51 40l8 7-8 7" stroke="var(--accent)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-              <rect x="62" y="30" width="34" height="34" rx="4" fill="none" stroke="var(--accent)" stroke-width="2"/>
-              <path d="M70 47l7 7 12-13" stroke="var(--accent)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <div class="service-visual-image"><svg viewBox="0 0 200 150" aria-hidden="true">
+              <circle cx="100" cy="75" r="50" fill="none" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="2 8"/>
+              <circle class="svc-target-ring" cx="100" cy="75" r="34" fill="none" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 6"/>
+              <path class="svc-mark-x" d="M92 67l16 16M108 67l-16 16" stroke="#ff8f8f" stroke-width="3.5" stroke-linecap="round"/>
+              <path class="svc-mark-check" d="M86 76l9 9 20-20" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
             </svg></div>
           </div>
-          <span class="service-num">03</span>
           <div class="service-main">
             <h3>Corrections ciblées</h3>
             <p>Nous corrigeons directement les problèmes critiques identifiés lors de votre audit — ou nous l'effectuons gratuitement si vous n'en avez pas encore. Un aller-retour de révision est inclus.</p>
@@ -149,15 +150,23 @@
 
         <a class="service-row" data-reveal href="#tarifs">
           <div class="service-visual" style="background:linear-gradient(160deg,#F3E4CE,#EBCFAF)">
-            <div class="service-visual-face">04</div>
-            <div class="service-visual-image"><svg viewBox="0 0 96 96" aria-hidden="true">
-              <rect x="6" y="8" width="84" height="18" rx="4" fill="var(--accent)"/>
-              <rect x="6" y="32" width="38" height="56" rx="4" fill="var(--ink-mute)" opacity=".55"/>
-              <rect x="50" y="32" width="40" height="26" rx="4" fill="var(--ink-mute)" opacity=".35"/>
-              <rect x="50" y="64" width="40" height="24" rx="4" fill="var(--ink-mute)" opacity=".35"/>
-            </svg></div>
+            <div class="service-visual-image svc-scene--rebuild">
+              <svg viewBox="0 0 200 150" aria-hidden="true" class="svc-rebuild-before">
+                <rect x="30" y="24" width="140" height="14" rx="3" fill="none" stroke="var(--ink-mute)" stroke-width="2"/>
+                <rect x="30" y="48" width="90" height="10" rx="3" fill="none" stroke="var(--ink-mute)" stroke-width="2"/>
+                <rect x="30" y="68" width="60" height="54" rx="4" fill="none" stroke="var(--ink-mute)" stroke-width="2"/>
+                <rect x="100" y="68" width="70" height="24" rx="4" fill="none" stroke="var(--ink-mute)" stroke-width="2"/>
+                <rect x="100" y="98" width="70" height="24" rx="4" fill="none" stroke="var(--ink-mute)" stroke-width="2"/>
+              </svg>
+              <svg viewBox="0 0 200 150" aria-hidden="true" class="svc-rebuild-after">
+                <rect x="30" y="24" width="140" height="14" rx="4" fill="var(--accent)"/>
+                <rect x="30" y="48" width="90" height="10" rx="4" fill="var(--ink-mute)" opacity=".4"/>
+                <rect x="30" y="68" width="60" height="54" rx="8" fill="var(--sky)"/>
+                <rect x="100" y="68" width="70" height="24" rx="6" fill="var(--pink)"/>
+                <rect x="100" y="98" width="70" height="24" rx="6" fill="var(--lavender)"/>
+              </svg>
+            </div>
           </div>
-          <span class="service-num">04</span>
           <div class="service-main">
             <h3>Refonte complète</h3>
             <p>Votre site repensé de A à Z, jusqu'à 5 pages : design, rédaction et SEO technique orientés conversion dès la livraison. Deux allers-retours de révision inclus.</p>
@@ -371,7 +380,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
 <script src="main.js" defer></script>
 <script src="motion.js" defer></script>
 </body>

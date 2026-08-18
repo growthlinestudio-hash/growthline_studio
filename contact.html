@@ -14,6 +14,9 @@
 <meta name="twitter:title" content="Contact — Growthline">
 <meta name="twitter:description" content="Contactez Growthline pour un devis de correction, de refonte, ou toute question sur votre audit digital.">
 <meta name="twitter:image" content="https://growthline-studio-9izc.onrender.com/og-image.png">
+<link rel="canonical" href="https://growthline-studio-9izc.onrender.com/contact.html">
+<link rel="icon" type="image/png" href="images/logo-growthline-pastel-icon.png">
+<link rel="apple-touch-icon" href="images/logo-growthline-pastel-icon.png">
 <link rel="preconnect" href="https://api.fontshare.com">
 <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
@@ -27,9 +30,6 @@
 </div>
 <div class="scroll-progress" aria-hidden="true"><span></span></div>
 <div class="grain" aria-hidden="true"></div>
-<div class="cursor-dot" aria-hidden="true"></div>
-<div class="cursor-ring" aria-hidden="true"><span class="cursor-text"></span></div>
-
 <header>
   <div class="container nav-inner">
     <a href="index.html" class="brand">
@@ -79,6 +79,19 @@
     </div>
   </section>
 
+  <!-- ============ VISUEL SIGNATURE : JOURNEY ============ -->
+  <section class="section" style="padding-top:0;padding-bottom:0;">
+    <div class="container">
+      <div class="journey" data-reveal role="img" aria-label="Trois étapes : vous écrivez, on reçoit votre message, on répond personnellement sous 24h.">
+        <div class="journey-line" aria-hidden="true"></div>
+        <div class="journey-pulse" aria-hidden="true"></div>
+        <div class="journey-stop"><div class="journey-dot">✍️</div><b>Vous écrivez</b><span>Email direct, sans formulaire à rallonge</span></div>
+        <div class="journey-stop"><div class="journey-dot">👋</div><b>On la reçoit, vraiment</b><span>Pas de robot, pas de file d'attente</span></div>
+        <div class="journey-stop"><div class="journey-dot">✅</div><b>Réponse sous 24h</b><span>Personnelle, par la même personne</span></div>
+      </div>
+    </div>
+  </section>
+
   <section class="section" style="padding-top:0;">
     <div class="container">
       <div class="contact-grid">
@@ -92,6 +105,39 @@
             <a href="mailto:growthline.studio@gmail.com?subject=Devis%20-%20Refonte%20compl%C3%A8te">Devis · Refonte complète</a>
             <a href="mailto:growthline.studio@gmail.com?subject=Projet%20sur-mesure">Projet sur-mesure</a>
             <a href="mailto:growthline.studio@gmail.com?subject=Question%20g%C3%A9n%C3%A9rale">Question générale</a>
+          </div>
+
+          <div class="location-card" id="locationCard" role="button" tabindex="0" aria-expanded="false" aria-label="Localisation de l'agence, à Marseille — cliquer pour afficher la carte">
+            <div class="location-card-map" aria-hidden="true">
+              <svg class="location-card-roads" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <line x1="0" y1="35" x2="100" y2="35"></line>
+                <line x1="0" y1="65" x2="100" y2="65"></line>
+                <line x1="30" y1="0" x2="30" y2="100"></line>
+                <line x1="70" y1="0" x2="70" y2="100"></line>
+                <line class="minor" x1="0" y1="18" x2="100" y2="18"></line>
+                <line class="minor" x1="0" y1="82" x2="100" y2="82"></line>
+                <line class="minor" x1="15" y1="0" x2="15" y2="100"></line>
+                <line class="minor" x1="85" y1="0" x2="85" y2="100"></line>
+              </svg>
+              <span class="location-card-block" style="top:38%;left:8%;width:15%;height:22%;"></span>
+              <span class="location-card-block" style="top:12%;left:36%;width:13%;height:16%;"></span>
+              <span class="location-card-block" style="top:68%;left:74%;width:19%;height:20%;"></span>
+              <span class="location-card-block" style="top:18%;left:78%;width:11%;height:26%;"></span>
+              <span class="location-card-block" style="top:55%;left:44%;width:10%;height:14%;"></span>
+              <span class="location-card-pin" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="currentColor"></path><circle cx="12" cy="9" r="2.5" fill="#fff"></circle></svg></span>
+            </div>
+            <div class="location-card-body">
+              <div class="location-card-top">
+                <svg class="location-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" x2="9" y1="3" y2="18"></line><line x1="15" x2="15" y1="6" y2="21"></line></svg>
+                <span class="location-card-live"><i></i>En activité</span>
+              </div>
+              <div class="location-card-bottom">
+                <b>Marseille, France</b>
+                <span class="location-card-coords">43.2965° N, 5.3698° E</span>
+                <span class="location-card-underline"></span>
+              </div>
+            </div>
+            <p class="location-card-hint">Cliquez pour voir la carte</p>
           </div>
         </div>
         <div class="contact-side" data-reveal>
@@ -120,6 +166,7 @@
         <h2 class="display-3" style="margin-top:14px;">Réservez un créneau.</h2>
         <p class="lede" style="margin-top:10px;">Choisissez comment et quand vous préférez qu'on échange — on confirme le créneau par retour d'email.</p>
 
+        <div id="bookingFormWrap">
         <form id="bookingForm" class="audit-form" style="margin-top:26px;">
           <input type="hidden" name="type" id="bookingTypeInput" value="Appel téléphonique">
           <div class="slot-toggle" role="radiogroup" aria-label="Type de rendez-vous">
@@ -158,6 +205,29 @@
           <p class="form-status" id="bookingFormStatus" role="status" aria-live="polite"></p>
         </form>
         <p class="audit-note">Le créneau n'est confirmé qu'après notre retour par email.</p>
+        </div>
+
+        <div class="form-confirm" id="bookingConfirm" hidden>
+          <div class="form-confirm-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          </div>
+          <h3 class="form-confirm-title">Demande envoyée.</h3>
+          <p class="form-confirm-recap" id="bookingConfirmRecap">—</p>
+
+          <div class="form-confirm-steps">
+            <div class="form-confirm-step is-done">
+              <span class="form-confirm-dot"></span>
+              <span>Demande envoyée</span>
+            </div>
+            <div class="form-confirm-step is-pending">
+              <span class="form-confirm-dot"></span>
+              <span>Confirmation par email sous 24h</span>
+            </div>
+          </div>
+
+          <p class="audit-note">On vous écrit à l'adresse indiquée dès que le créneau est confirmé — pas avant.</p>
+          <button type="button" class="btn" id="bookingConfirmReset">Faire une autre demande</button>
+        </div>
       </div>
     </div>
   </section>
@@ -220,7 +290,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
 <script src="main.js" defer></script>
 <script src="motion.js" defer></script>
 </body>

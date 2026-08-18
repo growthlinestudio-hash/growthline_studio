@@ -3,29 +3,53 @@
 (function () {
   'use strict';
 
-  /* ---------- Écran de bienvenue au chargement (mini séquence "usine") ---------- */
+  /* ---------- Écran de bienvenue au chargement ---------- */
+  /* Se cache dès que la page est prête — aucun délai minimum artificiel.
+     Sur ce site (statique, léger), ça se traduit en pratique par un flash
+     très court du logo plutôt qu'une séquence figée : la vitesse réelle
+     prime sur la mise en scène du chargement. */
   var pageLoader = document.getElementById('pageLoader');
   if (pageLoader) {
     var loaderText = document.getElementById('pageLoaderText');
-    var loaderBar = document.getElementById('pageLoaderBar');
-    var messages = ['Initialisation...', 'Construction de votre présence digitale...', 'Bienvenue.'];
+    if (loaderText) loaderText.textContent = 'Chargement...';
 
     requestAnimationFrame(function () { pageLoader.classList.add('is-in'); });
 
-    if (loaderText) {
-      setTimeout(function () { loaderText.textContent = messages[1]; }, 550);
-      setTimeout(function () { loaderText.textContent = messages[2]; }, 1250);
-    }
-    if (loaderBar) {
-      setTimeout(function () { loaderBar.style.width = '38%'; }, 120);
-      setTimeout(function () { loaderBar.style.width = '72%'; }, 600);
-      setTimeout(function () { loaderBar.style.width = '100%'; }, 950);
-    }
-
     var hideLoader = function () { pageLoader.classList.add('is-out'); };
-    // délai assez long pour laisser voir le dernier message ("Bienvenue.") affiché à 1250ms
-    window.addEventListener('load', function () { setTimeout(hideLoader, 1650); });
-    setTimeout(hideLoader, 2600); // filet de sécurité si "load" tarde
+    if (document.readyState === 'complete') {
+      hideLoader();
+    } else {
+      window.addEventListener('load', hideLoader);
+      setTimeout(hideLoader, 1800); // filet de sécurité si "load" tarde anormalement
+    }
+  }
+
+  /* ---------- Vidéo de signature du hero : repli sur l'image si la vidéo échoue ---------- */
+  var heroVideo = document.querySelector('.hero-signature-video');
+  if (heroVideo) {
+    var heroVideoFallback = function () {
+      var img = document.querySelector('.hero-signature-fallback');
+      if (img) img.hidden = false;
+      heroVideo.hidden = true;
+    };
+    heroVideo.addEventListener('error', heroVideoFallback, true);
+    heroVideo.addEventListener('stalled', function () {
+      if (heroVideo.readyState === 0) heroVideoFallback();
+    });
+    if (heroVideo.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) heroVideoFallback();
+  }
+
+  /* ---------- Carte de localisation (Contact) : s'agrandit au clic ou à Entrée/Espace ---------- */
+  var locationCard = document.getElementById('locationCard');
+  if (locationCard) {
+    var toggleLocationCard = function () {
+      var expanded = locationCard.classList.toggle('is-expanded');
+      locationCard.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    };
+    locationCard.addEventListener('click', toggleLocationCard);
+    locationCard.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleLocationCard(); }
+    });
   }
 
   /* ---------- Navbar : réduction au scroll ---------- */
@@ -38,31 +62,10 @@
     window.addEventListener('scroll', onScroll, { passive: true });
   }
 
-  /* ---------- Transition entre pages : petit "wipe" avant de quitter la page
-     (réutilise l'écran de chargement existant comme sortie, pas un effet à part) ---------- */
-  if (pageLoader) {
-    document.querySelectorAll('a[href$=".html"]').forEach(function (a) {
-      if (a.target === '_blank' || a.hasAttribute('download')) return;
-      var href = a.getAttribute('href');
-      var here = (location.pathname.split('/').pop() || 'index.html');
-      if (href === here) return; // déjà sur cette page
-      a.addEventListener('click', function (e) {
-        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return; // laisser ouvrir dans un nouvel onglet si demandé
-        e.preventDefault();
-        pageLoader.classList.remove('is-out');
-        if (loaderText) loaderText.textContent = 'Chargement...';
-        if (loaderBar) {
-          loaderBar.style.transition = 'none';
-          loaderBar.style.width = '0%';
-          requestAnimationFrame(function () {
-            loaderBar.style.transition = '';
-            loaderBar.style.width = '85%';
-          });
-        }
-        setTimeout(function () { window.location.href = href; }, 420);
-      });
-    });
-  }
+  /* ---------- Navigation interne : native, sans délai ajouté ----------
+     Un "wipe" de transition forcé avant chaque clic a été retiré : il
+     ajoutait ~420ms d'attente à chaque navigation sans bénéfice réel — la
+     vitesse perçue prime sur la mise en scène (voir audit du 2026-08-17). */
 
   /* ---------- Lien de nav actif selon la page courante ---------- */
   var here = (location.pathname.split('/').pop() || 'index.html');
@@ -109,7 +112,7 @@
      sur leur appareil (fréquent sur mobile/webmail) — on envoie donc réellement le
      message via un service gratuit, avec un mini-spinner pendant l'envoi, et on ne
      retombe sur mailto qu'en dernier recours si la requête échoue. */
-  function submitFormReliably(form, statusEl, subject, mailtoBody) {
+  function submitFormReliably(form, statusEl, subject, mailtoBody, onSuccess) {
     var btn = form.querySelector('button[type="submit"]');
     var formData = new FormData(form);
     formData.append('_subject', subject);
@@ -131,6 +134,7 @@
         statusEl.textContent = 'Envoyé ! On vous répond rapidement par email.';
         statusEl.className = 'form-status is-success';
         form.reset();
+        if (onSuccess) onSuccess();
       })
       .catch(function () {
         btn.classList.remove('is-loading');
@@ -143,14 +147,32 @@
   /* ---------- Formulaire audit (index.html#audit) ---------- */
   var auditForm = document.getElementById('auditForm');
   if (auditForm) {
+    var auditFormWrap = document.getElementById('auditFormWrap');
+    var auditConfirmEl = document.getElementById('auditConfirm');
+    var auditRecapEl = document.getElementById('auditConfirmRecap');
+
     auditForm.addEventListener('submit', function (e) {
       e.preventDefault();
       var site = auditForm.site.value.trim();
       var email = auditForm.email.value.trim();
       var subject = 'Demande d\'audit gratuit - ' + site;
       var body = 'Site à auditer : ' + site + '\nEmail de contact : ' + email;
-      submitFormReliably(auditForm, document.getElementById('auditFormStatus'), subject, body);
+      submitFormReliably(auditForm, document.getElementById('auditFormStatus'), subject, body, function () {
+        if (!auditConfirmEl) return;
+        auditRecapEl.textContent = site + ' — rapport envoyé à ' + email + '.';
+        if (auditFormWrap) auditFormWrap.hidden = true;
+        auditConfirmEl.hidden = false;
+        auditConfirmEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
     });
+
+    var auditResetBtn = document.getElementById('auditConfirmReset');
+    if (auditResetBtn) {
+      auditResetBtn.addEventListener('click', function () {
+        auditConfirmEl.hidden = true;
+        if (auditFormWrap) auditFormWrap.hidden = false;
+      });
+    }
   }
 
   /* ---------- Slider avant/après (index.html) ---------- */
@@ -263,8 +285,40 @@
       if (note) bodyLines.push('Projet : ' + note);
       var body = bodyLines.join('\n');
 
-      submitFormReliably(bookingForm, document.getElementById('bookingFormStatus'), subject, body);
+      submitFormReliably(bookingForm, document.getElementById('bookingFormStatus'), subject, body, function () {
+        showBookingConfirmation(bookingType, date, time, name);
+      });
     });
+
+    var formWrap = document.getElementById('bookingFormWrap');
+    var confirmEl = document.getElementById('bookingConfirm');
+    var recapEl = document.getElementById('bookingConfirmRecap');
+
+    function formatDateFr(isoDate) {
+      if (!isoDate) return '';
+      var parts = isoDate.split('-');
+      if (parts.length !== 3) return isoDate;
+      return parts[2] + '/' + parts[1] + '/' + parts[0];
+    }
+
+    function showBookingConfirmation(type, date, time, name) {
+      if (!confirmEl) return;
+      var bits = [type];
+      if (date) bits.push('le ' + formatDateFr(date));
+      if (time) bits.push('à ' + time);
+      recapEl.textContent = bits.join(' ') + (name ? ', pour ' + name + '.' : '.');
+      if (formWrap) formWrap.hidden = true;
+      confirmEl.hidden = false;
+      confirmEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    var resetBtn = document.getElementById('bookingConfirmReset');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', function () {
+        confirmEl.hidden = true;
+        if (formWrap) formWrap.hidden = false;
+      });
+    }
   }
 
   /* ---------- Duplication des pistes de marquee pour boucle infinie ---------- */

@@ -188,6 +188,12 @@ h1,h2,h3,h4,p{ margin:0; }
 .mask-reveal-wrap{ overflow:hidden; }
 .mask-reveal-inner{ display:block; }
 
+/* --- Motifs de marque tirés du logo (trajectoire de croissance + courbe du G) :
+   remplace les blobs génériques par des formes qui appartiennent vraiment à
+   Growthline, pour qu'une section soit reconnaissable même sans le logo --- */
+.growth-arrow-bg{ position:absolute; z-index:0; pointer-events:none; opacity:.4; }
+.g-curve-bg{ position:absolute; z-index:0; pointer-events:none; opacity:.5; }
+
 .lede{ font-size:clamp(1.05rem, 1.4vw, 1.3rem); color:var(--ink-dim); line-height:1.65; font-weight:400; max-width:46ch; }
 
 .accent-text{ color:var(--accent); }
@@ -248,28 +254,6 @@ h1,h2,h3,h4,p{ margin:0; }
 .card{
   background:var(--surface); border:1px solid var(--border-soft); border-radius:var(--radius-lg);
 }
-
-/* --- Curseur personnalisé (desktop uniquement) --- */
-.cursor-dot,.cursor-ring{
-  position:fixed; top:0; left:0; pointer-events:none; z-index:9999; border-radius:50%;
-  transform:translate(-50%,-50%);
-}
-.cursor-dot{ width:6px; height:6px; background:var(--ink); }
-.cursor-ring{
-  width:36px; height:36px; border:1.4px solid rgba(46,43,39,.28);
-  display:flex; align-items:center; justify-content:center;
-  box-shadow:0 0 26px 6px var(--accent-dim);
-  transition:width .4s var(--ease-spring), height .4s var(--ease-spring), border-color .3s ease, background .3s ease, box-shadow .3s ease;
-}
-.cursor-ring.is-hover{ width:64px; height:64px; background:rgba(143,174,141,.12); border-color:var(--accent); }
-.cursor-ring.is-view{ width:88px; height:88px; background:var(--ink); mix-blend-mode:difference; }
-.cursor-text{
-  opacity:0; font-family:var(--font-body); font-size:.66rem; font-weight:700; letter-spacing:.07em;
-  color:var(--accent-ink); white-space:nowrap; transition:opacity .2s ease;
-}
-.cursor-ring.is-text{ width:78px; height:78px; background:var(--accent); border-color:var(--accent); }
-.cursor-ring.is-text .cursor-text{ opacity:1; }
-@media (hover:none), (pointer:coarse){ .cursor-dot,.cursor-ring{ display:none; } }
 
 /* ==========================================================================
    NAVBAR
@@ -447,6 +431,83 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 @media (max-width:900px){ .orbit{ display:none; } }
 
 /* ==========================================================================
+   VISUEL SIGNATURE — "Constellation" (a-propos.html)
+   Diagramme, pas un dashboard : votre entreprise reliée aux 6 catégories
+   réellement analysées par Growthline. Volontairement sans barres/scores,
+   pour ne pas ajouter une 4e occurrence du motif "dashboard" du site.
+   ========================================================================== */
+.constellation{ position:relative; width:100%; aspect-ratio:800/420; max-width:820px; margin:0 auto; }
+.constellation-lines{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
+.constellation-lines path{
+  fill:none; stroke-width:2; stroke-linecap:round; stroke-dasharray:6 8; opacity:.5;
+  animation:constellation-flow 6s linear infinite;
+}
+.constellation-lines path:nth-of-type(1){ stroke:var(--sage); }
+.constellation-lines path:nth-of-type(2){ stroke:var(--lavender); }
+.constellation-lines path:nth-of-type(3){ stroke:var(--sky); }
+.constellation-lines path:nth-of-type(4){ stroke:var(--pink); }
+.constellation-lines path:nth-of-type(5){ stroke:var(--peach); }
+.constellation-lines path:nth-of-type(6){ stroke:var(--sage); }
+@keyframes constellation-flow{ to{ stroke-dashoffset:-28; } }
+
+.constellation-node{
+  position:absolute; transform:translate(-50%,-50%); display:inline-flex; align-items:center; gap:8px;
+  background:var(--bg-elevated); border:1px solid var(--border-soft); border-radius:var(--radius-full);
+  padding:9px 16px 9px 10px; box-shadow:var(--soft-shadow); font-size:.8rem; font-weight:600; color:var(--ink-dim);
+  white-space:nowrap; animation:constellation-float 6s ease-in-out infinite;
+}
+.constellation-node .dot{ width:9px; height:9px; border-radius:50%; flex:none; }
+.constellation-node--sage .dot{ background:var(--sage); }
+.constellation-node--lavender .dot{ background:var(--lavender); }
+.constellation-node--sky .dot{ background:var(--sky); }
+.constellation-node--pink .dot{ background:var(--pink); }
+.constellation-node--peach .dot{ background:var(--peach); }
+@keyframes constellation-float{ 0%,100%{ transform:translate(-50%,-50%) translateY(0); } 50%{ transform:translate(-50%,-50%) translateY(-7px); } }
+
+.constellation-node--center{
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:2;
+  width:132px; height:132px; border-radius:50%; display:flex; align-items:center; justify-content:center; text-align:center;
+  background:linear-gradient(160deg,#FFFFFF,var(--bg-soft)); border:1px solid var(--border-soft); box-shadow:var(--shadow-lift);
+}
+.constellation-node--center b{ font-family:var(--font-display); font-size:1rem; font-weight:700; line-height:1.25; }
+
+@media (prefers-reduced-motion:reduce){ .constellation-lines path, .constellation-node{ animation:none; } }
+@media (max-width:640px){
+  .constellation{ aspect-ratio:800/620; }
+  .constellation-node{ font-size:.68rem; padding:7px 12px 7px 8px; gap:6px; }
+  .constellation-node--center{ width:100px; height:100px; }
+  .constellation-node--center b{ font-size:.8rem; }
+}
+
+/* ==========================================================================
+   VISUEL SIGNATURE — "Journey" (contact.html)
+   Une trajectoire, pas un hub : partage le vocabulaire de la Constellation
+   (ligne en tirets, pastille qui voyage) mais dans une forme différente,
+   pour rester reconnaissable sans être une répétition du même composant.
+   ========================================================================== */
+.journey{ position:relative; display:flex; align-items:flex-start; justify-content:space-between; max-width:640px; margin:0 auto; padding:8px 0 0; }
+.journey-line{
+  position:absolute; left:52px; right:52px; top:26px; height:0; border-top:2px dashed var(--border);
+}
+.journey-pulse{
+  position:absolute; top:26px; left:52px; width:8px; height:8px; margin-top:-3px; border-radius:50%;
+  background:var(--accent); box-shadow:0 0 10px 2px var(--accent-dim); animation:journey-travel 3.6s ease-in-out infinite;
+}
+@keyframes journey-travel{ 0%{ left:52px; opacity:0; } 10%{ opacity:1; } 90%{ opacity:1; } 100%{ left:calc(100% - 52px); opacity:0; } }
+.journey-stop{ position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; gap:12px; text-align:center; width:33%; }
+.journey-dot{
+  width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:var(--bg-elevated); border:1px solid var(--border-soft); box-shadow:var(--soft-shadow); font-size:1.35rem;
+}
+.journey-stop b{ font-size:.86rem; }
+.journey-stop span{ font-size:.76rem; color:var(--ink-mute); max-width:16ch; }
+@media (prefers-reduced-motion:reduce){ .journey-pulse{ animation:none; opacity:0; } }
+@media (max-width:640px){
+  .journey{ max-width:320px; }
+  .journey-stop span{ display:none; }
+}
+
+/* ==========================================================================
    HERO
    ========================================================================== */
 .hero{
@@ -523,30 +584,39 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 @keyframes cueDrop{ 0%{ top:-40%; } 60%,100%{ top:100%; } }
 @media (max-width:720px){ .scroll-cue{ display:none; } }
 
-/* --- Visuel hero : carte "signal" (illustration honnête du produit réel) --- */
-.signal-card{
-  position:relative; z-index:1; width:100%; max-width:420px; margin-left:auto;
-  border-radius:var(--radius-lg); padding:30px; border:1px solid var(--border-soft);
-  background:rgba(255,255,255,.9); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+/* --- Visuel hero : scène de marque (illustration, pas un dashboard) —
+   remplace l'ancienne carte "signal" pour ne pas être le 3e dashboard du
+   site (déjà Growthline Intelligence + Réalisations). Recadrée en CSS sur
+   la partie sculpture de l'image, le texte anglais d'origine reste hors
+   cadre. --- */
+.hero-signature{
+  position:relative; z-index:1; width:100%; max-width:460px; aspect-ratio:1/1; margin-left:auto;
+  border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--border-soft);
   box-shadow:var(--soft-shadow), 0 0 0 10px rgba(191,211,190,.16);
 }
+.hero-signature-video,
+.hero-signature-fallback{ width:100%; height:100%; object-fit:cover; object-position:80% 45%; transform:scale(1.15); display:block; }
+@media (max-width:900px){ .hero-signature{ max-width:100%; margin-left:0; } }
+
+/* --- Visuel signature de la page Services (illustration système, réutilise
+   la même logique de recadrage CSS que le hero) --- */
+.services-signature{
+  position:relative; border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--border-soft);
+  box-shadow:var(--soft-shadow); aspect-ratio:16/7; margin-bottom:var(--space-8);
+}
+.services-signature img{ width:100%; height:100%; object-fit:cover; object-position:50% 34%; transform:scale(2.6) translateX(-115px); }
+@media (max-width:640px){ .services-signature{ aspect-ratio:4/3; } }
+
+/* --- En-tête façon fenêtre (points + étiquette), toujours utilisé par la
+   démo Growthline Intelligence plus bas sur la page --- */
 .signal-card-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; }
 .signal-card-head .dots{ display:flex; gap:6px; }
 .signal-card-head .dots span{ width:8px; height:8px; border-radius:50%; background:var(--border); }
 .signal-card-head .tag{ font-size:.72rem; color:var(--accent); border:1px solid var(--accent-line); border-radius:var(--radius-full); padding:4px 10px; display:flex; align-items:center; gap:6px; }
 .signal-card-head .tag::before{ content:""; width:5px; height:5px; border-radius:50%; background:var(--accent); }
-.signal-row{ display:flex; align-items:center; justify-content:space-between; gap:14px; padding:13px 0; border-top:1px solid var(--border-soft); }
-.signal-row:first-of-type{ border-top:none; }
-.signal-row-label{ display:flex; flex-direction:column; gap:2px; }
-.signal-row-label b{ font-size:.88rem; font-weight:600; }
-.signal-row-label span{ font-size:.74rem; color:var(--ink-mute); }
-.signal-bar{ width:110px; height:5px; border-radius:var(--radius-full); background:var(--surface); overflow:hidden; flex:none; }
-.signal-bar i{ display:block; height:100%; border-radius:var(--radius-full); background:var(--accent); width:var(--val,60%); transform-origin:left; }
-.signal-card-foot{ margin-top:18px; padding-top:16px; border-top:1px solid var(--border-soft); display:flex; align-items:center; justify-content:space-between; }
 .signal-score{ font-family:var(--font-display); font-size:2.1rem; font-weight:500; }
 .signal-score span{ font-size:.9rem; color:var(--ink-mute); font-family:var(--font-body); font-weight:500; }
 .signal-score .signal-score-num{ font-size:inherit; color:inherit; font-family:inherit; font-weight:inherit; }
-.signal-card-foot .note{ font-size:.72rem; color:var(--ink-mute); max-width:130px; text-align:right; }
 
 /* ==========================================================================
    MARQUEE (mots-clés de service — pas de faux logos clients)
@@ -564,6 +634,20 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
    SECTION HEADER (réutilisé partout)
    ========================================================================== */
 .section{ padding:var(--space-9) 0; position:relative; }
+
+/* --- Modificateur "section sombre" : réservé à quelques sections stratégiques
+   pour créer du rythme entre les chapitres du site — pas une bascule de thème.
+   Réutilise --inverse-bg/--inverse-ink, déjà présents et éprouvés sur .cta-final. --- */
+.section--dark{ background:var(--inverse-bg); color:var(--inverse-ink); }
+.section--dark .eyebrow{ color:rgba(246,239,222,.65); }
+.section--dark .eyebrow::before{ background:var(--accent-bright); box-shadow:0 0 10px 2px var(--accent-dim); }
+.section--dark .chapter-tag{ color:rgba(246,239,222,.45); }
+.section--dark .chapter-tag::before{ background:rgba(246,239,222,.25); }
+.section--dark .chapter-tag b{ color:var(--accent-bright); }
+.section--dark .lede{ color:rgba(246,239,222,.72); }
+.section--dark .disclaimer-note{ color:rgba(246,239,222,.55); }
+.section--dark .quote-marquee-wrap::before{ background:repeating-linear-gradient(to right, rgba(246,239,222,.18) 0 6px, transparent 6px 14px); }
+.section--dark .proof-cell{ box-shadow:none; }
 .section-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:40px; margin-bottom:var(--space-8); flex-wrap:wrap; }
 .section-head .lede{ max-width:420px; }
 .section-head-title{ max-width:560px; position:relative; }
@@ -581,7 +665,7 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
    SERVICES — présentation éditoriale
    ========================================================================== */
 .service-row{
-  position:relative; display:grid; grid-template-columns:104px 74px 1fr auto; align-items:center; gap:28px;
+  position:relative; display:grid; grid-template-columns:220px 1fr auto; align-items:center; gap:28px;
   padding:36px 0; border-top:1px solid var(--border-soft); cursor:pointer;
 }
 .service-row:last-child{ border-bottom:1px solid var(--border-soft); }
@@ -604,40 +688,95 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 }
 .service-row:hover .service-arrow{ transform:rotate(45deg); background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
 
-/* --- Case visuelle par service : logo/numéro par défaut, image illustrative au survol/toucher --- */
+/* --- Case visuelle par service : une scène animée propre à chaque service,
+   visible en permanence (plus cachée derrière un survol) — chaque service
+   doit se comprendre visuellement avant même la lecture du texte. --- */
 .service-visual{
-  position:relative; width:104px; height:104px; border-radius:var(--radius-md); overflow:hidden; flex:none;
+  position:relative; width:220px; height:150px; border-radius:var(--radius-md); overflow:hidden; flex:none;
   border:1px solid var(--border-soft);
   transition:transform .5s var(--ease-spring), box-shadow .5s var(--ease), border-color .4s ease;
 }
 .service-row:hover .service-visual{
-  transform:translateY(-4px) scale(1.05) rotate(-2deg);
+  transform:translateY(-4px) scale(1.03) rotate(-1deg);
   box-shadow:0 20px 34px -16px rgba(46,43,39,.28);
 }
-.service-visual-face{
-  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-  font-family:var(--font-display); font-size:2rem; font-weight:500; color:rgba(46,43,39,.3);
-  transition:opacity .4s var(--ease);
-}
 .service-visual-image{
-  position:absolute; inset:0; opacity:0; transform:scale(1.08);
-  transition:opacity .45s var(--ease), transform .5s var(--ease);
-  display:flex; align-items:center; justify-content:center; padding:18px; background:var(--bg-elevated);
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center; padding:16px;
 }
 .service-visual-image svg{ width:100%; height:100%; overflow:visible; }
-.service-row:hover .service-visual-image,
-.service-visual.is-active .service-visual-image{ opacity:1; transform:scale(1); }
-.service-row:hover .service-visual-face,
-.service-visual.is-active .service-visual-face{ opacity:0; }
 @media (max-width:900px){
-  .service-visual{ width:72px; height:72px; }
-  .service-visual-face{ font-size:1.4rem; }
+  .service-visual{ width:100%; height:150px; }
+}
+
+/* --- Scène 1 : Audit — un faisceau balaie la page, des repères s'allument ---
+   (le conteneur .service-visual-image est déjà position:absolute, sert de repère) */
+.svc-scan-beam{
+  position:absolute; top:8%; bottom:8%; left:0; width:26px;
+  background:linear-gradient(90deg, transparent, rgba(127,169,140,.55), transparent);
+  animation:svc-scan-sweep 3.2s ease-in-out infinite;
+}
+@keyframes svc-scan-sweep{ 0%{ left:6%; } 50%{ left:78%; } 100%{ left:6%; } }
+.svc-scan-dot{ animation:svc-scan-blink 3.2s ease-in-out infinite; opacity:.25; }
+.svc-scan-dot--2{ animation-delay:.5s; }
+.svc-scan-dot--3{ animation-delay:.9s; }
+@keyframes svc-scan-blink{ 0%,40%{ opacity:.25; } 50%{ opacity:1; } 75%,100%{ opacity:.25; } }
+
+/* --- Scène 2 : Rapport — des tickets de priorité qui respirent, du plus urgent au plus léger --- */
+.svc-ticket{ animation:bubbleFloat 4.5s ease-in-out infinite; transform-origin:center; }
+.svc-ticket--1{ animation-delay:0s; }
+.svc-ticket--2{ animation-delay:.35s; }
+.svc-ticket--3{ animation-delay:.7s; }
+
+/* --- Scène 3 : Corrections ciblées — un problème repéré devient une correction validée --- */
+.svc-target-ring{ transform-origin:100px 75px; animation:svc-target-spin 9s linear infinite; }
+@keyframes svc-target-spin{ to{ transform:rotate(360deg); } }
+.svc-mark-x{ animation:svc-mark-cross 4s ease-in-out infinite; }
+.svc-mark-check{ animation:svc-mark-cross 4s ease-in-out infinite; animation-delay:2s; }
+@keyframes svc-mark-cross{ 0%,42%{ opacity:1; } 50%,92%{ opacity:0; } 100%{ opacity:1; } }
+
+/* --- Scène 4 : Refonte — le wireframe se transforme en site fini --- */
+.svc-scene--rebuild svg{ position:absolute; inset:0; }
+.svc-rebuild-before{ animation:svc-rebuild-fade 6s ease-in-out infinite; }
+.svc-rebuild-after{ animation:svc-rebuild-fade 6s ease-in-out infinite reverse; }
+@keyframes svc-rebuild-fade{ 0%,38%{ opacity:1; } 50%,88%{ opacity:0; } 100%{ opacity:1; } }
+
+@media (prefers-reduced-motion:reduce){
+  .svc-scan-beam{ display:none; }
+  .svc-scan-dot, .svc-ticket, .svc-rebuild-after{ animation:none; opacity:1; }
+  .svc-target-ring{ animation:none; }
+  .svc-mark-x{ animation:none; opacity:0; }
+  .svc-mark-check{ animation:none; opacity:1; }
+  .svc-rebuild-before{ animation:none; opacity:0; }
 }
 
 /* ==========================================================================
    PROCESSUS — ligne de progression au scroll
    ========================================================================== */
 .process-row{ display:grid; grid-template-columns:1fr; gap:0; }
+@media (min-width:900px){ .process-row{ grid-template-columns:1fr 300px; gap:var(--space-8); align-items:start; } }
+.process-visual{ display:none; }
+@media (min-width:900px){
+  .process-visual{
+    display:flex; justify-content:center; align-items:flex-start;
+    background:var(--surface); border:1px solid var(--border-soft); border-radius:var(--radius-lg);
+    padding:56px 0; box-shadow:var(--soft-shadow); position:sticky; top:120px;
+  }
+}
+.process-visual-track{ position:relative; display:flex; flex-direction:column; align-items:center; gap:52px; }
+.process-visual-track::before{
+  content:""; position:absolute; left:50%; top:26px; bottom:26px; width:1px;
+  background:linear-gradient(180deg,var(--sage),var(--lavender),var(--sky),var(--peach)); transform:translateX(-50%);
+}
+.process-visual-node{
+  position:relative; z-index:1; width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:var(--bg); border:1px solid var(--border-soft); box-shadow:0 6px 16px rgba(0,0,0,.06);
+}
+.process-visual-node svg{ width:22px; height:22px; }
+.process-visual-node--sage{ color:var(--sage); }
+.process-visual-node--lavender{ color:var(--lavender); }
+.process-visual-node--sky{ color:var(--sky); }
+.process-visual-node--peach{ color:var(--peach); }
 .process-track{ position:relative; padding-left:40px; }
 .process-track::before{ content:""; position:absolute; left:0; top:6px; bottom:6px; width:1px; background:var(--border); }
 .process-track-fill{ position:absolute; left:0; top:6px; width:1px; height:0; background:var(--accent); box-shadow:0 0 12px 1px var(--accent-dim); }
@@ -669,6 +808,27 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .craft-card:hover::after{ opacity:1; }
 .craft-card:hover{ box-shadow:0 26px 46px -22px rgba(46,43,39,.22), 0 0 40px -16px rgba(127,169,140,.35); transform:translateY(-4px) rotate(-1.5deg) scale(1.03); }
 .craft-emoji{ font-size:2.1rem; line-height:1; }
+.craft-icon{ width:64px; height:64px; object-fit:contain; }
+
+/* --- Lévitation discrète : un léger va-et-vient vertical sur les icônes
+   illustrées (secteurs, valeurs, tarifs) pour qu'elles semblent vivantes
+   sans jamais attirer l'attention plus que le contenu. --- */
+@keyframes gentle-float{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-6px); } }
+.craft-icon,
+.value-icon,
+.price-card-icon{ animation:gentle-float 4.2s ease-in-out infinite; }
+.craft-card:nth-child(3n+1) .craft-icon,
+.value-item:nth-child(3n+1) .value-icon,
+.price-card:nth-child(3n+1) .price-card-icon{ animation-delay:0s; }
+.craft-card:nth-child(3n+2) .craft-icon,
+.value-item:nth-child(3n+2) .value-icon,
+.price-card:nth-child(3n+2) .price-card-icon{ animation-delay:.7s; }
+.craft-card:nth-child(3n) .craft-icon,
+.value-item:nth-child(3n) .value-icon,
+.price-card:nth-child(3n) .price-card-icon{ animation-delay:1.4s; }
+@media (prefers-reduced-motion:reduce){
+  .craft-icon, .value-icon, .price-card-icon{ animation:none; }
+}
 .craft-card b{ font-family:var(--font-display); font-weight:500; font-size:.92rem; letter-spacing:0; }
 @media (max-width:900px){ .craft-grid{ grid-template-columns:repeat(2,1fr); } }
 
@@ -688,40 +848,106 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
    CONSTRUCTION EN DIRECT — wireframe → design → animation → site terminé
    ========================================================================== */
 .build-stage{
-  position:relative; height:380px; border-radius:var(--radius-lg); overflow:hidden;
+  position:relative; height:440px; border-radius:var(--radius-lg); overflow:hidden;
   background:var(--bg-elevated); border:1px solid var(--border-soft); box-shadow:var(--soft-shadow);
 }
+/* --- Chrome de navigateur, persistant : c'est LE MÊME écran qui se transforme,
+   pas 6 scènes différentes — répond directement à "aucune étape ne doit sembler forcée". --- */
+.build-chrome{
+  position:absolute; top:0; left:0; right:0; height:40px; z-index:3;
+  display:flex; align-items:center; gap:7px; padding:0 16px;
+  background:var(--surface); border-bottom:1px solid var(--border-soft);
+}
+.build-chrome-dot{ width:9px; height:9px; border-radius:50%; flex:none; }
+.build-chrome-url{
+  margin-left:8px; width:200px; max-width:40%; height:21px; border-radius:var(--radius-full);
+  background:var(--bg-elevated); border:1px solid var(--border-soft);
+  display:flex; align-items:center; padding:0 12px; overflow:hidden;
+}
+.build-chrome-url span{ font-size:.66rem; font-family:ui-monospace,'Courier New',monospace; color:var(--ink-mute); white-space:nowrap; }
+.build-chrome-badge{
+  margin-left:auto; display:flex; align-items:center; gap:6px; opacity:0; transform:translateY(-4px);
+  transition:opacity .4s ease, transform .4s ease; font-size:.72rem; font-weight:700; color:var(--accent);
+}
+.build-chrome-badge.is-shown{ opacity:1; transform:translateY(0); }
+.build-chrome-badge i{ width:6px; height:6px; border-radius:50%; background:var(--accent); box-shadow:0 0 8px 1px var(--accent-dim); }
+
+/* --- Barre de progression façon "story" : un segment par étape, qui se
+   remplit pendant la durée d'affichage puis passe au suivant, en boucle. --- */
+.build-story-bar{
+  position:absolute; top:46px; left:16px; right:16px; z-index:4;
+  display:flex; gap:5px;
+}
+.build-story-seg{ flex:1; height:3px; border-radius:var(--radius-full); background:rgba(46,43,39,.1); overflow:hidden; display:block; }
+.build-story-seg i{ display:block; height:100%; width:0%; background:var(--accent); border-radius:inherit; }
+.build-story-seg.is-done i{ width:100%; }
+.build-story-seg.is-active i{ width:0%; animation:build-story-fill var(--story-duration,3200ms) linear forwards; }
+@keyframes build-story-fill{ to{ width:100%; } }
+@media (prefers-reduced-motion:reduce){ .build-story-bar{ display:none; } }
+
 .build-frame{
-  position:absolute; inset:0; padding:36px; opacity:0; transition:opacity .5s ease;
-  display:flex; flex-direction:column; gap:16px;
+  position:absolute; top:52px; left:0; right:0; bottom:0; padding:20px 30px 26px; opacity:0; transition:opacity .5s ease;
+  display:flex; flex-direction:column; gap:14px;
 }
 .build-frame.is-active{ opacity:1; }
 .build-line{ height:16px; border-radius:6px; }
 .build-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; flex:1; }
-.build-block{ border-radius:16px; }
-/* --- Étape 1 : wireframe (gris, pointillés) --- */
-.build-frame--wireframe .build-line{ background:var(--surface-hover); border:1px dashed var(--border); }
+.build-block{ border-radius:16px; position:relative; }
+
+/* --- Squelette de mini-site partagé (nav + hero + cartes) : gris pointillé au
+   wireframe, coloré ensuite — c'est le même gabarit qui se remplit, pas des
+   rectangles abstraits sans rapport avec un vrai site. --- */
+.bw-nav{ display:flex; align-items:center; gap:10px; height:22px; }
+.bw-dash{ height:8px; border-radius:4px; background:var(--surface-hover); border:1px dashed var(--border); }
+.bw-hero{ height:64px; border-radius:12px; background:var(--surface-hover); border:1px dashed var(--border); }
+
+.bd-nav{ display:flex; align-items:center; gap:10px; height:22px; }
+.bd-logo{ width:16px; height:16px; border-radius:6px; background:var(--accent); flex:none; }
+.bd-link{ width:34px; height:7px; border-radius:4px; background:var(--ink-mute); opacity:.3; }
+.bd-btn{ margin-left:auto; width:58px; height:18px; border-radius:var(--radius-full); background:var(--accent); }
+.bd-hero{ height:88px; border-radius:12px; padding:16px; display:flex; flex-direction:column; justify-content:center; gap:8px; background:linear-gradient(135deg,var(--sky),var(--lavender)); }
+.bd-hero-line{ height:9px; border-radius:5px; background:rgba(255,255,255,.85); }
+.bd-hero-cta{ margin-top:4px; width:78px; height:16px; border-radius:var(--radius-full); background:var(--ink); opacity:.9; }
+
 .build-frame--wireframe .build-block{ background:var(--surface-hover); border:1px dashed var(--border); }
-/* --- Étape 2 : design (couleurs posées) --- */
-.build-frame--design .build-line{ background:var(--sage); }
+
 .build-frame--design .build-block:nth-child(1){ background:var(--sage); }
 .build-frame--design .build-block:nth-child(2){ background:var(--lavender); }
 .build-frame--design .build-block:nth-child(3){ background:var(--sky); }
-/* --- Étape 3 : animation (mêmes blocs, micro-mouvement) --- */
-.build-frame--animation .build-line{ background:var(--sage); }
-.build-frame--animation .build-block{ animation:buildPulse 1.8s ease-in-out infinite; }
-.build-frame--animation .build-block:nth-child(1){ background:var(--sage); animation-delay:0s; }
-.build-frame--animation .build-block:nth-child(2){ background:var(--lavender); animation-delay:.2s; }
-.build-frame--animation .build-block:nth-child(3){ background:var(--sky); animation-delay:.4s; }
+
+/* --- Développement : même écran, une barre de chargement traverse le haut,
+   les cartes "respirent" comme si elles se construisaient --- */
+.build-frame--dev .build-block:nth-child(1){ background:var(--sage); }
+.build-frame--dev .build-block:nth-child(2){ background:var(--lavender); }
+.build-frame--dev .build-block:nth-child(3){ background:var(--sky); }
+.build-frame--dev .build-block{ animation:buildPulse 1.8s ease-in-out infinite; }
+.build-frame--dev .build-block:nth-child(1){ animation-delay:0s; }
+.build-frame--dev .build-block:nth-child(2){ animation-delay:.2s; }
+.build-frame--dev .build-block:nth-child(3){ animation-delay:.4s; }
+.build-loading-bar{ position:absolute; top:0; left:0; height:2.5px; background:var(--accent); box-shadow:0 0 8px 1px var(--accent-dim); animation:build-loading 1.6s ease-in-out infinite; }
+@keyframes build-loading{ 0%{ width:0; opacity:1; } 70%{ width:100%; opacity:1; } 100%{ width:100%; opacity:0; } }
 @keyframes buildPulse{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-8px); } }
-/* --- Étape 4 : site terminé (aperçu final habillé) --- */
-.build-frame--final{ gap:10px; }
-.build-frame--final .build-line{ background:var(--ink); opacity:.85; width:56%; }
-.build-frame--final .build-sub{ height:10px; width:34%; border-radius:5px; background:var(--ink-mute); opacity:.4; }
-.build-frame--final .build-grid{ margin-top:6px; }
-.build-frame--final .build-block{ background:var(--bg-soft); border:1px solid var(--border-soft); display:flex; align-items:flex-end; padding:12px; }
-.build-frame--final .build-block span{ font-size:1.4rem; }
-@media (prefers-reduced-motion:reduce){ .build-frame--animation .build-block{ animation:none; } }
+
+/* --- Optimisation : même écran + une coche de validation par carte --- */
+.build-frame--opt .build-block:nth-child(1){ background:var(--sage); }
+.build-frame--opt .build-block:nth-child(2){ background:var(--lavender); }
+.build-frame--opt .build-block:nth-child(3){ background:var(--sky); }
+.build-check{
+  position:absolute; top:8px; right:8px; width:20px; height:20px; border-radius:50%;
+  background:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 10px -4px rgba(0,0,0,.3);
+  opacity:0; transform:scale(.4); animation:build-check-pop .4s var(--ease-spring) forwards;
+}
+.build-check svg{ width:11px; height:11px; color:var(--accent); }
+.build-block:nth-child(1) .build-check{ animation-delay:.15s; }
+.build-block:nth-child(2) .build-check{ animation-delay:.4s; }
+.build-block:nth-child(3) .build-check{ animation-delay:.65s; }
+@keyframes build-check-pop{ to{ opacity:1; transform:scale(1); } }
+
+@media (prefers-reduced-motion:reduce){
+  .build-frame--dev .build-block{ animation:none; }
+  .build-loading-bar{ display:none; }
+  .build-check{ opacity:1; transform:scale(1); animation:none; }
+}
 
 /* --- Étape 0 : idée (avant même le wireframe) --- */
 .build-frame--idea{ align-items:flex-start; justify-content:center; }
@@ -729,20 +955,34 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .build-line--dashed{ background:transparent; border:1.5px dashed var(--border); }
 @media (prefers-reduced-motion:reduce){ .build-idea-bulb{ animation:none; } }
 
-/* --- Étape 5 : clients (le site fini rencontre ses visiteurs) --- */
-.build-frame--clients{ justify-content:center; gap:20px; }
-.build-frame--clients .build-line{ background:var(--ink); opacity:.75; margin:0 auto; }
+/* --- Étape 6 : résultat final — le même écran (nav + hero), désormais complet,
+   avec un petit repère de résultat qui flotte dessus et rencontre ses visiteurs.
+   Garde exactement le gabarit des étapes précédentes pour que les 6 écrans
+   se lisent comme UNE seule transformation continue, pas 6 scènes séparées. --- */
+.build-frame--clients{ justify-content:center; gap:22px; }
+.build-final-hero{ position:relative; }
+.build-stat-chip{
+  position:absolute; top:-14px; right:-12px; width:38px; height:38px; border-radius:50%;
+  background:#fff; display:flex; align-items:center; justify-content:center; color:var(--accent);
+  box-shadow:0 10px 22px -8px rgba(46,43,39,.35); border:1px solid var(--border-soft);
+  animation:build-chip-pop .5s var(--ease-spring) .25s both;
+}
+.build-stat-chip svg{ width:17px; height:17px; }
+@keyframes build-chip-pop{ from{ opacity:0; transform:scale(.5); } to{ opacity:1; transform:scale(1); } }
+@media (prefers-reduced-motion:reduce){ .build-stat-chip{ animation:none; } }
 .build-clients-row{ display:flex; align-items:center; justify-content:center; }
 .build-avatar{ width:44px; height:44px; border-radius:50%; border:3px solid var(--bg-elevated); margin-left:-14px; box-shadow:0 2px 6px rgba(46,43,39,.12); }
 .build-avatar:first-child{ margin-left:0; }
 .build-avatar-more{ margin-left:10px; font-size:.85rem; color:var(--ink-mute); }
 
 .build-labels{ display:flex; gap:12px; margin-top:22px; justify-content:center; flex-wrap:wrap; }
-.build-labels span{
-  font-size:.82rem; color:var(--ink-mute); padding:7px 16px; border-radius:var(--radius-full);
-  border:1px solid var(--border-soft); transition:background .3s ease, color .3s ease, border-color .3s ease;
+.build-labels button{
+  font-family:inherit; font-size:.82rem; color:var(--ink-mute); padding:7px 16px; border-radius:var(--radius-full);
+  background:transparent; border:1px solid var(--border-soft); cursor:pointer;
+  transition:background .3s ease, color .3s ease, border-color .3s ease;
 }
-.build-labels span.is-active{ color:var(--accent-ink); background:var(--accent); border-color:var(--accent); }
+.build-labels button:hover{ border-color:var(--accent); color:var(--ink); }
+.build-labels button.is-active{ color:var(--accent-ink); background:var(--accent); border-color:var(--accent); }
 @media (max-width:640px){ .build-stage{ height:460px; } .build-grid{ grid-template-columns:1fr; } }
 
 /* ==========================================================================
@@ -753,7 +993,7 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .proof-cell:nth-child(1){ box-shadow:0 22px 44px -26px rgba(143,174,141,.7); }
 .proof-cell:nth-child(2){ box-shadow:0 22px 44px -26px rgba(207,195,232,.7); }
 .proof-cell:nth-child(3){ box-shadow:0 22px 44px -26px rgba(235,196,204,.7); }
-.proof-cell b{ display:block; font-family:var(--font-display); font-size:clamp(2.2rem,4vw,3.4rem); font-weight:500; letter-spacing:-.01em; }
+.proof-cell b{ display:block; font-family:var(--font-display); font-size:clamp(2.2rem,4vw,3.4rem); font-weight:500; letter-spacing:-.01em; color:var(--ink); }
 .proof-cell span{ color:var(--ink-mute); font-size:.9rem; }
 
 .disclaimer-note{ display:flex; align-items:center; gap:8px; font-size:.82rem; color:var(--ink-mute); margin-top:var(--space-5); }
@@ -803,6 +1043,30 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .showcase-teaser-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:24px; flex-wrap:wrap; }
 .showcase-teaser h3{ font-family:var(--font-display); font-size:clamp(1.8rem,4vw,3.2rem); font-weight:500; max-width:16ch; letter-spacing:-.005em; }
 
+/* --- Éventail de vraies captures (secteurs), pour que le teaser ne soit
+   plus uniquement du texte --- */
+.showcase-teaser-stack{
+  position:absolute; right:var(--space-8); top:50%; transform:translateY(-50%);
+  width:220px; height:150px; z-index:1;
+}
+.showcase-teaser-stack img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  border-radius:var(--radius-md); border:1px solid var(--border-soft); box-shadow:var(--shadow-lift);
+  transition:transform .5s var(--ease-spring);
+}
+.showcase-teaser-stack img:nth-child(1){ transform:rotate(-7deg) translate(-18px,6px); z-index:1; }
+.showcase-teaser-stack img:nth-child(2){ transform:rotate(4deg) translate(10px,-4px); z-index:2; }
+.showcase-teaser-stack img:nth-child(3){ transform:rotate(-2deg) translate(-4px,-14px); z-index:3; }
+.showcase-teaser:hover .showcase-teaser-stack img:nth-child(1){ transform:rotate(-11deg) translate(-30px,10px); }
+.showcase-teaser:hover .showcase-teaser-stack img:nth-child(2){ transform:rotate(7deg) translate(18px,-2px); }
+.showcase-teaser:hover .showcase-teaser-stack img:nth-child(3){ transform:rotate(-2deg) translate(-4px,-22px); }
+@media (max-width:900px){
+  .showcase-teaser-stack{ position:relative; right:auto; top:auto; transform:none; width:100%; height:120px; margin-bottom:var(--space-5); }
+  .showcase-teaser-stack img:nth-child(1){ transform:rotate(-6deg) translate(-14px,4px); }
+  .showcase-teaser-stack img:nth-child(2){ transform:rotate(3deg) translate(8px,-2px); }
+  .showcase-teaser-stack img:nth-child(3){ transform:rotate(-1deg) translate(-2px,-8px); }
+}
+
 /* ==========================================================================
    CTA FINAL (inversé)
    ========================================================================== */
@@ -827,6 +1091,29 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .audit-field input:focus{ outline:none; border-color:var(--accent-line); background:var(--surface-hover); }
 .audit-submit{ width:100%; margin-top:6px; }
 .audit-note{ margin-top:14px; font-size:.82rem; color:var(--ink-mute); }
+
+/* --- Confirmation de demande de rendez-vous (contact.html) --- */
+.form-confirm{ text-align:center; padding:var(--space-6) 0 var(--space-4); animation:form-confirm-in .5s var(--ease-spring) both; }
+@keyframes form-confirm-in{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:translateY(0); } }
+.form-confirm-check{
+  width:56px; height:56px; margin:0 auto 18px; border-radius:50%; background:var(--accent); color:var(--accent-ink);
+  display:flex; align-items:center; justify-content:center;
+  animation:form-confirm-pop .5s var(--ease-spring) .15s both;
+}
+.form-confirm-check svg{ width:26px; height:26px; }
+@keyframes form-confirm-pop{ from{ transform:scale(.4); opacity:0; } to{ transform:scale(1); opacity:1; } }
+.form-confirm-title{ font-family:var(--font-display); font-size:1.5rem; font-weight:700; }
+.form-confirm-recap{ margin-top:8px; color:var(--ink-dim); font-size:.95rem; }
+.form-confirm-steps{ max-width:360px; margin:var(--space-6) auto 0; }
+.form-confirm-step{ display:flex; align-items:center; gap:10px; font-size:.86rem; color:var(--ink-mute); padding:8px 0; text-align:left; }
+.form-confirm-step.is-done{ color:var(--ink); font-weight:600; }
+.form-confirm-dot{ width:9px; height:9px; border-radius:50%; flex:none; background:var(--border); }
+.form-confirm-step.is-done .form-confirm-dot{ background:var(--accent); box-shadow:0 0 0 4px var(--accent-dim); }
+.form-confirm-step.is-pending .form-confirm-dot{ animation:form-confirm-pulse 1.6s ease-in-out infinite; }
+@keyframes form-confirm-pulse{ 0%,100%{ opacity:.35; } 50%{ opacity:.9; } }
+.form-confirm .audit-note{ max-width:44ch; margin-left:auto; margin-right:auto; }
+#bookingConfirmReset{ margin-top:var(--space-5); }
+@media (prefers-reduced-motion:reduce){ .form-confirm, .form-confirm-check, .form-confirm-dot{ animation:none; } }
 
 /* --- État de chargement des formulaires (mini spinner sur le bouton) --- */
 .btn-spinner{
@@ -884,9 +1171,25 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .tool-severity-chip.opportunity i{ background:#8fb4ff; }
 
 .slot-toggle{ display:inline-flex; gap:6px; padding:4px; background:var(--surface); border:1px solid var(--border-soft); border-radius:var(--radius-full); }
-.slot-toggle-btn{ padding:10px 20px; border-radius:var(--radius-full); font-size:.9rem; font-weight:600; color:var(--ink-dim); transition:background .3s ease, color .3s ease; }
+.slot-toggle-btn{ display:inline-flex; align-items:center; gap:8px; padding:8px 20px 8px 12px; border-radius:var(--radius-full); font-size:.9rem; font-weight:600; color:var(--ink-dim); transition:background .3s ease, color .3s ease; }
+.slot-toggle-icon{ width:22px; height:22px; object-fit:contain; }
 .slot-toggle-btn.is-active{ background:var(--accent); color:var(--accent-ink); }
 @media (max-width:480px){ .slot-toggle{ display:flex; width:100%; } .slot-toggle-btn{ flex:1; text-align:center; padding:10px 12px; } }
+
+/* ==========================================================================
+   GROWTHLINE INTELLIGENCE — démo interactive (index.html#intelligence)
+   Simulation locale uniquement : aucune vraie analyse n'est effectuée ici,
+   voir le disclaimer dans le HTML.
+   ========================================================================== */
+.intel-demo-controls{ display:flex; flex-wrap:wrap; align-items:center; gap:16px; margin-bottom:var(--space-6); }
+.intel-demo-label{ font-size:.86rem; color:var(--ink-mute); font-weight:600; }
+.intel-demo-card{ min-height:340px; }
+.intel-demo-scan{ display:flex; flex-direction:column; align-items:center; gap:20px; padding:var(--space-8) 0; text-align:center; }
+.intel-demo-scan .tool-loading-ring{ width:52px; height:52px; }
+.intel-demo-scan-text{ color:var(--ink-dim); font-size:.96rem; min-height:1.4em; transition:opacity .25s ease; }
+.intel-demo-fade-in{ animation:intel-fade-in .5s ease both; }
+@keyframes intel-fade-in{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
+@media (prefers-reduced-motion:reduce){ .intel-demo-fade-in{ animation:none; } }
 
 .tool-summary{ display:flex; align-items:baseline; gap:32px; flex-wrap:wrap; margin-bottom:var(--space-6); }
 
@@ -1150,6 +1453,11 @@ footer{ padding:var(--space-9) 0 var(--space-6); position:relative; overflow:hid
    ========================================================================== */
 .value-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--border-soft); border:1px solid var(--border-soft); border-radius:var(--radius-lg); overflow:hidden; }
 .value-item{ background:var(--bg); padding:var(--space-7); }
+.value-icon{
+  width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+  background:var(--surface); color:var(--ink-dim); margin-bottom:16px;
+}
+.value-icon svg{ width:22px; height:22px; }
 .value-item .service-num{ display:block; margin-bottom:18px; }
 .value-item h3{ font-family:var(--font-display); font-size:1.4rem; font-weight:600; margin-bottom:10px; letter-spacing:-.01em; }
 .value-item p{ color:var(--ink-dim); font-size:.95rem; max-width:46ch; }
@@ -1179,6 +1487,47 @@ footer{ padding:var(--space-9) 0 var(--space-6); position:relative; overflow:hid
 .contact-side a:hover svg{ transform:translate(3px,-3px); }
 @media (max-width:900px){ .contact-grid{ grid-template-columns:1fr; gap:36px; } }
 
+/* --- Carte de localisation : compacte, s'agrandit au clic pour révéler une
+   carte abstraite (rues + pâtés de maisons génériques, pas une vraie carte
+   embarquée) avec un repère central. --- */
+.location-card{
+  position:relative; width:260px; max-width:100%; height:150px; margin-top:32px; cursor:pointer; user-select:none;
+  border-radius:var(--radius-lg); background:var(--bg-elevated); border:1px solid var(--border-soft);
+  overflow:hidden; box-shadow:var(--soft-shadow); transform-style:preserve-3d;
+  transition:width .5s var(--ease-spring), height .5s var(--ease-spring), box-shadow .3s ease;
+}
+.location-card.is-expanded{ width:340px; height:280px; box-shadow:0 30px 50px -24px rgba(46,43,39,.28); }
+.location-card-map{ position:absolute; inset:0; opacity:0; transition:opacity .4s ease; pointer-events:none; }
+.location-card.is-expanded .location-card-map{ opacity:1; }
+.location-card-roads{ position:absolute; inset:0; width:100%; height:100%; }
+.location-card-roads line{ stroke:var(--ink); opacity:.16; stroke-width:1.6; }
+.location-card-roads line.minor{ opacity:.08; stroke-width:.8; }
+.location-card-block{ position:absolute; border-radius:4px; background:var(--ink-mute); opacity:.14; border:1px solid var(--ink-mute); }
+.location-card-pin{
+  position:absolute; top:50%; left:50%; width:30px; height:30px; color:var(--accent);
+  transform:translate(-50%,-62%) scale(0); transition:transform .45s var(--ease-spring) .15s;
+  filter:drop-shadow(0 4px 8px rgba(127,169,140,.4));
+}
+.location-card.is-expanded .location-card-pin{ transform:translate(-50%,-62%) scale(1); }
+.location-card-body{ position:relative; z-index:1; height:100%; display:flex; flex-direction:column; justify-content:space-between; padding:20px; }
+.location-card-top{ display:flex; align-items:center; justify-content:space-between; }
+.location-card-icon{ width:18px; height:18px; color:var(--accent); transition:opacity .3s ease; }
+.location-card.is-expanded .location-card-icon{ opacity:0; }
+.location-card-live{ display:flex; align-items:center; gap:6px; padding:4px 10px; border-radius:var(--radius-full); background:rgba(46,43,39,.05); font-size:.64rem; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-mute); }
+.location-card-live i{ width:6px; height:6px; border-radius:50%; background:var(--accent); box-shadow:0 0 6px 1px var(--accent-dim); }
+.location-card-bottom b{ display:block; font-family:var(--font-display); font-weight:500; font-size:.95rem; }
+.location-card-coords{
+  display:block; font-size:.72rem; font-family:ui-monospace,'Courier New',monospace; color:var(--ink-mute);
+  max-height:0; opacity:0; overflow:hidden; transition:max-height .3s ease, opacity .3s ease, margin-top .3s ease;
+}
+.location-card.is-expanded .location-card-coords{ max-height:20px; opacity:1; margin-top:4px; }
+.location-card-underline{ display:block; height:1px; margin-top:8px; background:linear-gradient(90deg,var(--accent),transparent); transform:scaleX(.3); transform-origin:left; transition:transform .4s ease; }
+.location-card:hover .location-card-underline, .location-card.is-expanded .location-card-underline{ transform:scaleX(1); }
+.location-card-hint{ position:absolute; bottom:-22px; left:50%; transform:translateX(-50%); font-size:.68rem; color:var(--ink-mute); opacity:0; transition:opacity .2s ease; white-space:nowrap; }
+.location-card:hover .location-card-hint{ opacity:1; }
+.location-card.is-expanded .location-card-hint{ opacity:0; }
+.location-card:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+
 /* ==========================================================================
    CARROUSEL PAR SECTEUR (realisations.html) — swipe mobile, reveal image
    ========================================================================== */
@@ -1192,20 +1541,24 @@ footer{ padding:var(--space-9) 0 var(--space-6); position:relative; overflow:hid
   border:1px solid var(--border-soft); cursor:pointer; scroll-snap-align:start;
 }
 .sector-card-face{
-  position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
-  background:linear-gradient(160deg,var(--bg-elevated),#0A0A0B); transition:opacity .4s var(--ease); text-align:center; padding:20px;
+  position:absolute; left:14px; bottom:14px; right:14px; z-index:2;
+  display:flex; flex-direction:column; align-items:flex-start; gap:2px; padding:10px 16px; border-radius:var(--radius-full);
+  width:fit-content; box-shadow:0 8px 20px rgba(0,0,0,.28); pointer-events:none; transition:transform .4s var(--ease);
 }
-.sector-card-face b{ font-family:var(--font-display); font-size:1.2rem; font-weight:600; color:#F3F1EA; }
-.sector-card-face span{ font-size:.78rem; color:rgba(255,255,255,.75); text-transform:uppercase; letter-spacing:.06em; }
+.sector-card-face b{ font-family:var(--font-display); font-size:.95rem; font-weight:600; color:#F3F1EA; line-height:1.15; }
+.sector-card-face span{ font-size:.66rem; color:rgba(255,255,255,.8); text-transform:uppercase; letter-spacing:.06em; }
 .sector-card-image{
-  position:absolute; inset:0; opacity:0; transform:scale(1.06);
-  transition:opacity .5s var(--ease), transform .6s var(--ease);
+  position:absolute; inset:0; opacity:1; transform:scale(1);
+  transition:transform .6s var(--ease);
+}
+.sector-card-image::after{
+  content:""; position:absolute; inset:0; background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.5) 100%);
 }
 .sector-card-image img{ width:100%; height:100%; object-fit:cover; display:block; }
 .sector-card:hover .sector-card-image,
-.sector-card.is-active .sector-card-image{ opacity:1; transform:scale(1); }
+.sector-card.is-active .sector-card-image{ transform:scale(1.06); }
 .sector-card:hover .sector-card-face,
-.sector-card.is-active .sector-card-face{ opacity:0; }
+.sector-card.is-active .sector-card-face{ transform:translateY(-4px); }
 @media (max-width:640px){ .sector-card{ width:74vw; } }
 
 .sector-card-expand{

@@ -28,55 +28,6 @@
     wrap.addEventListener('mouseleave', function () { rotX(0); rotY(0); });
   }
 
-  /* ---------- 1. Curseur personnalisé (desktop, hover fin uniquement) ---------- */
-  (function customCursor() {
-    if (!canHover || reduced) return;
-    var dot = document.querySelector('.cursor-dot');
-    var ring = document.querySelector('.cursor-ring');
-    if (!dot || !ring) return;
-
-    var dotX = gsap.quickTo(dot, 'x', { duration: .12, ease: 'power3.out' });
-    var dotY = gsap.quickTo(dot, 'y', { duration: .12, ease: 'power3.out' });
-    var ringX = gsap.quickTo(ring, 'x', { duration: .35, ease: 'power3.out' });
-    var ringY = gsap.quickTo(ring, 'y', { duration: .35, ease: 'power3.out' });
-
-    window.addEventListener('mousemove', function (e) {
-      dotX(e.clientX); dotY(e.clientY);
-      ringX(e.clientX); ringY(e.clientY);
-    });
-
-    document.querySelectorAll('a, button, [data-cursor-hover]').forEach(function (el) {
-      el.addEventListener('mouseenter', function () { ring.classList.add('is-hover'); });
-      el.addEventListener('mouseleave', function () { ring.classList.remove('is-hover'); });
-    });
-    document.querySelectorAll('[data-cursor-view]').forEach(function (el) {
-      el.addEventListener('mouseenter', function () { ring.classList.add('is-view'); });
-      el.addEventListener('mouseleave', function () { ring.classList.remove('is-view'); });
-    });
-
-    /* Texte contextuel dans le curseur selon l'élément survolé */
-    var textEl = ring.querySelector('.cursor-text');
-    if (textEl) {
-      var textTargets = [
-        { selector: '.btn-solid', text: 'OUVRIR' },
-        { selector: '.service-row', text: 'VOIR' },
-        { selector: '.sector-card', text: 'VOIR' },
-        { selector: '.price-card', text: 'CHOISIR' }
-      ];
-      textTargets.forEach(function (t) {
-        document.querySelectorAll(t.selector).forEach(function (el) {
-          el.addEventListener('mouseenter', function () {
-            textEl.textContent = t.text;
-            ring.classList.add('is-text');
-          });
-          el.addEventListener('mouseleave', function () {
-            ring.classList.remove('is-text');
-          });
-        });
-      });
-    }
-  })();
-
   /* ---------- 1bis. Barre de progression du scroll ---------- */
   (function scrollProgress() {
     var bar = document.querySelector('.scroll-progress span');
@@ -87,18 +38,8 @@
     });
   })();
 
-  /* ---------- 1ter. Smooth scroll premium (Lenis, si chargé) ---------- */
-  (function smoothScroll() {
-    if (!window.Lenis || reduced) return;
-    var lenis = new window.Lenis({ lerp: 0.5, wheelMultiplier: 1 });
-    if (window.ScrollTrigger) {
-      lenis.on('scroll', ScrollTrigger.update);
-      gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
-      gsap.ticker.lagSmoothing(0);
-    } else {
-      requestAnimationFrame(function raf(time) { lenis.raf(time); requestAnimationFrame(raf); });
-    }
-  })();
+  /* Scroll natif du navigateur — Lenis (scroll lissé) retiré : donnait une
+     sensation de perte de contrôle, contraire à ce qui est recherché ici. */
 
   /* ---------- 2. Reveal générique au scroll ([data-reveal]) ---------- */
   /* Effet "chute + rebond léger" : les cartes tombent d'un peu plus haut puis se posent,
@@ -169,7 +110,7 @@
     var h1 = hero.querySelector('h1[data-split-immediate]');
     var eyebrowRow = hero.querySelector('.hero-eyebrow-row');
     var subCol = hero.querySelector('.hero-sub-col');
-    var visual = hero.querySelector('.signal-card');
+    var visual = hero.querySelector('.hero-signature');
     var cue = hero.querySelector('.scroll-cue');
 
     var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
@@ -196,23 +137,6 @@
     if (cornerBadge) {
       gsap.set(cornerBadge, { y: -60, opacity: 0, rotate: -12 });
       tl.to(cornerBadge, { y: 0, opacity: 1, rotate: 0, duration: 1, ease: 'back.out(1.4)' }, '-=0.7');
-    }
-
-    /* Graphique du signal-card : les barres se remplissent, le score compte jusqu'à sa valeur */
-    var bars = hero.querySelectorAll('.signal-bar i');
-    var scoreEl = hero.querySelector('#heroScoreNum');
-    if (bars.length) {
-      gsap.set(bars, { scaleX: 0, transformOrigin: 'left center' });
-      tl.to(bars, { scaleX: 1, duration: .9, stagger: .12, ease: 'power2.out' }, '-=0.5');
-    }
-    if (scoreEl) {
-      var target = { val: 0 };
-      var finalScore = parseInt(scoreEl.textContent, 10) || 66;
-      scoreEl.textContent = '0';
-      tl.to(target, {
-        val: finalScore, duration: 1.1, ease: 'power1.out',
-        onUpdate: function () { scoreEl.textContent = Math.round(target.val); }
-      }, '-=0.8');
     }
 
     /* Les 3 vrais chiffres du hero (0€ / 6 / 24h) comptent jusqu'à leur valeur —
@@ -262,6 +186,7 @@
   tiltCards('.price-card', { strength: 10, lift: -6 });
   tiltCards('.craft-card', { strength: 7, lift: -4 });
   tiltCards('.proof-cell', { strength: 6, lift: -3 });
+  tiltCards('.location-card', { strength: 6, lift: -3 });
 
   /* ---------- 4ter. Glow qui suit la souris, sans le tilt 3D (lignes de service : trop larges pour un tilt cohérent) ---------- */
   function glowTrack(selector) {
@@ -357,20 +282,68 @@
   })();
 
   /* ---------- 9. Construction en direct : wireframe → design → animation → site terminé ---------- */
+  /* Défile tout seul comme une story (en boucle, en pause hors écran), et
+     chaque étiquette reste cliquable pour sauter directement à une étape —
+     plus aucun lien avec le scroll de la page, qui ne fait que révéler le bloc. */
   (function buildStory() {
     var stage = document.getElementById('buildStage');
-    if (!stage || !window.ScrollTrigger) return;
+    if (!stage) return;
     var frames = stage.querySelectorAll('.build-frame');
     var labels = document.querySelectorAll('.build-labels [data-label]');
-    if (reduced) { frames.forEach(function (f, i) { f.classList.toggle('is-active', i === frames.length - 1); }); return; }
-    ScrollTrigger.create({
-      trigger: stage, start: 'top 75%', end: 'bottom 45%', scrub: .4,
-      onUpdate: function (self) {
-        var idx = Math.min(frames.length - 1, Math.floor(self.progress * frames.length));
-        frames.forEach(function (f, i) { f.classList.toggle('is-active', i === idx); });
-        labels.forEach(function (l, i) { l.classList.toggle('is-active', i === idx); });
-      }
+    var segs = stage.querySelectorAll('.build-story-seg');
+    var badge = stage.querySelector('.build-chrome-badge');
+    var DURATION = 3200;
+    var idx = 0, timer = null, playing = false;
+
+    function show(i) {
+      idx = i;
+      frames.forEach(function (f, n) { f.classList.toggle('is-active', n === idx); });
+      labels.forEach(function (l, n) { l.classList.toggle('is-active', n === idx); });
+      if (badge) badge.classList.toggle('is-shown', idx >= 4);
+      segs.forEach(function (s, n) {
+        s.classList.remove('is-active', 'is-done');
+        if (n < idx) s.classList.add('is-done');
+        else if (n === idx) s.classList.add('is-active');
+      });
+    }
+
+    function scheduleNext() {
+      clearTimeout(timer);
+      if (reduced || !playing) return;
+      timer = setTimeout(function () {
+        show((idx + 1) % frames.length);
+        scheduleNext();
+      }, DURATION);
+    }
+
+    function goTo(i) {
+      clearTimeout(timer);
+      show(i);
+      scheduleNext();
+    }
+
+    labels.forEach(function (l, n) {
+      l.addEventListener('click', function () { goTo(n); });
     });
+
+    if (reduced) {
+      show(frames.length - 1);
+      return;
+    }
+
+    show(0);
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          playing = entry.isIntersecting;
+          if (playing) scheduleNext(); else clearTimeout(timer);
+        });
+      }, { threshold: .35 }).observe(stage);
+    } else {
+      playing = true;
+      scheduleNext();
+    }
   })();
 
   /* ---------- 11. Parallax léger des blobs du hero (profondeur à la souris) ---------- */
