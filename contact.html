@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="no-js">
 <head>
+<script>document.documentElement.classList.remove("no-js");</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Contact — Growthline</title>
@@ -76,6 +77,25 @@
       <span class="eyebrow" data-reveal>Contact</span>
       <h1 class="display-1" data-reveal>Parlons de votre projet.</h1>
       <p class="lede" data-reveal>Un devis pour une correction, une refonte, ou simplement une question sur votre audit : écrivez-nous directement.</p>
+    </div>
+  </section>
+
+  <!-- ============ VISUEL SIGNATURE : ÉCHANGE / CONNEXION ============ -->
+  <section class="section" style="padding-top:0;padding-bottom:0;">
+    <div class="container">
+      <div class="contact-web" data-reveal role="img" aria-label="Illustration : des échanges reliés entre vous et Growthline, de la prise de contact à la construction du projet.">
+        <svg class="contact-web-lines" viewBox="0 0 800 300" aria-hidden="true">
+          <path d="M64,45 C 150,20 220,10 304,15"/>
+          <path d="M304,15 C 380,20 480,40 544,66"/>
+          <path d="M64,45 C 90,100 120,150 160,186"/>
+          <path d="M160,186 C 250,200 380,210 464,204"/>
+        </svg>
+        <div class="contact-bubble" style="left:8%; top:15%;"><span class="dot"></span>Bonjour 👋</div>
+        <div class="contact-bubble" style="left:38%; top:5%;"><span class="dot"></span>Votre projet</div>
+        <div class="contact-bubble" style="left:68%; top:22%;"><span class="dot"></span>Stratégie</div>
+        <div class="contact-bubble" style="left:20%; top:62%;"><span class="dot"></span>Growth</div>
+        <div class="contact-bubble contact-bubble--accent" style="left:58%; top:68%;"><span class="dot"></span>Let's build</div>
+      </div>
     </div>
   </section>
 
@@ -170,8 +190,8 @@
         <form id="bookingForm" class="audit-form" style="margin-top:26px;">
           <input type="hidden" name="type" id="bookingTypeInput" value="Appel téléphonique">
           <div class="slot-toggle" role="radiogroup" aria-label="Type de rendez-vous">
-            <button type="button" class="slot-toggle-btn is-active" data-type="Appel téléphonique" aria-pressed="true">Appel téléphonique</button>
-            <button type="button" class="slot-toggle-btn" data-type="Rendez-vous physique" aria-pressed="false">Rendez-vous physique</button>
+            <button type="button" class="slot-toggle-btn is-active" data-type="Appel téléphonique" role="radio" aria-checked="true">Appel téléphonique</button>
+            <button type="button" class="slot-toggle-btn" data-type="Rendez-vous physique" role="radio" aria-checked="false">Rendez-vous physique</button>
           </div>
 
           <div class="tool-form-grid" style="margin-top:6px;">
@@ -262,20 +282,21 @@
         <p>Agence digitale : audit manuel, corrections et refontes orientées performance et conversion.</p>
       </div>
       <div class="footer-col">
-        <h5>Navigation</h5>
+        <h3>Navigation</h3>
         <a href="index.html">Accueil</a>
         <a href="services.html">Services</a>
         <a href="realisations.html">Réalisations</a>
         <a href="a-propos.html">À propos</a>
       </div>
       <div class="footer-col">
-        <h5>Produit</h5>
+        <h3>Produit</h3>
         <a href="index.html#audit">Audit gratuit</a>
         <a href="services.html#tarifs">Tarifs</a>
         <a href="realisations.html">Exemple de rapport</a>
+        <a href="growthline-intelligence.html">Growthline Intelligence™</a>
       </div>
       <div class="footer-col">
-        <h5>Contact</h5>
+        <h3>Contact</h3>
         <a href="mailto:growthline.studio@gmail.com">growthline.studio@gmail.com</a>
         <a href="contact.html">Formulaire de contact</a>
       </div>

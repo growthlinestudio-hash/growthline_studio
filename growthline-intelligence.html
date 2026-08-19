@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr" class="no-js">
+<head>
+<script>document.documentElement.classList.remove("no-js");</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Growthline Intelligence™ — Démo d'audit — Growthline</title>
+<meta name="description" content="Voyez le principe de l'audit Growthline en 10 secondes : choisissez un secteur, regardez l'analyse se dérouler sur les 6 axes qu'on examine à chaque audit.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://growthline-studio-9izc.onrender.com/growthline-intelligence.html">
+<meta property="og:title" content="Growthline Intelligence™ — Démo d'audit — Growthline">
+<meta property="og:description" content="Voyez le principe de l'audit Growthline en 10 secondes : choisissez un secteur, regardez l'analyse se dérouler sur les 6 axes qu'on examine à chaque audit.">
+<meta property="og:image" content="https://growthline-studio-9izc.onrender.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Growthline Intelligence™ — Démo d'audit — Growthline">
+<meta name="twitter:description" content="Voyez le principe de l'audit Growthline en 10 secondes : choisissez un secteur, regardez l'analyse se dérouler sur les 6 axes qu'on examine à chaque audit.">
+<meta name="twitter:image" content="https://growthline-studio-9izc.onrender.com/og-image.png">
+<link rel="canonical" href="https://growthline-studio-9izc.onrender.com/growthline-intelligence.html">
+<link rel="icon" type="image/png" href="images/logo-growthline-pastel-icon.png">
+<link rel="apple-touch-icon" href="images/logo-growthline-pastel-icon.png">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="pageLoader" class="page-loader" aria-hidden="true">
+  <div class="mark"><img src="images/logo-growthline-pastel-icon.png" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"></div>
+  <p class="page-loader-text" id="pageLoaderText">Chargement...</p>
+  <div class="page-loader-bar"><span id="pageLoaderBar"></span></div>
+</div>
+<div class="scroll-progress" aria-hidden="true"><span></span></div>
+<div class="grain" aria-hidden="true"></div>
+<header>
+  <div class="container nav-inner">
+    <a href="index.html" class="brand">
+      <span class="mark"><img src="images/logo-growthline-pastel-icon.png" alt="Growthline"></span>
+      Growthline
+    </a>
+    <nav class="main-nav">
+      <a href="index.html">Accueil</a>
+      <a href="services.html">Services</a>
+      <a href="realisations.html">Réalisations</a>
+      <a href="a-propos.html">À propos</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <a href="index.html#audit" class="btn btn-solid btn-sm nav-cta" data-magnetic>Démarrer un audit</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Ouvrir le menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <nav class="mobile-menu-links">
+    <a href="index.html">Accueil <span>01</span></a>
+    <a href="services.html">Services <span>02</span></a>
+    <a href="realisations.html">Réalisations <span>03</span></a>
+    <a href="a-propos.html">À propos <span>04</span></a>
+    <a href="contact.html">Contact <span>05</span></a>
+  </nav>
+  <div class="mobile-menu-foot">
+    <a href="index.html#audit" class="btn btn-solid btn-lg">Démarrer un audit gratuit</a>
+    <div class="meta-row">
+      <span>growthline.studio@gmail.com</span>
+      <span>© 2026</span>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow" data-reveal>Growthline Intelligence™</span>
+      <h1 class="display-1" data-reveal>Voyez comment on analyse un site.</h1>
+      <p class="lede" data-reveal>Choisissez un secteur, regardez l'analyse se dérouler — même format que le vrai rapport que vous recevez après un audit.</p>
+    </div>
+  </section>
+
+  <!-- ============ DÉMO INTERACTIVE ============ -->
+  <section class="section" id="intelligence" style="padding-top:0;">
+    <div class="container">
+      <div class="intel-demo-controls" data-reveal>
+        <span class="intel-demo-label">Simuler un audit pour :</span>
+        <div class="slot-toggle" id="intelSectorToggle" role="tablist">
+          <button type="button" class="slot-toggle-btn is-active" data-sector="restaurant" role="tab" aria-selected="true" aria-controls="intelDemoCard"><img class="slot-toggle-icon" src="images/icon-secteur-restaurant.png" alt="">Restaurant</button>
+          <button type="button" class="slot-toggle-btn" data-sector="dentiste" role="tab" aria-selected="false" aria-controls="intelDemoCard"><img class="slot-toggle-icon" src="images/icon-secteur-medical.png" alt="">Cabinet médical</button>
+          <button type="button" class="slot-toggle-btn" data-sector="artisan" role="tab" aria-selected="false" aria-controls="intelDemoCard">🏠 Artisan</button>
+          <button type="button" class="slot-toggle-btn" data-sector="boutique" role="tab" aria-selected="false" aria-controls="intelDemoCard"><img class="slot-toggle-icon" src="images/icon-secteur-ecommerce.png" alt="">E-commerce</button>
+        </div>
+      </div>
+
+      <div class="tool-card intel-demo-card" id="intelDemoCard" role="tabpanel" tabindex="0" aria-live="polite" data-reveal>
+        <div class="signal-card-head">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <span class="tag">Growthline Intelligence™ — démo</span>
+        </div>
+
+        <div class="intel-demo-scan" id="intelScan">
+          <div class="tool-loading-ring" aria-hidden="true"></div>
+          <p class="intel-demo-scan-text" id="intelScanText">Analyse technique et sécurité…</p>
+        </div>
+
+        <div id="intelResults" hidden>
+          <div class="tool-summary">
+            <div class="signal-score"><span id="intelScoreNum">–</span><span>/100</span></div>
+          </div>
+          <div class="score-breakdown" id="intelBreakdown"></div>
+          <div class="issues-list" id="intelIssues" style="margin-top:var(--space-6);"></div>
+        </div>
+      </div>
+
+      <p class="disclaimer-note" data-reveal>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+        Démonstration : aucune vraie analyse n'est effectuée sur cette section. <a href="index.html#audit">Lancez votre vrai audit gratuit ↓</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ LES 6 AXES ============ -->
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <div class="section-head-title">
+          <span class="eyebrow">Ce qu'on regarde</span>
+          <h2 class="display-2" style="margin-top:14px;">Six axes, à chaque audit, sans exception.</h2>
+        </div>
+        <p class="lede">Pas une liste de fonctionnalités marketing — les mêmes six catégories, à chaque fois.</p>
+      </div>
+      <div class="value-grid" data-reveal>
+        <div class="value-item">
+          <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 4v5"/></svg></div>
+          <h3>Site web</h3>
+          <p>Structure, clarté, accessibilité — les fondations techniques de votre présence en ligne.</p>
+        </div>
+        <div class="value-item">
+          <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></div>
+          <h3>SEO</h3>
+          <p>Ce qui vous rend trouvable — ou invisible — sur les moteurs de recherche.</p>
+        </div>
+        <div class="value-item">
+          <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 11-14h-7l1-6z"/></svg></div>
+          <h3>Conversion</h3>
+          <p>Ce qui pousse — ou freine — un visiteur à devenir client.</p>
+        </div>
+        <div class="value-item">
+          <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <h3>SEO local</h3>
+          <p>Votre visibilité pour les recherches proches de chez vous — fiche Google, cohérence des informations.</p>
+        </div>
+        <div class="value-item">
+          <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 01-3.14 1.53A4.48 4.48 0 0022.4.36a9 9 0 01-2.83 1.08A4.52 4.52 0 0016.11 0a4.5 4.5 0 00-4.5 4.5c0 .35.04.7.1 1.03A12.8 12.8 0 013 1.15a4.5 4.5 0 001.4 6A4.48 4.48 0 012 6.6v.06a4.5 4.5 0 003.6 4.4 4.5 4.5 0 01-2 .08 4.5 4.5 0 004.2 3.13A9 9 0 010 20.14 12.7 12.7 0 007 22c8 0 12.5-6.6 12.5-12.5v-.57A9 9 0 0023 3z"/></svg></div>
+          <h3>Réseaux sociaux</h3>
+          <p>Présence, cohérence, mise à jour — ce que voient vos prospects avant de vous contacter.</p>
+        </div>
+        <div class="value-item">
+          <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 11-14h-7l1-6z"/></svg></div>
+          <h3>Performance</h3>
+          <p>Vitesse de chargement, fluidité mobile — chaque seconde perdue coûte des visiteurs.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA FINAL ============ -->
+  <section class="section">
+    <div class="container">
+      <div class="cta-final" data-reveal>
+        <div class="cta-final-orb" aria-hidden="true"></div>
+        <div class="cta-final-inner">
+          <span class="eyebrow">Prêt à voir votre propre score ?</span>
+          <h2>Ceci était une démo. Votre audit sera réel.</h2>
+          <div class="cta-final-actions">
+            <a href="index.html#audit" class="btn btn-solid btn-lg" data-magnetic>Démarrer mon audit gratuit</a>
+            <a href="realisations.html" class="btn btn-lg" data-magnetic>Voir un exemple de rapport</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="brand">
+          <span class="mark"><img src="images/logo-growthline-pastel-icon.png" alt="Growthline"></span>
+          Growthline
+        </a>
+        <p>Agence digitale : audit manuel, corrections et refontes orientées performance et conversion.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Navigation</h3>
+        <a href="index.html">Accueil</a>
+        <a href="services.html">Services</a>
+        <a href="realisations.html">Réalisations</a>
+        <a href="a-propos.html">À propos</a>
+      </div>
+      <div class="footer-col">
+        <h3>Produit</h3>
+        <a href="index.html#audit">Audit gratuit</a>
+        <a href="services.html#tarifs">Tarifs</a>
+        <a href="realisations.html">Exemple de rapport</a>
+        <a href="growthline-intelligence.html">Growthline Intelligence™</a>
+      </div>
+      <div class="footer-col">
+        <h3>Contact</h3>
+        <a href="mailto:growthline.studio@gmail.com">growthline.studio@gmail.com</a>
+        <a href="contact.html">Formulaire de contact</a>
+      </div>
+    </div>
+    <div class="footer-wordmark" aria-hidden="true">GROWTHLINE</div>
+    <div class="footer-bottom">
+      <span class="meta">© 2026 Growthline. Tous droits réservés.</span>
+      <span class="meta"><a href="mentions-legales.html">Mentions légales</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<script src="main.js" defer></script>
+<script src="motion.js" defer></script>
+<script src="intel-demo.js" defer></script>
+</body>
+</html>

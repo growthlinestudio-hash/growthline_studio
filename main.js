@@ -24,21 +24,6 @@
     }
   }
 
-  /* ---------- Vidéo de signature du hero : repli sur l'image si la vidéo échoue ---------- */
-  var heroVideo = document.querySelector('.hero-signature-video');
-  if (heroVideo) {
-    var heroVideoFallback = function () {
-      var img = document.querySelector('.hero-signature-fallback');
-      if (img) img.hidden = false;
-      heroVideo.hidden = true;
-    };
-    heroVideo.addEventListener('error', heroVideoFallback, true);
-    heroVideo.addEventListener('stalled', function () {
-      if (heroVideo.readyState === 0) heroVideoFallback();
-    });
-    if (heroVideo.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) heroVideoFallback();
-  }
-
   /* ---------- Carte de localisation (Contact) : s'agrandit au clic ou à Entrée/Espace ---------- */
   var locationCard = document.getElementById('locationCard');
   if (locationCard) {
@@ -50,6 +35,107 @@
     locationCard.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleLocationCard(); }
     });
+  }
+
+  /* ---------- Filet de sécurité multi-navigateurs : si GSAP ne charge pas
+     (bloqueur de pub, protection anti-tracking stricte type Edge/Opera, CDN
+     lent ou inaccessible), tout le contenu marqué data-reveal resterait
+     invisible pour toujours (opacity:0 en CSS, jamais levé). On force son
+     affichage après un court délai si GSAP n'est toujours pas là. ---------- */
+  setTimeout(function () {
+    if (!window.gsap) {
+      document.querySelectorAll('[data-reveal]').forEach(function (el) {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      });
+    }
+  }, 2200);
+
+  /* ---------- Construction en direct (Build Stage) : indépendant de GSAP pour
+     fonctionner même si la CDN GSAP est bloquée. Défile tout seul comme une
+     story, en boucle, en pause hors écran ; chaque étiquette reste cliquable
+     pour sauter directement à une étape. ---------- */
+  (function buildStory() {
+    var stage = document.getElementById('buildStage');
+    if (!stage) return;
+    var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var frames = stage.querySelectorAll('.build-frame');
+    var labels = document.querySelectorAll('.build-labels [data-label]');
+    var segs = stage.querySelectorAll('.build-story-seg');
+    var badge = stage.querySelector('.build-chrome-badge');
+    var DURATION = 3200;
+    var idx = 0, timer = null, playing = false;
+
+    function show(i) {
+      idx = i;
+      frames.forEach(function (f, n) { f.classList.toggle('is-active', n === idx); });
+      labels.forEach(function (l, n) { l.classList.toggle('is-active', n === idx); });
+      if (badge) badge.classList.toggle('is-shown', idx >= 4);
+      segs.forEach(function (s, n) {
+        s.classList.remove('is-active', 'is-done');
+        if (n < idx) s.classList.add('is-done');
+        else if (n === idx) s.classList.add('is-active');
+      });
+    }
+
+    function scheduleNext() {
+      clearTimeout(timer);
+      if (reducedMotion || !playing) return;
+      timer = setTimeout(function () {
+        show((idx + 1) % frames.length);
+        scheduleNext();
+      }, DURATION);
+    }
+
+    function goTo(i) {
+      clearTimeout(timer);
+      show(i);
+      scheduleNext();
+    }
+
+    labels.forEach(function (l, n) {
+      l.addEventListener('click', function () { goTo(n); });
+    });
+
+    if (reducedMotion) {
+      show(frames.length - 1);
+      return;
+    }
+
+    show(0);
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          playing = entry.isIntersecting;
+          if (playing) scheduleNext(); else clearTimeout(timer);
+        });
+      }, { threshold: .35 }).observe(stage);
+    } else {
+      playing = true;
+      scheduleNext();
+    }
+  })();
+
+  /* ---------- Aperçu Growthline Intelligence : les recommandations
+     apparaissent en léger décalage quand le mockup entre à l'écran.
+     Indépendant de GSAP (comme le Build Stage), pour ne jamais dépendre
+     d'une CDN externe pour un contenu déjà visible. ---------- */
+  var intelMock = document.getElementById('intelMock');
+  if (intelMock) {
+    if ('IntersectionObserver' in window) {
+      var intelIo = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            intelMock.classList.add('is-live');
+            intelIo.unobserve(entry.target);
+          }
+        });
+      }, { threshold: .4 });
+      intelIo.observe(intelMock);
+    } else {
+      intelMock.classList.add('is-live');
+    }
   }
 
   /* ---------- Navbar : réduction au scroll ---------- */
@@ -82,12 +168,14 @@
       toggle.classList.remove('is-open');
       mobileMenu.classList.remove('is-open');
       toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Ouvrir le menu');
       document.body.style.overflow = '';
     };
     var openMenu = function () {
       toggle.classList.add('is-open');
       mobileMenu.classList.add('is-open');
       toggle.setAttribute('aria-expanded', 'true');
+      toggle.setAttribute('aria-label', 'Fermer le menu');
       document.body.style.overflow = 'hidden';
     };
     toggle.addEventListener('click', function () {
@@ -116,7 +204,7 @@
     var btn = form.querySelector('button[type="submit"]');
     var formData = new FormData(form);
     formData.append('_subject', subject);
-    formData.append('_captcha', 'false');
+    formData.append('_captcha', 'true');
     formData.append('_template', 'table');
 
     btn.classList.add('is-loading');
@@ -183,10 +271,12 @@
     var handle = document.getElementById('compareHandle');
     var dragging = false;
 
+    var pos = 50;
     function setPos(pct) {
-      pct = Math.max(6, Math.min(94, pct));
-      before.style.clipPath = 'inset(0 ' + (100 - pct) + '% 0 0)';
-      handle.style.left = pct + '%';
+      pos = Math.max(6, Math.min(94, pct));
+      before.style.clipPath = 'inset(0 ' + (100 - pos) + '% 0 0)';
+      handle.style.left = pos + '%';
+      handle.setAttribute('aria-valuenow', String(Math.round(pos)));
     }
     function pointerToPct(clientX) {
       var r = slider.getBoundingClientRect();
@@ -203,6 +293,12 @@
     slider.addEventListener('touchstart', function (e) { dragging = true; setPos(pointerToPct(e.touches[0].clientX)); }, { passive: true });
     window.addEventListener('touchmove', onMove, { passive: true });
     window.addEventListener('touchend', function () { dragging = false; });
+    handle.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { setPos(pos - 5); e.preventDefault(); }
+      else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { setPos(pos + 5); e.preventDefault(); }
+      else if (e.key === 'Home') { setPos(6); e.preventDefault(); }
+      else if (e.key === 'End') { setPos(94); e.preventDefault(); }
+    });
 
     setPos(50);
   })();
@@ -212,23 +308,28 @@
   if (lightbox) {
     var lbImg = document.getElementById('galleryLightboxImg');
     var lbLabel = document.getElementById('galleryLightboxLabel');
-    var openLightbox = function (src, label) {
+    var lbClose = lightbox.querySelector('.gallery-lightbox-close');
+    var lastFocused = null;
+    var openLightbox = function (src, label, trigger) {
       lbImg.src = src;
       lbImg.alt = label;
       lbLabel.textContent = label;
       lightbox.classList.add('is-open');
       lightbox.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
+      lastFocused = trigger || document.activeElement;
+      lbClose.focus();
     };
     var closeLightbox = function () {
       lightbox.classList.remove('is-open');
       lightbox.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
+      if (lastFocused) lastFocused.focus();
     };
     document.querySelectorAll('.sector-card-expand').forEach(function (btn) {
       btn.addEventListener('click', function (e) {
         e.stopPropagation();
-        openLightbox(btn.getAttribute('data-img'), btn.getAttribute('data-label'));
+        openLightbox(btn.getAttribute('data-img'), btn.getAttribute('data-label'), btn);
       });
     });
     lightbox.querySelector('.gallery-lightbox-backdrop').addEventListener('click', closeLightbox);
@@ -258,13 +359,16 @@
     var toggleBtns = bookingForm.querySelectorAll('.slot-toggle-btn');
     toggleBtns.forEach(function (btn) {
       btn.addEventListener('click', function () {
-        toggleBtns.forEach(function (b) { b.classList.remove('is-active'); b.setAttribute('aria-pressed', 'false'); });
+        toggleBtns.forEach(function (b) { b.classList.remove('is-active'); b.setAttribute('aria-checked', 'false'); });
         btn.classList.add('is-active');
-        btn.setAttribute('aria-pressed', 'true');
+        btn.setAttribute('aria-checked', 'true');
         bookingType = btn.getAttribute('data-type');
         if (bookingTypeInput) bookingTypeInput.value = bookingType;
       });
     });
+
+    var bookingDateInput = document.getElementById('bookingDate');
+    if (bookingDateInput) bookingDateInput.min = new Date().toISOString().slice(0, 10);
 
     bookingForm.addEventListener('submit', function (e) {
       e.preventDefault();

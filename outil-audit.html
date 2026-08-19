@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="no-js">
 <head>
+<script>document.documentElement.classList.remove("no-js");</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Outil d'audit (interne) — Growthline</title>
@@ -68,6 +69,8 @@
   <section class="section" style="padding-top:0;">
     <div class="container">
 
+      <h2 class="sr-only">Lancer une analyse.</h2>
+
       <div class="tool-card" data-reveal>
         <form id="toolAuditForm" class="audit-form tool-form-grid">
           <div class="audit-field full">
@@ -82,7 +85,7 @@
             <label for="toolCity">Ville</label>
             <input id="toolCity" name="city" type="text" placeholder="Facultatif, utile pour le SEO local">
           </div>
-          <button type="submit" class="btn btn-solid btn-lg audit-submit tool-form-grid-full" style="grid-column:1/-1;">
+          <button type="submit" class="btn btn-solid btn-lg audit-submit" style="grid-column:1/-1;">
             Lancer l'analyse
             <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </button>
@@ -142,20 +145,20 @@
         <p>Agence digitale : audit manuel, corrections et refontes orientées performance et conversion.</p>
       </div>
       <div class="footer-col">
-        <h5>Navigation</h5>
+        <h3>Navigation</h3>
         <a href="index.html">Accueil</a>
         <a href="services.html">Services</a>
         <a href="realisations.html">Réalisations</a>
         <a href="a-propos.html">À propos</a>
       </div>
       <div class="footer-col">
-        <h5>Produit</h5>
+        <h3>Produit</h3>
         <a href="index.html#audit">Audit gratuit</a>
         <a href="services.html#tarifs">Tarifs</a>
         <a href="realisations.html">Exemple de rapport</a>
       </div>
       <div class="footer-col">
-        <h5>Contact</h5>
+        <h3>Contact</h3>
         <a href="mailto:growthline.studio@gmail.com">growthline.studio@gmail.com</a>
         <a href="contact.html">Formulaire de contact</a>
       </div>
