@@ -211,7 +211,7 @@
     statusEl.textContent = '';
     statusEl.className = 'form-status';
 
-    fetch('https://formsubmit.co/ajax/growthline.studio@gmail.com', {
+    fetch('https://formsubmit.co/ajax/contact@growthlineagency.fr', {
       method: 'POST',
       headers: { 'Accept': 'application/json' },
       body: formData
@@ -228,7 +228,7 @@
         btn.classList.remove('is-loading');
         statusEl.textContent = "L'envoi automatique a échoué — ouverture de votre messagerie...";
         statusEl.className = 'form-status is-error';
-        window.location.href = 'mailto:growthline.studio@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(mailtoBody);
+        window.location.href = 'mailto:contact@growthlineagency.fr?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(mailtoBody);
       });
   }
 
