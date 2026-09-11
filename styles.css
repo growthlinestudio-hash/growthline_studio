@@ -645,7 +645,13 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
   box-shadow:var(--soft-shadow); aspect-ratio:16/7; margin-bottom:var(--space-8);
 }
 .services-signature img{ width:100%; height:100%; object-fit:cover; object-position:50% 34%; transform:scale(2.6) translateX(-115px); }
-@media (max-width:640px){ .services-signature{ aspect-ratio:4/3; } }
+@media (max-width:640px){
+  .services-signature{ aspect-ratio:4/3; }
+  /* the fixed -115px offset above is tuned for a wide desktop container;
+     on a ~350px-wide phone container it shoves the illustration mostly
+     off-screen, so mobile gets a much lighter, container-relative crop */
+  .services-signature img{ transform:scale(1.85); object-position:66% 32%; }
+}
 
 /* --- En-tête façon fenêtre (points + étiquette), toujours utilisé par la
    démo Growthline Intelligence plus bas sur la page --- */
@@ -1255,7 +1261,14 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .slot-toggle-btn{ display:inline-flex; align-items:center; gap:8px; padding:8px 20px 8px 12px; border-radius:var(--radius-full); font-size:.9rem; font-weight:600; color:var(--ink-dim); transition:background .3s ease, color .3s ease; }
 .slot-toggle-icon{ width:22px; height:22px; object-fit:contain; }
 .slot-toggle-btn.is-active{ background:var(--accent); color:var(--accent-ink); }
-@media (max-width:480px){ .slot-toggle{ display:flex; width:100%; } .slot-toggle-btn{ flex:1; text-align:center; padding:10px 12px; } }
+@media (max-width:480px){
+  /* a plain flex row with flex:1 refuses to shrink below the intrinsic
+     width of the longest label (e.g. "Cabinet médical"), so a 4-option
+     toggle overflows the viewport; a 2-column grid wraps to a second row
+     instead and each button's own text can wrap if still needed */
+  .slot-toggle{ display:grid; grid-template-columns:repeat(2,1fr); gap:6px; width:100%; }
+  .slot-toggle-btn{ justify-content:center; text-align:center; padding:10px 8px; gap:6px; font-size:.82rem; }
+}
 
 /* ==========================================================================
    GROWTHLINE INTELLIGENCE — démo interactive (index.html#intelligence)
@@ -1552,6 +1565,12 @@ footer{ padding:var(--space-9) 0 var(--space-6); position:relative; overflow:hid
 .contact-email{
   display:inline-flex; align-items:center; gap:16px; font-family:var(--font-display); font-weight:600; letter-spacing:-.02em;
   font-size:clamp(1.6rem,4vw,3rem); color:var(--ink); border-bottom:1.5px solid var(--border); padding-bottom:14px;
+  max-width:100%; overflow-wrap:anywhere;
+}
+@media (max-width:480px){
+  /* the clamp() floor above is still too wide for the unbreakable email
+     string on narrow phones once container padding is subtracted */
+  .contact-email{ font-size:1.35rem; gap:10px; }
 }
 .contact-email svg{ width:.7em; height:.7em; transition:transform .5s var(--ease); flex:none; }
 .contact-email:hover svg{ transform:translate(6px,-6px); }
