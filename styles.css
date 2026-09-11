@@ -306,8 +306,28 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .main-nav a:hover::after, .main-nav a.active::after{ transform:scaleX(1); }
 .main-nav a.active{ color:var(--ink); }
 
-.nav-right{ display:flex; align-items:center; gap:14px; }
+.nav-right{ display:flex; align-items:center; gap:10px; }
 .nav-cta{ display:inline-flex; }
+
+/* --- Téléphone dans le header : seul élément visible sur le premier
+   écran mobile avant tout scroll, donc traité en priorité. Pilule
+   icône + numéro sur desktop, bouton rond (même gabarit que le
+   hamburger) en dessous de 900px où la place manque. --- */
+.nav-phone{
+  display:flex; align-items:center; justify-content:center; gap:8px; flex:none;
+  height:44px; padding:0 18px 0 14px; border-radius:var(--radius-full);
+  border:1px solid var(--border); color:var(--ink);
+  font-family:var(--font-display); font-weight:600; font-size:.88rem;
+  letter-spacing:-.01em; font-variant-numeric:tabular-nums; white-space:nowrap;
+  transition:border-color .3s ease, background .3s ease, color .3s ease, transform .3s var(--ease);
+}
+.nav-phone svg{ width:17px; height:17px; flex:none; }
+.nav-phone:hover{ border-color:var(--accent-line); color:var(--accent-text); background:var(--accent-dim); transform:translateY(-2px); }
+.nav-phone:active{ transform:translateY(0) scale(.95); }
+@media (max-width:900px){
+  .nav-phone{ width:44px; height:44px; padding:0; }
+  .nav-phone-number{ display:none; }
+}
 .menu-toggle{
   display:none; flex-direction:column; justify-content:center; gap:5px; width:44px; height:44px;
   border:1px solid var(--border); border-radius:var(--radius-full); align-items:center;
@@ -1299,13 +1319,14 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .cta-final .btn-solid:hover{ background:var(--accent-bright); border-color:var(--accent-bright); }
 .cta-final-phone{
   display:inline-flex; align-items:center; gap:10px; min-height:44px; padding:10px 22px 10px 16px;
-  border-radius:var(--radius-full); border:1px solid rgba(246,239,222,.22); color:rgba(246,239,222,.85);
+  border-radius:var(--radius-full); border:1px solid rgba(246,239,222,.22); color:var(--inverse-ink);
   font-family:var(--font-display); font-weight:600; letter-spacing:-.01em; font-size:.95rem;
   font-variant-numeric:tabular-nums;
-  transition:border-color .3s ease, background .3s ease, color .3s ease, transform .3s var(--ease);
+  transition:border-color .3s ease, background .3s ease, transform .3s var(--ease);
 }
-.cta-final-phone svg{ width:17px; height:17px; flex:none; }
-.cta-final-phone:hover{ background:rgba(246,239,222,.08); border-color:rgba(246,239,222,.5); color:var(--inverse-ink); transform:translateY(-2px); }
+.cta-final-phone svg{ width:17px; height:17px; flex:none; color:var(--accent-bright); }
+.cta-final-phone:hover{ background:rgba(246,239,222,.1); border-color:rgba(246,239,222,.5); transform:translateY(-2px); }
+.cta-final-phone:active{ transform:translateY(0) scale(.97); }
 /* --- Badge circulaire tournant (façon "tampon") --- */
 .spin-badge{ position:relative; width:118px; height:118px; flex:none; }
 .spin-badge-ring{ width:100%; height:100%; animation:spin-badge-turn 16s linear infinite; }
@@ -1583,10 +1604,18 @@ footer{ padding:var(--space-9) 0 var(--space-6); position:relative; overflow:hid
   transition:border-color .3s ease, transform .35s var(--ease), box-shadow .35s var(--ease);
 }
 .contact-primary-link:hover{ border-color:var(--accent-line); transform:translateY(-3px); box-shadow:var(--soft-shadow); }
+.contact-primary-link:active{ transform:translateY(-1px) scale(.99); box-shadow:none; }
 .contact-primary-icon{
   display:flex; align-items:center; justify-content:center; flex:none;
   width:52px; height:52px; border-radius:var(--radius-md); background:var(--accent-dim); color:var(--accent-text);
 }
+/* Le téléphone convertit mieux qu'un email pour un prospect qui hésite :
+   il porte la couleur de marque pleine, l'email reste sur la carte
+   neutre — même logique que .btn-solid vs .btn dans ce design system. */
+.contact-primary-link--primary{ background:var(--accent-dim); border-color:var(--accent-line); }
+.contact-primary-link--primary:hover{ background:var(--accent-dim); border-color:var(--accent); box-shadow:0 20px 44px -22px rgba(127,169,140,.55); }
+.contact-primary-link--primary .contact-primary-icon{ background:var(--accent); color:#fff; }
+.contact-primary-link--primary .contact-primary-label{ color:var(--accent-text); }
 .contact-primary-icon svg{ width:22px; height:22px; }
 .contact-primary-body{ display:flex; flex-direction:column; gap:3px; min-width:0; }
 .contact-primary-label{ font-size:.76rem; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-mute); font-weight:600; }
