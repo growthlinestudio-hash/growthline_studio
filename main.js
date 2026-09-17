@@ -368,6 +368,21 @@
     var bookingType = 'Appel téléphonique';
     var bookingTypeInput = document.getElementById('bookingTypeInput');
     var toggleBtns = bookingForm.querySelectorAll('.slot-toggle-btn');
+
+    // Le champ téléphone n'a de sens comme obligatoire que si le prospect a
+    // choisi d'être rappelé - sinon (rendez-vous physique) on le laisse
+    // facultatif plutôt que de bloquer l'envoi pour un numéro qui ne
+    // servirait à rien dans ce cas.
+    var bookingPhoneInput = document.getElementById('bookingPhone');
+    var bookingPhoneHint = document.getElementById('bookingPhoneHint');
+    function updatePhoneRequirement() {
+      if (!bookingPhoneInput) return;
+      var isCall = bookingType === 'Appel téléphonique';
+      bookingPhoneInput.required = isCall;
+      if (bookingPhoneHint) bookingPhoneHint.textContent = isCall ? '(obligatoire pour un appel)' : '(facultatif)';
+    }
+    updatePhoneRequirement();
+
     toggleBtns.forEach(function (btn) {
       btn.addEventListener('click', function () {
         toggleBtns.forEach(function (b) { b.classList.remove('is-active'); b.setAttribute('aria-checked', 'false'); });
@@ -375,6 +390,7 @@
         btn.setAttribute('aria-checked', 'true');
         bookingType = btn.getAttribute('data-type');
         if (bookingTypeInput) bookingTypeInput.value = bookingType;
+        updatePhoneRequirement();
       });
     });
 
@@ -387,6 +403,7 @@
       var time = bookingForm.querySelector('#bookingTime').value;
       var name = bookingForm.querySelector('#bookingName').value.trim();
       var email = bookingForm.querySelector('#bookingEmail').value.trim();
+      var phone = bookingForm.querySelector('#bookingPhone').value.trim();
       var note = bookingForm.querySelector('#bookingNote').value.trim();
 
       var subject = 'Demande de rendez-vous - ' + bookingType;
@@ -397,6 +414,7 @@
         'Nom : ' + name,
         'Email : ' + email
       ];
+      if (phone) bodyLines.push('Téléphone : ' + phone);
       if (note) bodyLines.push('Projet : ' + note);
       var body = bodyLines.join('\n');
 

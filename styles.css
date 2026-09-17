@@ -1189,6 +1189,7 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .audit-form{ display:flex; flex-direction:column; gap:14px; }
 .audit-field{ display:flex; flex-direction:column; gap:8px; }
 .audit-field label{ font-size:.78rem; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-mute); font-weight:600; }
+.audit-field label span{ text-transform:none; letter-spacing:normal; font-weight:500; opacity:.75; }
 .audit-field input{
   height:54px; padding:0 20px; border-radius:var(--radius-sm); border:1px solid var(--border);
   background:var(--surface); color:var(--ink); font-family:var(--font-body); font-size:1rem;
