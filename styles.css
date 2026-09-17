@@ -340,7 +340,7 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 /* --- Menu mobile plein écran --- */
 .mobile-menu{
   position:fixed; inset:0; z-index:998; background:var(--bg);
-  display:flex; flex-direction:column; justify-content:space-between;
+  display:flex; flex-direction:column; justify-content:center; gap:var(--space-8);
   padding:110px var(--container-pad) 48px;
   opacity:0; visibility:hidden; pointer-events:none;
   transition:opacity .5s var(--ease), visibility .5s var(--ease);
@@ -1444,6 +1444,31 @@ footer{ padding:var(--space-9) 0 var(--space-6); position:relative; overflow:hid
 @media (max-width:640px){
   .footer-top{ grid-template-columns:1fr; gap:32px; }
   .footer-bottom{ flex-direction:column; align-items:flex-start; gap:10px; }
+
+  /* Audit gratuit (hero du bloc formulaire) : le formulaire ne doit pas a
+     lui seul occuper tout le premier écran mobile - moins de padding,
+     moins de gap entre les champs, champs moins hauts. */
+  .audit-panel{ padding:var(--space-6) var(--space-5); gap:var(--space-5); }
+  .audit-panel-head .lede{ margin-top:10px; }
+  .audit-form{ gap:10px; }
+  .audit-field{ gap:6px; }
+  .audit-field input{ height:48px; }
+  .audit-submit{ margin-top:2px; }
+  .audit-note{ margin-top:10px; }
+
+  /* Aperçu Growthline Intelligence : la vignette du site suivait son ratio
+     naturel (souvent large), ce qui rendait la carte bien plus haute que
+     nécessaire une fois empilée en 1 colonne. Hauteur plafonnée + moins de
+     padding entre les blocs. */
+  .intel-mock-site-visual{ min-height:0; max-height:140px; }
+  .intel-mock-site,.intel-mock-results{ padding:16px; gap:10px; }
+  .intel-mock-cats{ gap:8px; }
+  .intel-mock-recos{ padding-top:10px; }
+
+  /* Processus en 4 étapes : 64px de marge basse par étape (x4) rendait la
+     section interminable sur mobile - resserré tout en gardant un vrai
+     espace entre chaque étape. */
+  .process-step{ padding-bottom:var(--space-6); }
 }
 
 /* ==========================================================================
