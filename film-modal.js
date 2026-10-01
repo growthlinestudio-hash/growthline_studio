@@ -10,13 +10,25 @@
   if (!modal || !openBtn) return;
 
   var video = document.getElementById('filmVideo');
+  var loader = document.getElementById('filmLoader');
   var closeEls = modal.querySelectorAll('[data-film-close]');
   var lastFocused = null;
+
+  /* Le chargement (préchargement désactivé par défaut pour ne pas peser sur
+     la page tant que personne n'a cliqué) peut prendre un instant sur une
+     connexion mobile lente : ce loader évite que l'attente ressemble à un
+     bouton cassé, aussi bien au démarrage qu'en cas de ré-achat de buffer
+     pendant la lecture. */
+  if (video && loader) {
+    video.addEventListener('waiting', function () { loader.classList.add('is-visible'); });
+    video.addEventListener('playing', function () { loader.classList.remove('is-visible'); });
+  }
 
   var openModal = function () {
     lastFocused = document.activeElement;
     modal.hidden = false;
     document.body.style.overflow = 'hidden';
+    if (loader) loader.classList.add('is-visible');
     requestAnimationFrame(function () {
       modal.classList.add('is-open');
       if (video) video.play().catch(function () {});
@@ -32,6 +44,7 @@
       video.pause();
       video.currentTime = 0;
     }
+    if (loader) loader.classList.remove('is-visible');
     var hide = function () {
       modal.hidden = true;
       modal.removeEventListener('transitionend', hide);

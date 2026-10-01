@@ -753,6 +753,14 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 }
 .film-modal.is-open .film-modal-panel{ transform:scale(1) translateY(0); }
 .film-modal-video{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; background:#000; }
+.film-modal-loader{
+  position:absolute; top:50%; left:50%; width:40px; height:40px; margin:-20px 0 0 -20px;
+  border-radius:50%; border:2px solid rgba(247,244,239,.25); border-top-color:rgba(247,244,239,.85);
+  animation:filmLoaderSpin .8s linear infinite; opacity:0; transition:opacity .25s var(--ease); pointer-events:none;
+}
+.film-modal-loader.is-visible{ opacity:1; }
+@keyframes filmLoaderSpin{ to{ transform:rotate(360deg); } }
+@media (prefers-reduced-motion:reduce){ .film-modal-loader{ animation-duration:1.6s; } }
 .film-modal-close{
   position:absolute; top:18px; right:18px; z-index:2; width:44px; height:44px; border-radius:50%;
   display:flex; align-items:center; justify-content:center; appearance:none; cursor:pointer;
