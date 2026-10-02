@@ -306,8 +306,28 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .main-nav a:hover::after, .main-nav a.active::after{ transform:scaleX(1); }
 .main-nav a.active{ color:var(--ink); }
 
-.nav-right{ display:flex; align-items:center; gap:14px; }
+.nav-right{ display:flex; align-items:center; gap:10px; }
 .nav-cta{ display:inline-flex; }
+
+/* --- Téléphone dans le header : seul élément visible sur le premier
+   écran mobile avant tout scroll, donc traité en priorité. Pilule
+   icône + numéro sur desktop, bouton rond (même gabarit que le
+   hamburger) en dessous de 900px où la place manque. --- */
+.nav-phone{
+  display:flex; align-items:center; justify-content:center; gap:8px; flex:none;
+  height:44px; padding:0 18px 0 14px; border-radius:var(--radius-full);
+  border:1px solid var(--border); color:var(--ink);
+  font-family:var(--font-display); font-weight:600; font-size:.88rem;
+  letter-spacing:-.01em; font-variant-numeric:tabular-nums; white-space:nowrap;
+  transition:border-color .3s ease, background .3s ease, color .3s ease, transform .3s var(--ease);
+}
+.nav-phone svg{ width:17px; height:17px; flex:none; }
+.nav-phone:hover{ border-color:var(--accent-line); color:var(--accent-text); background:var(--accent-dim); transform:translateY(-2px); }
+.nav-phone:active{ transform:translateY(0) scale(.95); }
+@media (max-width:900px){
+  .nav-phone{ width:44px; height:44px; padding:0; }
+  .nav-phone-number{ display:none; }
+}
 .menu-toggle{
   display:none; flex-direction:column; justify-content:center; gap:5px; width:44px; height:44px;
   border:1px solid var(--border); border-radius:var(--radius-full); align-items:center;
@@ -320,7 +340,7 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 /* --- Menu mobile plein écran --- */
 .mobile-menu{
   position:fixed; inset:0; z-index:998; background:var(--bg);
-  display:flex; flex-direction:column; justify-content:space-between;
+  display:flex; flex-direction:column; justify-content:center; gap:var(--space-8);
   padding:110px var(--container-pad) 48px;
   opacity:0; visibility:hidden; pointer-events:none;
   transition:opacity .5s var(--ease), visibility .5s var(--ease);
@@ -646,7 +666,13 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
   box-shadow:var(--soft-shadow); aspect-ratio:16/7; margin-bottom:var(--space-8);
 }
 .services-signature img{ width:100%; height:100%; object-fit:cover; object-position:50% 34%; transform:scale(2.6) translateX(-115px); }
-@media (max-width:640px){ .services-signature{ aspect-ratio:4/3; } }
+@media (max-width:640px){
+  .services-signature{ aspect-ratio:4/3; }
+  /* the fixed -115px offset above is tuned for a wide desktop container;
+     on a ~350px-wide phone container it shoves the illustration mostly
+     off-screen, so mobile gets a much lighter, container-relative crop */
+  .services-signature img{ transform:scale(1.85); object-position:66% 32%; }
+}
 
 /* --- En-tête façon fenêtre (points + étiquette), toujours utilisé par la
    démo Growthline Intelligence plus bas sur la page --- */
@@ -1253,6 +1279,7 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .audit-form{ display:flex; flex-direction:column; gap:14px; }
 .audit-field{ display:flex; flex-direction:column; gap:8px; }
 .audit-field label{ font-size:.78rem; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-mute); font-weight:600; }
+.audit-field label span{ text-transform:none; letter-spacing:normal; font-weight:500; opacity:.75; }
 .audit-field input{
   height:54px; padding:0 20px; border-radius:var(--radius-sm); border:1px solid var(--border);
   background:var(--surface); color:var(--ink); font-family:var(--font-body); font-size:1rem;
@@ -1345,10 +1372,13 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .slot-toggle-btn{ display:inline-flex; align-items:center; gap:8px; padding:8px 20px 8px 12px; border-radius:var(--radius-full); font-size:.9rem; font-weight:600; color:var(--ink-dim); transition:background .3s ease, color .3s ease; flex:none; white-space:nowrap; }
 .slot-toggle-icon{ width:22px; height:22px; object-fit:contain; flex:none; }
 .slot-toggle-btn.is-active{ background:var(--accent); color:var(--accent-ink); }
-@media (max-width:640px){
-  .slot-toggle{ display:flex; width:100%; max-width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
-  .slot-toggle::-webkit-scrollbar{ display:none; }
-  .slot-toggle-btn{ padding:10px 16px 10px 10px; }
+@media (max-width:480px){
+  /* a plain flex row with flex:1 refuses to shrink below the intrinsic
+     width of the longest label (e.g. "Cabinet médical"), so a 4-option
+     toggle overflows the viewport; a 2-column grid wraps to a second row
+     instead and each button's own text can wrap if still needed */
+  .slot-toggle{ display:grid; grid-template-columns:repeat(2,1fr); gap:6px; width:100%; }
+  .slot-toggle-btn{ justify-content:center; text-align:center; padding:10px 8px; gap:6px; font-size:.82rem; }
 }
 
 /* ==========================================================================
@@ -1378,6 +1408,16 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .cta-final .btn:hover{ background:rgba(246,239,222,.08); }
 .cta-final .btn-solid{ background:var(--accent); color:#fff; border-color:var(--accent); }
 .cta-final .btn-solid:hover{ background:var(--accent-bright); border-color:var(--accent-bright); }
+.cta-final-phone{
+  display:inline-flex; align-items:center; gap:10px; min-height:44px; padding:10px 22px 10px 16px;
+  border-radius:var(--radius-full); border:1px solid rgba(246,239,222,.22); color:var(--inverse-ink);
+  font-family:var(--font-display); font-weight:600; letter-spacing:-.01em; font-size:.95rem;
+  font-variant-numeric:tabular-nums;
+  transition:border-color .3s ease, background .3s ease, transform .3s var(--ease);
+}
+.cta-final-phone svg{ width:17px; height:17px; flex:none; color:var(--accent-bright); }
+.cta-final-phone:hover{ background:rgba(246,239,222,.1); border-color:rgba(246,239,222,.5); transform:translateY(-2px); }
+.cta-final-phone:active{ transform:translateY(0) scale(.97); }
 /* --- Badge circulaire tournant (façon "tampon") --- */
 .spin-badge{ position:relative; width:118px; height:118px; flex:none; }
 .spin-badge-ring{ width:100%; height:100%; animation:spin-badge-turn 16s linear infinite; }
@@ -1500,6 +1540,31 @@ footer{ padding:var(--space-9) 0 var(--space-6); position:relative; overflow:hid
 @media (max-width:640px){
   .footer-top{ grid-template-columns:1fr; gap:32px; }
   .footer-bottom{ flex-direction:column; align-items:flex-start; gap:10px; }
+
+  /* Audit gratuit (hero du bloc formulaire) : le formulaire ne doit pas a
+     lui seul occuper tout le premier écran mobile - moins de padding,
+     moins de gap entre les champs, champs moins hauts. */
+  .audit-panel{ padding:var(--space-6) var(--space-5); gap:var(--space-5); }
+  .audit-panel-head .lede{ margin-top:10px; }
+  .audit-form{ gap:10px; }
+  .audit-field{ gap:6px; }
+  .audit-field input{ height:48px; }
+  .audit-submit{ margin-top:2px; }
+  .audit-note{ margin-top:10px; }
+
+  /* Aperçu Growthline Intelligence : la vignette du site suivait son ratio
+     naturel (souvent large), ce qui rendait la carte bien plus haute que
+     nécessaire une fois empilée en 1 colonne. Hauteur plafonnée + moins de
+     padding entre les blocs. */
+  .intel-mock-site-visual{ min-height:0; max-height:140px; }
+  .intel-mock-site,.intel-mock-results{ padding:16px; gap:10px; }
+  .intel-mock-cats{ gap:8px; }
+  .intel-mock-recos{ padding-top:10px; }
+
+  /* Processus en 4 étapes : 64px de marge basse par étape (x4) rendait la
+     section interminable sur mobile - resserré tout en gardant un vrai
+     espace entre chaque étape. */
+  .process-step{ padding-bottom:var(--space-6); }
 }
 
 /* ==========================================================================
@@ -1648,12 +1713,46 @@ footer{ padding:var(--space-9) 0 var(--space-6); position:relative; overflow:hid
    CONTACT
    ========================================================================== */
 .contact-grid{ display:grid; grid-template-columns:1.3fr 1fr; gap:60px; align-items:start; }
-.contact-email{
-  display:inline-flex; align-items:center; gap:16px; font-family:var(--font-display); font-weight:600; letter-spacing:-.02em;
-  font-size:clamp(1.6rem,4vw,3rem); color:var(--ink); border-bottom:1.5px solid var(--border); padding-bottom:14px;
+
+/* --- Moyens de contact principaux (téléphone + email), traités comme
+   deux cartes de poids égal : c'est le numéro qui inspire confiance en
+   premier sur une agence, donc il passe en tête. --- */
+.contact-primary{ display:flex; flex-direction:column; gap:12px; }
+.contact-primary-link{
+  display:flex; align-items:center; gap:18px; padding:22px 26px; min-height:44px;
+  border-radius:var(--radius-lg); border:1px solid var(--border-soft); background:var(--bg-elevated);
+  box-shadow:0 1px 2px rgba(46,43,39,.03);
+  transition:border-color .3s ease, transform .35s var(--ease), box-shadow .35s var(--ease);
 }
-.contact-email svg{ width:.7em; height:.7em; transition:transform .5s var(--ease); flex:none; }
-.contact-email:hover svg{ transform:translate(6px,-6px); }
+.contact-primary-link:hover{ border-color:var(--accent-line); transform:translateY(-3px); box-shadow:var(--soft-shadow); }
+.contact-primary-link:active{ transform:translateY(-1px) scale(.99); box-shadow:none; }
+.contact-primary-icon{
+  display:flex; align-items:center; justify-content:center; flex:none;
+  width:52px; height:52px; border-radius:var(--radius-md); background:var(--accent-dim); color:var(--accent-text);
+}
+/* Le téléphone convertit mieux qu'un email pour un prospect qui hésite :
+   il porte la couleur de marque pleine, l'email reste sur la carte
+   neutre — même logique que .btn-solid vs .btn dans ce design system. */
+.contact-primary-link--primary{ background:var(--accent-dim); border-color:var(--accent-line); }
+.contact-primary-link--primary:hover{ background:var(--accent-dim); border-color:var(--accent); box-shadow:0 20px 44px -22px rgba(127,169,140,.55); }
+.contact-primary-link--primary .contact-primary-icon{ background:var(--accent); color:#fff; }
+.contact-primary-link--primary .contact-primary-label{ color:var(--accent-text); }
+.contact-primary-icon svg{ width:22px; height:22px; }
+.contact-primary-body{ display:flex; flex-direction:column; gap:3px; min-width:0; }
+.contact-primary-label{ font-size:.76rem; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-mute); font-weight:600; }
+.contact-primary-value{
+  font-family:var(--font-display); font-weight:600; letter-spacing:-.01em; color:var(--ink);
+  font-size:clamp(1.15rem,2.4vw,1.45rem); overflow-wrap:anywhere; font-variant-numeric:tabular-nums;
+}
+.contact-primary-arrow{ margin-left:auto; flex:none; width:18px; height:18px; color:var(--ink-mute); transition:transform .4s var(--ease), color .3s ease; }
+.contact-primary-link:hover .contact-primary-arrow{ transform:translate(4px,-4px); color:var(--accent-text); }
+@media (max-width:480px){
+  .contact-primary-link{ padding:18px 18px; gap:14px; }
+  .contact-primary-icon{ width:44px; height:44px; }
+  .contact-primary-icon svg{ width:19px; height:19px; }
+  .contact-primary-value{ font-size:1.05rem; }
+}
+
 .contact-topics{ display:flex; flex-wrap:wrap; gap:10px; margin-top:28px; }
 .contact-topics a{
   font-size:.85rem; padding:9px 16px; border-radius:var(--radius-full); border:1px solid var(--border); color:var(--ink-dim);
