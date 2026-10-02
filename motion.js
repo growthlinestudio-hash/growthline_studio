@@ -57,6 +57,31 @@
       },
       once: true
     });
+
+    /* Filet de sécurité : un saut de scroll instantané (ancre cliquée type
+       "Démarrer mon audit gratuit" -> #audit, touche Fin, scrollIntoView)
+       traverse toute la zone de déclenchement d'un coup sans passer par les
+       évènements de scroll progressifs sur lesquels ScrollTrigger se base —
+       l'élément reste alors bloqué à opacity:0 pour toujours, y compris le
+       formulaire d'audit. On revérifie juste après et on affiche directement
+       ce qui est déjà visible (ou déjà dépassé) sans attendre un vrai scroll. */
+    function catchUpReveals() {
+      els.forEach(function (el) {
+        if (gsap.getProperty(el, 'opacity') > 0) return;
+        if (el.getBoundingClientRect().top < window.innerHeight) {
+          gsap.set(el, { opacity: 1, y: 0 });
+        }
+      });
+    }
+    window.addEventListener('load', catchUpReveals);
+    /* Les liens d'ancre (ex. "Démarrer mon audit gratuit" -> #audit) sont le
+       cas réel le plus fréquent de saut instantané : on revérifie juste
+       après le clic, avec un délai large pour laisser le temps au saut
+       (natif ou en douceur) de se terminer. */
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="#"]');
+      if (a) setTimeout(catchUpReveals, 400);
+    });
   })();
 
   /* ---------- 3. Split-text mot par mot ([data-split]) ---------- */
