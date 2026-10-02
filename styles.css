@@ -1561,10 +1561,25 @@ footer{ padding:var(--space-9) 0 var(--space-6); position:relative; overflow:hid
   .intel-mock-cats{ gap:8px; }
   .intel-mock-recos{ padding-top:10px; }
 
+  /* Les chips de catégorie (ex. "Performance" + score) sont en espace-entre
+     sur 2 colonnes - le libellé le plus long ("Performance") ne tenait pas
+     à côté de son score dans la largeur réduite d'une colonne mobile et
+     débordait du cadre, jusque hors de l'écran. Empilé verticalement. */
+  .intel-mock-cat{ flex-direction:column; align-items:flex-start; gap:2px; }
+
   /* Processus en 4 étapes : 64px de marge basse par étape (x4) rendait la
      section interminable sur mobile - resserré tout en gardant un vrai
      espace entre chaque étape. */
   .process-step{ padding-bottom:var(--space-6); }
+
+  /* Le numéro rond de chaque étape (::before) est positionné à left:-58px,
+     pensé pour la marge latérale généreuse du desktop (jusqu'à 64px) - sur
+     mobile le padding du container tombe à ~20px, donc le cercle dépassait
+     du viewport et n'était plus visible qu'en partie sur son bord gauche.
+     Repositionné au-dessus du titre plutôt qu'à côté, en flux normal. */
+  .process-step::before{
+    position:static; display:inline-flex; transform:none; margin:0 0 10px;
+  }
 }
 
 /* ==========================================================================
