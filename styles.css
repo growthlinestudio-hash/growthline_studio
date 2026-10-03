@@ -86,8 +86,11 @@
 }
 
 *{ box-sizing:border-box; }
-html{ scroll-behavior:smooth; background:var(--bg); overflow-x:hidden; }
-@media (prefers-reduced-motion:reduce){ html{ scroll-behavior:auto; } }
+/* scroll-behavior:smooth volontairement retiré : applique un easing à
+   CHAQUE geste de molette/trackpad, pas seulement aux sauts d'ancre — ça
+   rendait tout le défilement du site plus lent et moins réactif. Le
+   défilement natif (instantané) reste utilisé pour les ancres aussi. */
+html{ background:var(--bg); overflow-x:hidden; }
 
 body{
   margin:0;
@@ -572,8 +575,11 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
    HERO
    ========================================================================== */
 .hero{
-  position:relative; min-height:100svh; display:flex; flex-direction:column; justify-content:center;
-  padding:150px 0 80px; overflow:hidden;
+  /* 100svh + 150px de padding forçait un défilement complet rien que pour
+     sortir du hero sur la plupart des écrans — réduit pour laisser voir
+     la suite du site plus tôt, tout en gardant un hero qui domine l'écran. */
+  position:relative; min-height:88svh; display:flex; flex-direction:column; justify-content:center;
+  padding:120px 0 64px; overflow:hidden;
 }
 
 .hero-glow{
@@ -700,7 +706,11 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 /* ==========================================================================
    SECTION HEADER (réutilisé partout)
    ========================================================================== */
-.section{ padding:var(--space-9) 0; position:relative; }
+/* var(--space-8) plutôt que --space-9 : la page cumule beaucoup de
+   sections, chaque px de padding vertical compte x15 — resserré pour
+   un défilement global moins long, sans toucher aux espacements internes
+   (CTA final, footer...) qui gardent --space-9. */
+.section{ padding:var(--space-8) 0; position:relative; }
 
 /* --- Modificateur "section sombre" : réservé à quelques sections stratégiques
    pour créer du rythme entre les chapitres du site — pas une bascule de thème.

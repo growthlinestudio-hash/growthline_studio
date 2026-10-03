@@ -138,30 +138,33 @@
     var visual = hero.querySelector('.hero-signature');
     var cue = hero.querySelector('.scroll-cue');
 
+    /* Chorégraphie volontairement courte (~0.6s au total, tout en grande
+       partie simultané) : le hero doit sembler déjà là à l'arrivée sur le
+       site, pas s'assembler morceau par morceau pendant plusieurs secondes. */
     var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
     /* Le repère de marque tombe légèrement du haut à l'ouverture, comme suspendu puis lâché */
     var brandMark = document.querySelector('.brand .mark');
     if (brandMark) {
       gsap.set(brandMark, { y: -46, opacity: 0 });
-      tl.to(brandMark, { y: 0, opacity: 1, duration: .9, ease: 'expo.out' }, 0);
+      tl.to(brandMark, { y: 0, opacity: 1, duration: .35, ease: 'expo.out' }, 0);
     }
 
-    if (eyebrowRow) { gsap.set(eyebrowRow, { opacity: 0, y: 16, filter: 'blur(6px)' }); tl.to(eyebrowRow, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .7 }, 0.1); }
+    if (eyebrowRow) { gsap.set(eyebrowRow, { opacity: 0, y: 16, filter: 'blur(6px)' }); tl.to(eyebrowRow, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .3 }, 0); }
     if (h1) {
       var spans = h1.querySelectorAll('.split-word > span');
-      tl.to(spans, { yPercent: 0, opacity: 1, duration: 1, stagger: .035 }, 0.25);
+      tl.to(spans, { yPercent: 0, opacity: 1, duration: .4, stagger: .012 }, 0.05);
     }
-    if (subCol) { gsap.set(subCol, { opacity: 0, y: 22 }); tl.to(subCol, { opacity: 1, y: 0, duration: .9 }, '-=0.6'); }
+    if (subCol) { gsap.set(subCol, { opacity: 0, y: 22 }); tl.to(subCol, { opacity: 1, y: 0, duration: .35 }, 0.15); }
     if (visual) {
       gsap.set(visual, { opacity: 0, x: 40, y: 30, scale: .96, filter: 'blur(10px)' });
-      tl.to(visual, { opacity: 1, x: 0, y: 0, scale: 1, filter: 'blur(0px)', duration: 1.2 }, '-=0.9');
+      tl.to(visual, { opacity: 1, x: 0, y: 0, scale: 1, filter: 'blur(0px)', duration: .4 }, 0.1);
       tl.call(function () { floatAndParallax(visual); });
     }
     var cornerBadge = hero.querySelector('.spin-badge--corner');
     if (cornerBadge) {
       gsap.set(cornerBadge, { y: -60, opacity: 0, rotate: -12 });
-      tl.to(cornerBadge, { y: 0, opacity: 1, rotate: 0, duration: 1, ease: 'back.out(1.4)' }, '-=0.7');
+      tl.to(cornerBadge, { y: 0, opacity: 1, rotate: 0, duration: .35, ease: 'back.out(1.4)' }, 0.2);
     }
 
     /* Les 3 vrais chiffres du hero (0€ / 6 / 24h) comptent jusqu'à leur valeur —
@@ -175,13 +178,13 @@
         var counter = { val: 0 };
         el.textContent = '0' + suffix;
         tl.to(counter, {
-          val: finalVal, duration: 1, ease: 'power1.out',
+          val: finalVal, duration: .5, ease: 'power1.out',
           onUpdate: function () { el.textContent = Math.round(counter.val) + suffix; }
-        }, '-=0.9');
+        }, 0.2);
       });
     }
 
-    if (cue) { gsap.set(cue, { opacity: 0 }); tl.to(cue, { opacity: 1, duration: .6 }, '-=0.3'); }
+    if (cue) { gsap.set(cue, { opacity: 0 }); tl.to(cue, { opacity: 1, duration: .3 }, 0.35); }
   })();
 
   /* ---------- 4bis. Tilt 3D discret : les cartes réagissent à la perspective ---------- */
