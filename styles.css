@@ -319,6 +319,32 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .main-nav a:hover::after, .main-nav a.active::after{ transform:scaleX(1); }
 .main-nav a.active{ color:var(--ink); }
 
+/* Sous-menu "Accueil" : l'accueil concentre la quasi-totalité des sections
+   du site (Film, Processus, Services, Comment ça marche, Intelligence,
+   Audit) — beaucoup de visiteurs scrollaient longtemps pour retrouver une
+   section précise. Permet d'y accéder directement depuis la nav. */
+.nav-item{ position:relative; }
+.nav-item > a{ display:inline-flex; align-items:center; gap:4px; }
+.nav-caret{ width:12px; height:12px; transition:transform .3s var(--ease); }
+.nav-item:hover .nav-caret, .nav-item:focus-within .nav-caret{ transform:rotate(180deg); }
+.nav-dropdown{
+  position:absolute; top:100%; left:0; margin-top:8px; min-width:230px; z-index:1001;
+  background:rgba(255,255,255,.97); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+  border:1px solid var(--border-soft); border-radius:var(--radius-md); box-shadow:var(--soft-shadow);
+  padding:8px; display:flex; flex-direction:column; gap:1px;
+  opacity:0; visibility:hidden; transform:translateY(-6px);
+  transition:opacity .25s var(--ease), transform .25s var(--ease), visibility .25s;
+}
+.nav-item:hover .nav-dropdown, .nav-item:focus-within .nav-dropdown{
+  opacity:1; visibility:visible; transform:translateY(0);
+}
+.nav-dropdown a{
+  padding:10px 14px; border-radius:var(--radius-sm); font-size:.88rem; font-weight:500;
+  color:var(--ink-dim); white-space:nowrap; transition:background .2s ease, color .2s ease;
+}
+.nav-dropdown a::after{ content:none; }
+.nav-dropdown a:hover{ background:var(--surface); color:var(--ink); }
+
 .nav-right{ display:flex; align-items:center; gap:10px; }
 .nav-cta{ display:inline-flex; }
 
@@ -366,6 +392,15 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
   display:flex; align-items:center; justify-content:space-between;
 }
 .mobile-menu-links a span{ font-size:.85rem; color:var(--ink-mute); font-family:var(--font-body); font-weight:500; }
+.mobile-menu-sub{
+  display:flex; flex-direction:column; gap:2px; padding:4px 0 16px 6px;
+  border-bottom:1px solid var(--border-soft);
+}
+.mobile-menu-sub a{
+  font-family:var(--font-body); font-weight:500; font-size:1.05rem;
+  padding:7px 0; border-bottom:none; color:var(--ink-mute);
+}
+.mobile-menu-sub a:hover{ color:var(--ink); }
 .mobile-menu-foot{ display:flex; flex-direction:column; gap:18px; }
 .mobile-menu-foot .btn{ width:100%; }
 .mobile-menu-foot .meta-row{ display:flex; justify-content:space-between; color:var(--ink-mute); font-size:.85rem; }
