@@ -92,6 +92,16 @@
    défilement natif (instantané) reste utilisé pour les ancres aussi. */
 html{ background:var(--bg); overflow-x:hidden; }
 
+/* Défilement "page par page" sur l'accueil : chaque section se cale au
+   sommet du viewport dès qu'on s'arrête de scroller, pour qu'on voie
+   toujours une section en entier (à commencer par le hero) plutôt que de
+   s'arrêter au milieu. */
+html.snap-scroll{ scroll-snap-type:y mandatory; }
+@media (prefers-reduced-motion:reduce){ html.snap-scroll{ scroll-snap-type:none; } }
+.snap-scroll .hero, .snap-scroll main > section{
+  scroll-snap-align:start; scroll-margin-top:100px;
+}
+
 body{
   margin:0;
   background:var(--bg);
