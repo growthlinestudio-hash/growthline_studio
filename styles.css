@@ -194,8 +194,8 @@ h1,h2,h3,h4,p{ margin:0; }
 .chapter-tag::before{ content:""; width:16px; height:1px; background:var(--border); }
 .chapter-tag b{ color:var(--accent-text); font-weight:500; }
 
-.display-1{ font-family:var(--font-display); font-weight:700; letter-spacing:-.02em; line-height:.98; font-size:clamp(2.6rem, 7vw, 7.2rem); }
-.display-2{ font-family:var(--font-display); font-weight:700; letter-spacing:-.015em; line-height:1.04; font-size:clamp(2.1rem, 4.4vw, 3.7rem); }
+.display-1{ font-family:var(--font-display); font-weight:700; letter-spacing:-.02em; line-height:1; font-size:clamp(2rem, 5vw, 4.2rem); }
+.display-2{ font-family:var(--font-display); font-weight:700; letter-spacing:-.015em; line-height:1.08; font-size:clamp(1.6rem, 3.2vw, 2.6rem); }
 .display-3{ font-family:var(--font-display); font-weight:600; letter-spacing:-.005em; line-height:1.14; font-size:clamp(1.5rem, 2.6vw, 2.2rem); }
 
 /* --- Titre révélé par un masque qui glisse (au lieu d'un simple fondu) --- */
@@ -208,7 +208,7 @@ h1,h2,h3,h4,p{ margin:0; }
 .growth-arrow-bg{ position:absolute; z-index:0; pointer-events:none; opacity:.4; }
 .g-curve-bg{ position:absolute; z-index:0; pointer-events:none; opacity:.5; }
 
-.lede{ font-size:clamp(1.05rem, 1.4vw, 1.3rem); color:var(--ink-dim); line-height:1.65; font-weight:400; max-width:46ch; }
+.lede{ font-size:clamp(.95rem, 1.1vw, 1.08rem); color:var(--ink-dim); line-height:1.6; font-weight:400; max-width:46ch; }
 
 .accent-text{ color:var(--accent); }
 .ink-mute{ color:var(--ink-mute); }
@@ -876,8 +876,59 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
   opacity:.5; pointer-events:none; filter:blur(6px);
 }
 
+/* ==========================================================================
+   HOMEPAGE COURTE — blocs compacts (restructure conversion)
+   ========================================================================== */
+.section--tight{ padding:var(--space-6) 0; }
+.section-head--compact{ margin-bottom:var(--space-5); max-width:560px; }
+.section-head--compact .display-2{ font-size:clamp(1.3rem,2.2vw,1.7rem); }
+.section-head--compact .eyebrow{ font-size:.72rem; }
+
+.hero-film-link{
+  appearance:none; border:0; background:none; cursor:pointer; margin-top:var(--space-3);
+  display:inline-flex; align-items:center; gap:8px; font-family:var(--font-accent); font-size:.85rem;
+  font-weight:500; color:var(--ink-dim); transition:color .25s var(--ease);
+}
+.hero-film-link:hover, .hero-film-link:focus-visible{ color:var(--ink); }
+.hero-film-link-play{
+  width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:var(--surface); border:1px solid var(--border-soft); flex:none;
+}
+.hero-film-link-play svg{ width:10px; height:10px; margin-left:1px; }
+
+.method-video-btn{ margin-top:var(--space-4); display:inline-flex; align-items:center; gap:8px; height:46px; padding:0 20px; font-size:.88rem; }
+.method-video-btn .hero-film-link-play{ width:22px; height:22px; }
+.method-video-btn .hero-film-link-play svg{ width:9px; height:9px; }
+
+.pb-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-4); }
+.pb-card{
+  padding:var(--space-4); border-radius:var(--radius-md); background:var(--surface);
+  border:1px solid var(--border-soft);
+}
+.pb-card-icon{
+  display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px;
+  border-radius:50%; background:rgba(255,143,143,.14); color:#d96a6a; margin-bottom:var(--space-3);
+}
+.pb-card-icon svg{ width:16px; height:16px; }
+.pb-card h3{ font-size:.95rem; margin-bottom:6px; }
+.pb-card p{ color:var(--ink-mute); font-size:.85rem; line-height:1.48; margin:0; }
+
+.sol-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-4); }
+.sol-card{
+  padding:var(--space-4); border-radius:var(--radius-md); background:var(--bg);
+  border:1px solid var(--border-soft); display:flex; flex-direction:column; align-items:flex-start;
+  transition:border-color .3s var(--ease), transform .3s var(--ease);
+}
+.sol-card:hover{ border-color:var(--accent); transform:translateY(-3px); }
+.sol-card h3{ font-size:1rem; margin-bottom:6px; }
+.sol-card p{ color:var(--ink-mute); font-size:.85rem; line-height:1.48; margin:0 0 var(--space-3); flex:1; }
+.sol-card .btn{ height:40px; padding:0 18px; font-size:.85rem; }
+
+@media (max-width:860px){
+  .pb-grid, .sol-grid{ grid-template-columns:1fr; }
+}
+
 /* --- Ambiance légèrement différente par section, pour éviter un fond uniforme --- */
-#services{ background:linear-gradient(180deg, transparent, rgba(156,127,224,.05) 40%, transparent); }
 #audit{ background:radial-gradient(1200px 500px at 50% 0%, rgba(63,143,73,.08), transparent 70%); }
 
 /* ==========================================================================
@@ -999,15 +1050,15 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .process-track{ position:relative; padding-left:40px; }
 .process-track::before{ content:""; position:absolute; left:0; top:6px; bottom:6px; width:1px; background:var(--border); }
 .process-track-fill{ position:absolute; left:0; top:6px; width:1px; height:0; background:var(--accent); box-shadow:0 0 12px 1px var(--accent-dim); }
-.process-step{ position:relative; padding:0 0 var(--space-8); }
+.process-step{ position:relative; padding:0 0 var(--space-6); }
 .process-step:last-child{ padding-bottom:0; }
 .process-step::before{
   content:attr(data-step); position:absolute; left:-40px; top:0; transform:translateX(-50%);
   width:34px; height:34px; margin-left:0; left:-58px; border-radius:50%; background:var(--bg-soft); border:1px solid var(--border);
   display:flex; align-items:center; justify-content:center; font-size:.78rem; color:var(--ink-mute); font-weight:600;
 }
-.process-step h3{ font-family:var(--font-display); font-size:clamp(1.2rem,2vw,1.6rem); font-weight:500; margin-bottom:8px; }
-.process-step p{ color:var(--ink-dim); max-width:52ch; }
+.process-step h3{ font-family:var(--font-display); font-size:clamp(1.05rem,1.6vw,1.25rem); font-weight:500; margin-bottom:6px; }
+.process-step p{ color:var(--ink-dim); max-width:52ch; font-size:.88rem; line-height:1.5; }
 
 /* ==========================================================================
    ON CRÉE TOUT — grille de secteurs (types de projets, pas des clients réels)
@@ -1249,7 +1300,7 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
    ========================================================================== */
 .showcase-teaser{
   position:relative; border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--border-soft);
-  padding:var(--space-8); display:flex; flex-direction:column; justify-content:space-between; gap:60px; min-height:420px;
+  padding:var(--space-6); display:flex; flex-direction:column; justify-content:space-between; gap:32px; min-height:300px;
   background:linear-gradient(160deg, var(--bg-elevated), var(--bg-soft));
   box-shadow:var(--soft-shadow);
 }
@@ -1260,12 +1311,12 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 }
 .showcase-teaser > *{ position:relative; z-index:1; }
 .showcase-teaser-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:24px; flex-wrap:wrap; }
-.showcase-teaser h3{ font-family:var(--font-display); font-size:clamp(1.8rem,4vw,3.2rem); font-weight:500; max-width:16ch; letter-spacing:-.005em; }
+.showcase-teaser h3{ font-family:var(--font-display); font-size:clamp(1.3rem,2.4vw,1.8rem); font-weight:500; max-width:18ch; letter-spacing:-.005em; }
 
 /* --- Éventail de vraies captures (secteurs), pour que le teaser ne soit
    plus uniquement du texte --- */
 .showcase-teaser-stack{
-  position:absolute; right:var(--space-8); top:50%; transform:translateY(-50%);
+  position:absolute; right:var(--space-6); top:50%; transform:translateY(-50%);
   width:220px; height:150px; z-index:1;
 }
 .showcase-teaser-stack img{
@@ -1289,7 +1340,6 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 /* --- Aperçu Growthline Intelligence : un vrai faux rapport d'audit construit
    en HTML/CSS (jamais une image générée avec un client/nom fictif dedans) —
    site analysé à gauche, score + catégories + recommandations à droite. --- */
-#intelligence .showcase-teaser{ min-height:0; gap:var(--space-6); }
 .intel-mock{
   background:var(--surface); border:1px solid var(--border-soft); border-radius:var(--radius-md);
   overflow:hidden; box-shadow:var(--shadow-soft);
@@ -1335,10 +1385,10 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
    ========================================================================== */
 .audit-panel{
   background:var(--bg-elevated); border:1px solid var(--border-soft); border-radius:var(--radius-lg);
-  padding:var(--space-9) var(--space-8); display:grid; grid-template-columns:1fr 1fr; gap:var(--space-8); align-items:center;
+  padding:var(--space-7) var(--space-6); display:grid; grid-template-columns:1fr 1fr; gap:var(--space-6); align-items:center;
   box-shadow:var(--soft-shadow);
 }
-.audit-panel-head .lede{ margin-top:16px; max-width:40ch; }
+.audit-panel-head .lede{ margin-top:12px; max-width:40ch; }
 .audit-form{ display:flex; flex-direction:column; gap:14px; }
 .audit-field{ display:flex; flex-direction:column; gap:8px; }
 .audit-field label{ font-size:.78rem; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-mute); font-weight:600; }
