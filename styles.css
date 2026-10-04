@@ -620,11 +620,11 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
    HERO
    ========================================================================== */
 .hero{
-  /* 100svh + 150px de padding forçait un défilement complet rien que pour
-     sortir du hero sur la plupart des écrans — réduit pour laisser voir
-     la suite du site plus tôt, tout en gardant un hero qui domine l'écran. */
-  position:relative; min-height:88svh; display:flex; flex-direction:column; justify-content:center;
-  padding:120px 0 64px; overflow:hidden;
+  /* Hero désormais dimensionné par son contenu (pas par le viewport) :
+     88svh forçait ~1000px quelle que soit la taille du contenu réel,
+     et c'était la section la plus lourde du homepage au scroll. */
+  position:relative; min-height:0; display:flex; flex-direction:column; justify-content:center;
+  padding:96px 0 40px; overflow:hidden;
 }
 
 .hero-glow{
@@ -643,7 +643,7 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
   mask-image:linear-gradient(to bottom, rgba(0,0,0,.7), transparent 70%);
 }
 .hero-inner{ position:relative; z-index:1; }
-.hero-eyebrow-row{ display:flex; align-items:center; gap:14px; margin-bottom:28px; flex-wrap:wrap; }
+.hero-eyebrow-row{ display:flex; align-items:center; gap:14px; margin-bottom:16px; flex-wrap:wrap; }
 .hero h1{ max-width:16ch; }
 
 /* --- Stickers flottants : reprennent les vrais chiffres du hero (pas
@@ -680,8 +680,8 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .hero h1 .accent-underline{ position:relative; white-space:nowrap; }
 .hero h1 .accent-underline svg{ position:absolute; left:0; bottom:-.06em; width:100%; height:.22em; overflow:visible; }
 .hero h1 .accent-underline path{ stroke:var(--accent); stroke-width:6; fill:none; }
-.hero-bottom{ display:flex; align-items:flex-end; justify-content:space-between; gap:40px; margin-top:44px; flex-wrap:wrap; }
-.hero-sub-col{ display:flex; flex-direction:column; gap:28px; max-width:520px; }
+.hero-bottom{ display:flex; align-items:flex-end; justify-content:space-between; gap:40px; margin-top:24px; flex-wrap:wrap; }
+.hero-sub-col{ display:flex; flex-direction:column; gap:18px; max-width:520px; }
 .hero-ctas{ display:flex; gap:14px; flex-wrap:wrap; }
 .hero-stats{ display:flex; gap:36px; flex-wrap:wrap; }
 .hero-stat b{ display:block; font-family:var(--font-display); font-size:1.7rem; font-weight:500; letter-spacing:0; }
@@ -703,7 +703,7 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
    la partie sculpture de l'image, le texte anglais d'origine reste hors
    cadre. --- */
 .hero-signature{
-  position:relative; z-index:1; width:100%; max-width:460px; aspect-ratio:1/1; margin-left:auto;
+  position:relative; z-index:1; width:100%; max-width:340px; aspect-ratio:1/1; margin-left:auto;
   border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--border-soft);
   box-shadow:var(--soft-shadow), 0 0 0 10px rgba(191,211,190,.16);
 }
@@ -714,7 +714,7 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
    la même logique de recadrage CSS que le hero) --- */
 .services-signature{
   position:relative; border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--border-soft);
-  box-shadow:var(--soft-shadow); aspect-ratio:16/7; margin-bottom:var(--space-8);
+  box-shadow:var(--soft-shadow); aspect-ratio:16/7; margin-bottom:var(--space-6);
 }
 .services-signature img{ width:100%; height:100%; object-fit:cover; object-position:50% 34%; transform:scale(2.6) translateX(-115px); }
 @media (max-width:640px){
@@ -884,21 +884,35 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .section-head--compact .display-2{ font-size:clamp(1.3rem,2.2vw,1.7rem); }
 .section-head--compact .eyebrow{ font-size:.72rem; }
 
-.hero-film-link{
-  appearance:none; border:0; background:none; cursor:pointer; margin-top:var(--space-3);
-  display:inline-flex; align-items:center; gap:8px; font-family:var(--font-accent); font-size:.85rem;
-  font-weight:500; color:var(--ink-dim); transition:color .25s var(--ease);
+/* --- Carte de prévisualisation vidéo compacte : poster + play, format
+   réduit (pas de section pleine dédiée) réutilisée dans le Hero et le
+   bloc Méthode pour garder l'accès aux vidéos sans alourdir le scroll. --- */
+.video-preview-mini{
+  appearance:none; border:0; padding:0; margin-top:var(--space-3); cursor:pointer;
+  display:inline-flex; align-items:center; gap:12px; max-width:100%;
+  background:none; text-align:left;
 }
-.hero-film-link:hover, .hero-film-link:focus-visible{ color:var(--ink); }
-.hero-film-link-play{
-  width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-  background:var(--surface); border:1px solid var(--border-soft); flex:none;
+.video-preview-mini-thumb{
+  position:relative; flex:none; width:96px; aspect-ratio:16/10; border-radius:var(--radius-sm);
+  overflow:hidden; background:#10140F; box-shadow:var(--soft-shadow);
 }
-.hero-film-link-play svg{ width:10px; height:10px; margin-left:1px; }
+.video-preview-mini-thumb img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s var(--ease); }
+.video-preview-mini:hover .video-preview-mini-thumb img,
+.video-preview-mini:focus-visible .video-preview-mini-thumb img{ transform:scale(1.06); }
+.video-preview-mini-play{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  background:rgba(8,10,8,.28);
+}
+.video-preview-mini-play span{
+  width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:rgba(247,244,239,.92); color:#141712; flex:none;
+}
+.video-preview-mini-play svg{ width:10px; height:10px; margin-left:1px; }
+.video-preview-mini-label{ font-family:var(--font-accent); font-size:.85rem; font-weight:500; color:var(--ink-dim); transition:color .25s var(--ease); }
+.video-preview-mini:hover .video-preview-mini-label,
+.video-preview-mini:focus-visible .video-preview-mini-label{ color:var(--ink); }
 
-.method-video-btn{ margin-top:var(--space-4); display:inline-flex; align-items:center; gap:8px; height:46px; padding:0 20px; font-size:.88rem; }
-.method-video-btn .hero-film-link-play{ width:22px; height:22px; }
-.method-video-btn .hero-film-link-play svg{ width:9px; height:9px; }
+.method-video-preview{ margin-top:var(--space-4); }
 
 .pb-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-4); }
 .pb-card{
@@ -909,6 +923,7 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
   display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px;
   border-radius:50%; background:rgba(255,143,143,.14); color:#d96a6a; margin-bottom:var(--space-3);
 }
+.pb-card--positive .pb-card-icon{ background:var(--accent-dim); color:var(--accent-text); }
 .pb-card-icon svg{ width:16px; height:16px; }
 .pb-card h3{ font-size:.95rem; margin-bottom:6px; }
 .pb-card p{ color:var(--ink-mute); font-size:.85rem; line-height:1.48; margin:0; }
@@ -935,8 +950,8 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
    SERVICES — présentation éditoriale
    ========================================================================== */
 .service-row{
-  position:relative; display:grid; grid-template-columns:220px 1fr auto; align-items:center; gap:28px;
-  padding:36px 0; border-top:1px solid var(--border-soft); cursor:pointer;
+  position:relative; display:grid; grid-template-columns:150px 1fr auto; align-items:center; gap:24px;
+  padding:22px 0; border-top:1px solid var(--border-soft); cursor:pointer;
 }
 .service-row:last-child{ border-bottom:1px solid var(--border-soft); }
 .service-row::after{
@@ -947,9 +962,9 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .service-row:hover::after{ opacity:1; }
 .service-row > *{ position:relative; z-index:1; }
 .service-num{ font-family:'Courier New',ui-monospace,monospace; font-size:.82rem; letter-spacing:-.02em; color:var(--ink-mute); }
-.service-main h3, .service-main h2{ font-family:var(--font-display); font-size:clamp(1.6rem,3.6vw,3rem); font-weight:700; letter-spacing:-.01em; transition:transform .5s var(--ease-spring), color .4s ease; }
+.service-main h3, .service-main h2{ font-family:var(--font-display); font-size:clamp(1.2rem,2.2vw,1.7rem); font-weight:700; letter-spacing:-.01em; transition:transform .5s var(--ease-spring), color .4s ease; }
 .service-row:hover .service-main h3, .service-row:hover .service-main h2{ transform:translateX(14px); color:var(--accent); }
-.service-main p{ margin-top:10px; color:var(--ink-dim); max-width:52ch; font-size:.98rem; }
+.service-main p{ margin-top:8px; color:var(--ink-dim); max-width:52ch; font-size:.88rem; line-height:1.5; }
 .service-meta{ display:flex; flex-direction:column; align-items:flex-end; gap:10px; text-align:right; }
 .service-price{ font-size:.85rem; color:var(--ink-mute); white-space:nowrap; }
 .service-arrow{
@@ -962,7 +977,7 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
    visible en permanence (plus cachée derrière un survol) — chaque service
    doit se comprendre visuellement avant même la lecture du texte. --- */
 .service-visual{
-  position:relative; width:220px; height:150px; border-radius:var(--radius-md); overflow:hidden; flex:none;
+  position:relative; width:150px; height:104px; border-radius:var(--radius-md); overflow:hidden; flex:none;
   border:1px solid var(--border-soft);
   transition:transform .5s var(--ease-spring), box-shadow .5s var(--ease), border-color .4s ease;
 }
@@ -976,7 +991,7 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 }
 .service-visual-image svg{ width:100%; height:100%; overflow:visible; }
 @media (max-width:900px){
-  .service-visual{ width:100%; height:150px; }
+  .service-visual{ width:100%; height:120px; }
 }
 
 /* --- Scène 1 : Audit — un faisceau balaie la page, des repères s'allument ---
@@ -1698,7 +1713,7 @@ footer{ padding:var(--space-9) 0 var(--space-6); position:relative; overflow:hid
 /* ==========================================================================
    PAGE HERO (pages secondaires)
    ========================================================================== */
-.page-hero{ padding:150px 0 var(--space-8); }
+.page-hero{ padding:120px 0 var(--space-6); }
 .page-hero h1{ margin-top:16px; max-width:18ch; }
 .page-hero .lede{ margin-top:22px; max-width:56ch; }
 
@@ -1757,12 +1772,12 @@ footer{ padding:var(--space-9) 0 var(--space-6); position:relative; overflow:hid
 .faq-item{ border-bottom:1px solid var(--border-soft); }
 .faq-q{
   width:100%; display:flex; align-items:center; justify-content:space-between; gap:20px;
-  padding:26px 0; text-align:left; font-family:var(--font-display); font-size:clamp(1.05rem,1.6vw,1.3rem); font-weight:600;
+  padding:16px 0; text-align:left; font-family:var(--font-display); font-size:clamp(.95rem,1.3vw,1.1rem); font-weight:600;
 }
-.faq-q svg{ flex:none; width:18px; height:18px; transition:transform .4s var(--ease); color:var(--ink-mute); }
+.faq-q svg{ flex:none; width:16px; height:16px; transition:transform .4s var(--ease); color:var(--ink-mute); }
 .faq-item.is-open .faq-q svg{ transform:rotate(180deg); color:var(--accent); }
 .faq-a{ max-height:0; overflow:hidden; transition:max-height .45s var(--ease); }
-.faq-a p{ padding:0 0 26px; color:var(--ink-dim); max-width:64ch; font-size:.95rem; }
+.faq-a p{ padding:0 0 16px; color:var(--ink-dim); max-width:64ch; font-size:.88rem; line-height:1.5; }
 .faq-a a{ color:var(--accent); text-decoration:underline; text-underline-offset:3px; }
 .faq-item.is-open .faq-a{ max-height:220px; }
 
@@ -1809,11 +1824,11 @@ footer{ padding:var(--space-9) 0 var(--space-6); position:relative; overflow:hid
 /* ==========================================================================
    STATEMENT (citation / mission, grand format centré)
    ========================================================================== */
-.statement{ text-align:center; padding:var(--space-8) 0; }
-.statement .eyebrow{ justify-content:center; margin-bottom:22px; }
+.statement{ text-align:center; padding:var(--space-6) 0; }
+.statement .eyebrow{ justify-content:center; margin-bottom:16px; }
 .statement p{
-  font-family:var(--font-display); font-weight:700; letter-spacing:-.01em; line-height:1.15;
-  font-size:clamp(1.6rem,3.6vw,3rem); max-width:22ch; margin:0 auto; color:var(--ink);
+  font-family:var(--font-display); font-weight:700; letter-spacing:-.01em; line-height:1.18;
+  font-size:clamp(1.3rem,2.6vw,2.1rem); max-width:22ch; margin:0 auto; color:var(--ink);
 }
 .statement p em{ font-style:normal; color:var(--ink-mute); }
 .statement p .accent-script{

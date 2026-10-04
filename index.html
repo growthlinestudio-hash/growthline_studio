@@ -163,9 +163,12 @@
             </a>
             <a href="realisations.html" class="btn btn-lg" data-magnetic>Voir nos réalisations</a>
           </div>
-          <button type="button" class="hero-film-link" data-video-open="filmModal" aria-haspopup="dialog" aria-controls="filmModal">
-            <span class="hero-film-link-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8 5.5v13a1 1 0 0 0 1.52.85l10.5-6.5a1 1 0 0 0 0-1.7l-10.5-6.5A1 1 0 0 0 8 5.5z" fill="currentColor"/></svg></span>
-            Voir notre film
+          <button type="button" class="video-preview-mini" data-video-open="filmModal" aria-haspopup="dialog" aria-controls="filmModal">
+            <span class="video-preview-mini-thumb">
+              <img src="images/film-poster.jpg" alt="" loading="lazy">
+              <span class="video-preview-mini-play" aria-hidden="true"><span><svg viewBox="0 0 24 24" fill="none"><path d="M8 5.5v13a1 1 0 0 0 1.52.85l10.5-6.5a1 1 0 0 0 0-1.7l-10.5-6.5A1 1 0 0 0 8 5.5z" fill="currentColor"/></svg></span></span>
+            </span>
+            <span class="video-preview-mini-label">Voir notre film</span>
           </button>
         </div>
 
@@ -219,27 +222,28 @@
     </div>
   </div>
 
-  <!-- ============ BLOC 1 — LE PROBLÈME ============ -->
-  <section class="section section--tight" id="probleme">
+  <!-- ============ BLOC 1 — POURQUOI GROWTHLINE ============ -->
+  <section class="section section--tight" id="pourquoi">
     <div class="container">
       <div class="section-head section-head--compact" data-reveal>
-        <h2 class="display-2" data-mask>Votre entreprise mérite mieux qu'un site qui fait fuir les clients.</h2>
+        <span class="eyebrow">Pourquoi Growthline</span>
+        <h2 class="display-2" data-mask style="margin-top:14px;">Un site pensé pour transformer vos visiteurs en clients.</h2>
       </div>
       <div class="pb-grid">
-        <div class="pb-card" data-reveal>
-          <span class="pb-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></span>
-          <h3>Site inexistant</h3>
-          <p>Vos clients vous cherchent en ligne et ne trouvent rien — ou pire, trouvent un concurrent à la place.</p>
+        <div class="pb-card pb-card--positive" data-reveal>
+          <span class="pb-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg></span>
+          <h3>Plus de visibilité</h3>
+          <p>Un site rapide et bien structuré, trouvable par vos clients plutôt que noyé dans les résultats.</p>
         </div>
-        <div class="pb-card" data-reveal>
-          <span class="pb-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l-3 3"/></svg></span>
-          <h3>Site dépassé</h3>
-          <p>Design daté, informations introuvables : votre site donne une image qui ne reflète plus votre activité.</p>
+        <div class="pb-card pb-card--positive" data-reveal>
+          <span class="pb-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.4 8.4-8 10-4.6-1.6-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4.5"/></svg></span>
+          <h3>Plus de confiance</h3>
+          <p>Un design soigné qui donne immédiatement une image sérieuse et professionnelle de votre activité.</p>
         </div>
-        <div class="pb-card" data-reveal>
-          <span class="pb-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg></span>
-          <h3>Site lent / peu clair</h3>
-          <p>Trop lent, trop confus : le visiteur repart avant même de comprendre ce que vous proposez.</p>
+        <div class="pb-card pb-card--positive" data-reveal>
+          <span class="pb-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H7l-3 3V4z"/><path d="M8 9h8M8 12h5"/></svg></span>
+          <h3>Plus de demandes</h3>
+          <p>Un parcours clair, du premier clic jusqu'au contact, pensé pour convertir plutôt que pour décorer.</p>
         </div>
       </div>
     </div>
@@ -316,9 +320,12 @@
           </div>
         </div>
       </div>
-      <button type="button" class="btn method-video-btn" data-video-open="processModal" aria-haspopup="dialog" aria-controls="processModal" data-magnetic>
-        <span class="hero-film-link-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8 5.5v13a1 1 0 0 0 1.52.85l10.5-6.5a1 1 0 0 0 0-1.7l-10.5-6.5A1 1 0 0 0 8 5.5z" fill="currentColor"/></svg></span>
-        Voir la vidéo du processus
+      <button type="button" class="video-preview-mini method-video-preview" data-video-open="processModal" aria-haspopup="dialog" aria-controls="processModal">
+        <span class="video-preview-mini-thumb">
+          <img src="images/process-poster.jpg" alt="" loading="lazy">
+          <span class="video-preview-mini-play" aria-hidden="true"><span><svg viewBox="0 0 24 24" fill="none"><path d="M8 5.5v13a1 1 0 0 0 1.52.85l10.5-6.5a1 1 0 0 0 0-1.7l-10.5-6.5A1 1 0 0 0 8 5.5z" fill="currentColor"/></svg></span></span>
+        </span>
+        <span class="video-preview-mini-label">Voir la vidéo du processus</span>
       </button>
     </div>
   </section>
