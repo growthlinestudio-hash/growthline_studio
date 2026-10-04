@@ -754,30 +754,30 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .hero-proof-list li{ display:inline-flex; align-items:center; gap:6px; }
 .hero-proof-list svg{ width:15px; height:15px; color:var(--accent); flex:none; }
 
-/* --- Aperçu de site (mockup navigateur) : remplace la sculpture abstraite
-   du hero — montre concrètement ce que Growthline livre à ses clients. --- */
-.hero-mock{ position:relative; z-index:1; width:100%; max-width:420px; margin-left:auto; }
-.hero-mock-frame{
-  border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--border-soft);
-  box-shadow:var(--soft-shadow); background:var(--bg-elevated);
+/* --- Film Growthline en lecture automatique : preuve visuelle immédiate du
+   travail, à la place d'un visuel statique. Intégration sobre (pas de cadre
+   lourd ni d'ombre marquée) pour rester fondu dans le fond ivoire. --- */
+.hero-video{
+  position:relative; z-index:1; width:100%; max-width:420px; margin-left:auto;
+  border-radius:var(--radius-lg); overflow:hidden; aspect-ratio:16/9;
+  background:var(--bg-elevated); box-shadow:0 1px 0 rgba(46,43,39,.04), var(--soft-shadow);
 }
-.hero-mock-bar{
-  display:flex; align-items:center; gap:7px; padding:12px 14px; background:var(--surface);
-  border-bottom:1px solid var(--border-soft);
+.hero-video-el{ width:100%; height:100%; object-fit:cover; display:block; background:var(--bg-elevated); }
+.hero-video-mute{
+  position:absolute; right:12px; bottom:12px; z-index:1; width:34px; height:34px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; appearance:none; cursor:pointer;
+  background:rgba(20,20,18,.38); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.18); color:#fff;
+  transition:background .25s ease, transform .25s ease;
 }
-.hero-mock-dot{ width:8px; height:8px; border-radius:50%; flex:none; }
-.hero-mock-url{
-  margin-left:8px; font-size:.72rem; color:var(--ink-mute); background:var(--bg);
-  border-radius:var(--radius-full); padding:3px 10px; flex:1;
+.hero-video-mute:hover{ background:rgba(20,20,18,.55); transform:scale(1.06); }
+.hero-video-mute-icon{ width:16px; height:16px; position:absolute; transition:opacity .2s ease; }
+.hero-video-mute-icon.icon-on{ opacity:0; }
+.hero-video-mute.is-unmuted .icon-off{ opacity:0; }
+.hero-video-mute.is-unmuted .icon-on{ opacity:1; }
+@media (max-width:900px){
+  .hero-video{ max-width:100%; margin-left:0; aspect-ratio:16/10; }
 }
-.hero-mock-body{ aspect-ratio:4/3; }
-.hero-mock-body img{ width:100%; height:100%; object-fit:cover; display:block; }
-.hero-mock-tag{
-  display:flex; align-items:center; gap:6px; margin-top:10px; justify-content:flex-end;
-  font-size:.74rem; color:var(--ink-mute);
-}
-.hero-mock-tag svg{ flex:none; }
-@media (max-width:900px){ .hero-mock{ max-width:100%; margin-left:0; } }
 
 /* --- Visuel signature de la page Services (illustration système, réutilise
    la même logique de recadrage CSS que le hero) --- */
