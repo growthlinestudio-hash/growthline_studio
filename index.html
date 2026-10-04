@@ -40,11 +40,36 @@
 </head>
 <body>
 
-<div id="pageLoader" class="page-loader" aria-hidden="true">
-  <div class="mark"><img src="images/logo-growthline-pastel-icon.png" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"></div>
-  <p class="page-loader-text" id="pageLoaderText">Initialisation...</p>
-  <div class="page-loader-bar"><span id="pageLoaderBar"></span></div>
+<div id="brandIntro" class="brand-intro" aria-hidden="true">
+  <div class="brand-intro-mark">
+    <span class="brand-intro-ring"></span>
+    <img class="brand-intro-logo" src="images/logo-growthline-pastel-icon.png" alt="">
+  </div>
+  <p class="brand-intro-tagline">Un site qui inspire confiance.</p>
 </div>
+<script>
+(function () {
+  var KEY = 'growthlineIntroSeen';
+  var intro = document.getElementById('brandIntro');
+  if (!intro) return;
+  var reduced = false;
+  try { reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  var seen = false;
+  try { seen = !!sessionStorage.getItem(KEY); } catch (e) {}
+  if (reduced || seen) { intro.remove(); return; }
+  try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
+
+  document.body.style.overflow = 'hidden';
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () { intro.classList.add('is-playing'); });
+  });
+  setTimeout(function () {
+    intro.classList.add('is-done');
+    document.body.style.overflow = '';
+    setTimeout(function () { intro.remove(); }, 700);
+  }, 2400);
+})();
+</script>
 <div class="scroll-progress" aria-hidden="true"><span></span></div>
 <div class="grain" aria-hidden="true"></div>
 <header>
