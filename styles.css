@@ -710,6 +710,39 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .hero-signature-img{ width:100%; height:100%; object-fit:cover; object-position:52% 40%; transform:scale(1.08); display:block; }
 @media (max-width:900px){ .hero-signature{ max-width:100%; margin-left:0; } }
 
+/* --- Liste de preuve compacte sous les CTA du hero (checkmarks) --- */
+.hero-proof-list{
+  display:flex; gap:20px; flex-wrap:wrap; list-style:none; margin:0; padding:0;
+  font-size:.85rem; color:var(--ink-mute);
+}
+.hero-proof-list li{ display:inline-flex; align-items:center; gap:6px; }
+.hero-proof-list svg{ width:15px; height:15px; color:var(--accent); flex:none; }
+
+/* --- Aperçu de site (mockup navigateur) : remplace la sculpture abstraite
+   du hero — montre concrètement ce que Growthline livre à ses clients. --- */
+.hero-mock{ position:relative; z-index:1; width:100%; max-width:420px; margin-left:auto; }
+.hero-mock-frame{
+  border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--border-soft);
+  box-shadow:var(--soft-shadow); background:var(--bg-elevated);
+}
+.hero-mock-bar{
+  display:flex; align-items:center; gap:7px; padding:12px 14px; background:var(--surface);
+  border-bottom:1px solid var(--border-soft);
+}
+.hero-mock-dot{ width:8px; height:8px; border-radius:50%; flex:none; }
+.hero-mock-url{
+  margin-left:8px; font-size:.72rem; color:var(--ink-mute); background:var(--bg);
+  border-radius:var(--radius-full); padding:3px 10px; flex:1;
+}
+.hero-mock-body{ aspect-ratio:4/3; }
+.hero-mock-body img{ width:100%; height:100%; object-fit:cover; display:block; }
+.hero-mock-tag{
+  display:flex; align-items:center; gap:6px; margin-top:10px; justify-content:flex-end;
+  font-size:.74rem; color:var(--ink-mute);
+}
+.hero-mock-tag svg{ flex:none; }
+@media (max-width:900px){ .hero-mock{ max-width:100%; margin-left:0; } }
+
 /* --- Visuel signature de la page Services (illustration système, réutilise
    la même logique de recadrage CSS que le hero) --- */
 .services-signature{
@@ -939,9 +972,54 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .sol-card p{ color:var(--ink-mute); font-size:.85rem; line-height:1.48; margin:0 0 var(--space-3); flex:1; }
 .sol-card .btn{ height:40px; padding:0 18px; font-size:.85rem; }
 
+.sol-cta{ margin-top:var(--space-5); }
+
 @media (max-width:860px){
   .pb-grid, .sol-grid{ grid-template-columns:1fr; }
 }
+
+/* --- Cartes de réalisations (image + type + titre + objectif) --- */
+.proj-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-4); }
+.proj-card{
+  display:block; border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--border-soft);
+  background:var(--bg-elevated); transition:transform .3s var(--ease), box-shadow .3s var(--ease);
+}
+.proj-card:hover{ transform:translateY(-3px); box-shadow:var(--soft-shadow); }
+.proj-card-img{ aspect-ratio:4/3; }
+.proj-card-img img{ width:100%; height:100%; object-fit:cover; display:block; }
+.proj-card-body{ padding:16px; }
+.proj-card-type{ font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-mute); }
+.proj-card-body h3{ font-size:1rem; margin:6px 0 4px; }
+.proj-card-body p{ font-size:.85rem; color:var(--ink-dim); margin:0; }
+@media (max-width:860px){ .proj-grid{ grid-template-columns:1fr; } }
+
+/* --- Processus en 4 étapes horizontales --- */
+.proc-h-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:var(--space-4); }
+.proc-h-step{ padding-top:14px; border-top:2px solid var(--border-soft); }
+.proc-h-num{ display:block; font-family:var(--font-display); font-size:.8rem; color:var(--accent-text); font-weight:600; margin-bottom:8px; }
+.proc-h-step h3{ font-size:1rem; margin-bottom:6px; }
+.proc-h-step p{ font-size:.85rem; color:var(--ink-mute); line-height:1.5; margin:0; }
+@media (max-width:860px){ .proc-h-grid{ grid-template-columns:1fr 1fr; } }
+@media (max-width:540px){ .proc-h-grid{ grid-template-columns:1fr; } }
+
+/* --- Grille d'avantages compacte (icône + label) --- */
+.adv-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:var(--space-4); }
+.adv-item{
+  display:flex; align-items:center; gap:10px; padding:14px 16px; border-radius:var(--radius-md);
+  background:var(--surface); border:1px solid var(--border-soft); font-size:.88rem; font-weight:500;
+}
+.adv-icon{ display:flex; align-items:center; justify-content:center; width:28px; height:28px; color:var(--accent-text); flex:none; }
+.adv-icon svg{ width:20px; height:20px; }
+@media (max-width:860px){ .adv-grid{ grid-template-columns:1fr 1fr; } }
+@media (max-width:540px){ .adv-grid{ grid-template-columns:1fr; } }
+
+/* --- Téléphone visible dans le bloc CTA final --- */
+.audit-panel-phone{
+  display:inline-flex; align-items:center; gap:8px; margin-top:16px; font-size:.9rem; font-weight:500; color:var(--ink-dim);
+  transition:color .25s var(--ease);
+}
+.audit-panel-phone svg{ width:17px; height:17px; color:var(--accent-text); }
+.audit-panel-phone:hover{ color:var(--ink); }
 
 /* --- Ambiance légèrement différente par section, pour éviter un fond uniforme --- */
 #audit{ background:radial-gradient(1200px 500px at 50% 0%, rgba(63,143,73,.08), transparent 70%); }
