@@ -157,10 +157,6 @@
           <video class="hero-video-el" id="heroVideo" poster="images/hero-loop-poster.jpg" muted playsinline loop autoplay preload="auto">
             <source src="video/growthline-hero-loop.mp4" type="video/mp4">
           </video>
-          <button type="button" class="hero-video-mute" id="heroVideoMute" aria-label="Activer le son" aria-pressed="false">
-            <svg class="hero-video-mute-icon icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
-            <svg class="hero-video-mute-icon icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
-          </button>
         </div>
       </div>
     </div>
@@ -168,7 +164,6 @@
   <script>
   (function () {
     var video = document.getElementById('heroVideo');
-    var muteBtn = document.getElementById('heroVideoMute');
     if (!video) return;
 
     var reduced = false;
@@ -176,34 +171,18 @@
 
     if (reduced) {
       /* Respecte la préférence : pas de lecture auto, le poster fait office
-         d'image statique. Le bouton son n'a plus de sens sans lecture. */
+         d'image statique. */
       video.removeAttribute('autoplay');
-      if (muteBtn) muteBtn.hidden = true;
       return;
     }
 
     /* La lecture auto (même muette) peut être bloquée par le navigateur dans
        de rares cas (économie de batterie stricte...) - échec silencieux vers
-       le poster plutôt qu'une vidéo figée à l'air cassée. */
+       le poster plutôt qu'une vidéo figée à l'air cassée. Ne jamais cacher
+       video.hidden sur erreur : le <video poster> reste affiché nativement
+       comme image statique tant qu'on ne touche pas à l'élément lui-même. */
     var playPromise = video.play();
     if (playPromise && playPromise.catch) { playPromise.catch(function () {}); }
-
-    video.addEventListener('error', function () {
-      /* Ne jamais cacher video.hidden ici : le <video poster> reste affiché
-         nativement comme image statique tant qu'on ne touche pas à
-         l'élément lui-même - c'est le fallback propre, pas un espace vide. */
-      if (muteBtn) muteBtn.hidden = true;
-    });
-
-    if (muteBtn) {
-      muteBtn.addEventListener('click', function () {
-        video.muted = !video.muted;
-        var unmuted = !video.muted;
-        muteBtn.classList.toggle('is-unmuted', unmuted);
-        muteBtn.setAttribute('aria-pressed', unmuted ? 'true' : 'false');
-        muteBtn.setAttribute('aria-label', unmuted ? 'Couper le son' : 'Activer le son');
-      });
-    }
   })();
   </script>
 
