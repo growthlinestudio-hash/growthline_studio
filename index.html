@@ -242,25 +242,27 @@
           </ul>
         </div>
 
-        <!-- Showreel de marque, avec sound design : masqué derrière une
-             affiche + bouton lecture par défaut (preload="none", rien n'est
-             téléchargé tant que le visiteur ne clique pas) — un lecteur
-             autoplay ne pourrait de toute façon jouer le son (politique
-             navigateur), donc autant en faire un vrai moment volontaire
-             plutôt qu'une boucle muette. Pas de data-reveal : son entrée est
-             gérée par la chorégraphie dédiée du hero dans motion.js
-             (.hero-signature), synchronisée avec la fin de l'intro. -->
+        <!-- Showreel de marque, avec sound design : boucle en fond, muet par
+             défaut (seule façon de l'autoplay — un navigateur refuse
+             toujours l'autoplay avec son). Le son s'active au clic sur la
+             vidéo ou sur le bouton dédié ; passer en plein écran active le
+             son automatiquement, puisque c'est alors un vrai visionnage.
+             Pas de data-reveal : son entrée est gérée par la chorégraphie
+             dédiée du hero dans motion.js (.hero-signature), synchronisée
+             avec la fin de l'intro. -->
         <div class="hero-video hero-signature hero-showreel" id="heroShowreel">
-          <img class="hero-showreel-poster" src="images/hero-showreel-poster.jpg" alt="Aperçu du film de marque Growthline" loading="lazy">
-          <button type="button" class="hero-showreel-play" aria-label="Lire le film de marque Growthline, avec le son">
-            <span class="hero-showreel-play-icon">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M8 5.5v13a1 1 0 0 0 1.52.85l10.5-6.5a1 1 0 0 0 0-1.7l-10.5-6.5A1 1 0 0 0 8 5.5z" fill="currentColor"/></svg>
-            </span>
-            <span class="hero-showreel-play-label">Voir le film · avec le son</span>
-          </button>
-          <video class="hero-showreel-video" playsinline preload="none" poster="images/hero-showreel-poster.jpg">
+          <video class="hero-showreel-video" autoplay muted loop playsinline preload="auto" poster="images/hero-showreel-poster.jpg">
             <source src="video/growthline-showreel.mp4" type="video/mp4">
           </video>
+          <div class="hero-showreel-controls">
+            <button type="button" class="hero-showreel-ctrl hero-showreel-sound" aria-label="Activer le son" aria-pressed="false">
+              <svg class="icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+              <svg class="icon-unmuted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+            </button>
+            <button type="button" class="hero-showreel-ctrl hero-showreel-fullscreen" aria-label="Plein écran, avec le son">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -270,31 +272,48 @@
     var card = document.getElementById('heroShowreel');
     if (!card) return;
     var video = card.querySelector('.hero-showreel-video');
-    var playBtn = card.querySelector('.hero-showreel-play');
+    var soundBtn = card.querySelector('.hero-showreel-sound');
+    var fsBtn = card.querySelector('.hero-showreel-fullscreen');
+    var iconMuted = soundBtn.querySelector('.icon-muted');
+    var iconUnmuted = soundBtn.querySelector('.icon-unmuted');
 
-    function play() {
-      card.classList.add('is-playing');
-      video.currentTime = 0;
-      video.muted = false;
-      var p = video.play();
-      /* Lecture avec son bloquée par le navigateur en dehors d'un geste
-         utilisateur direct (rare ici puisqu'on part d'un vrai clic) :
-         on retente en muet plutôt que de laisser un cadre figé. */
-      if (p && p.catch) {
-        p.catch(function () { video.muted = true; video.play().catch(function () {}); });
-      }
+    function setMuted(m) {
+      video.muted = m;
+      iconMuted.hidden = !m;
+      iconUnmuted.hidden = m;
+      soundBtn.setAttribute('aria-pressed', String(!m));
+      soundBtn.setAttribute('aria-label', m ? 'Activer le son' : 'Couper le son');
     }
-    playBtn.addEventListener('click', play);
-    /* Cliquer la vidéo en cours de lecture bascule pause/reprise */
-    video.addEventListener('click', function () {
-      if (video.paused) video.play(); else video.pause();
+    function unmute() {
+      setMuted(false);
+      var p = video.play();
+      if (p && p.catch) p.catch(function () {});
+    }
+
+    soundBtn.addEventListener('click', function (e) { e.stopPropagation(); setMuted(!video.muted); });
+    /* Cliquer n'importe où sur l'écran de la vidéo active aussi le son */
+    video.addEventListener('click', function () { if (video.muted) unmute(); else setMuted(true); });
+
+    /* Le plein écran se demande sur le CADRE (pas sur <video>) pour garder
+       les boutons personnalisés visibles par-dessus, plutôt que de laisser
+       le navigateur basculer sur son propre lecteur plein écran natif. */
+    fsBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var req = card.requestFullscreen || card.webkitRequestFullscreen;
+      /* Peut être refusé par le navigateur (contexte, permissions) : certains
+         rejettent une Promise, d'autres lèvent directement - on couvre les
+         deux, mais le son s'active de toute façon pour ne jamais bloquer le
+         visiteur sur une erreur si le plein écran échoue. */
+      if (req) {
+        try {
+          var p = req.call(card);
+          if (p && p.catch) p.catch(function () {});
+        } catch (err) {}
+      }
+      unmute();
     });
-    /* Pas de boucle : le son construit une montée d'énergie, la rejouer en
-       coupe aurait recommencé plat juste après le point culminant. On
-       revient à l'affiche pour que revoir le film reste un choix explicite. */
-    video.addEventListener('ended', function () {
-      card.classList.remove('is-playing');
-      video.currentTime = 0;
+    document.addEventListener('fullscreenchange', function () {
+      if (document.fullscreenElement === card) unmute();
     });
   })();
   </script>

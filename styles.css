@@ -924,42 +924,33 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
   .hero-video{ max-width:100%; margin-left:0; aspect-ratio:16/10; }
 }
 
-/* --- Visuel signature du hero : showreel de marque avec sound design,
-   masqué derrière une affiche + bouton tant qu'on n'a pas cliqué (voir le
-   commentaire HTML pour le pourquoi). Entrée + flottement pris en charge
-   par la chorégraphie dédiée du hero dans motion.js (classe
-   .hero-signature, réutilise floatAndParallax déjà existant). --- */
+/* --- Visuel signature du hero : showreel de marque avec sound design, en
+   boucle muette par défaut (seule façon d'autoplay — un navigateur refuse
+   toujours l'autoplay avec son). Entrée + flottement pris en charge par la
+   chorégraphie dédiée du hero dans motion.js (classe .hero-signature,
+   réutilise floatAndParallax déjà existant). --- */
 .hero-signature{ position:relative; overflow:hidden; }
-.hero-showreel{ cursor:pointer; background:#000; }
-.hero-showreel-poster{
-  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
-  transition:opacity .4s ease;
+.hero-showreel{ background:#000; }
+.hero-showreel-video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; cursor:pointer; }
+/* En plein écran, le cadre occupe tout l'écran et la vidéo s'ajuste sans
+   recadrage agressif (contain plutôt que cover, le ratio de l'écran du
+   visiteur n'étant plus garanti proche de 16:9). */
+.hero-showreel:fullscreen{ width:100vw; height:100vh; max-width:none; border-radius:0; }
+.hero-showreel:fullscreen .hero-showreel-video{ object-fit:contain; }
+.hero-showreel:-webkit-full-screen{ width:100vw; height:100vh; max-width:none; border-radius:0; }
+.hero-showreel:-webkit-full-screen .hero-showreel-video{ object-fit:contain; }
+
+.hero-showreel-controls{
+  position:absolute; right:14px; bottom:14px; z-index:1; display:flex; gap:8px;
 }
-.hero-showreel-video{
-  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
-  opacity:0; pointer-events:none; transition:opacity .4s ease;
+.hero-showreel-ctrl{
+  width:38px; height:38px; border-radius:50%; border:0; padding:0; appearance:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; flex:none;
+  background:rgba(20,18,15,.48); color:rgba(247,244,239,.95); backdrop-filter:blur(6px);
+  transition:background .25s ease, transform .25s var(--ease-spring);
 }
-.hero-showreel.is-playing .hero-showreel-video{ opacity:1; pointer-events:auto; }
-.hero-showreel.is-playing .hero-showreel-poster{ opacity:0; }
-.hero-showreel-play{
-  position:absolute; inset:0; z-index:1; display:flex; flex-direction:column; align-items:center;
-  justify-content:center; gap:12px; border:0; padding:0; appearance:none;
-  background:linear-gradient(180deg, rgba(20,18,15,.12), rgba(20,18,15,.34));
-  transition:opacity .35s ease, visibility .35s ease;
-}
-.hero-showreel.is-playing .hero-showreel-play{ opacity:0; visibility:hidden; pointer-events:none; }
-.hero-showreel-play-icon{
-  width:58px; height:58px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-  background:rgba(247,244,239,.95); color:var(--ink); flex:none;
-  box-shadow:0 14px 30px -10px rgba(0,0,0,.4);
-  transition:transform .3s var(--ease-spring), background .25s ease;
-}
-.hero-showreel-play-icon svg{ width:20px; height:20px; margin-left:3px; }
-.hero-showreel-play:hover .hero-showreel-play-icon{ transform:scale(1.08); background:var(--bg-elevated); }
-.hero-showreel-play-label{
-  font-family:var(--font-body); font-size:.8rem; font-weight:500; letter-spacing:.02em;
-  color:rgba(247,244,239,.92); text-shadow:0 1px 6px rgba(0,0,0,.35);
-}
+.hero-showreel-ctrl:hover{ background:rgba(20,18,15,.68); transform:scale(1.07); }
+.hero-showreel-ctrl svg{ width:16px; height:16px; }
 
 /* --- Visuel signature de la page Services (illustration système, réutilise
    la même logique de recadrage CSS que le hero) --- */
