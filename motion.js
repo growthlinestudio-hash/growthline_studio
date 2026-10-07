@@ -169,20 +169,21 @@
     if (!hero || reduced) return;
     var h1 = hero.querySelector('h1[data-split-immediate]');
     var eyebrowRow = hero.querySelector('.hero-eyebrow-row');
-    var subCol = hero.querySelector('.hero-sub-col');
+    var lede = hero.querySelector('.lede');
+    var ctaBtns = hero.querySelectorAll('.hero-ctas > *');
+    var proofItems = hero.querySelectorAll('.hero-proof-list > li');
     var visual = hero.querySelector('.hero-signature');
     var cue = hero.querySelector('.scroll-cue');
 
-    /* Chorégraphie volontairement lente et fondue (~1.9s au total, en
-       cascade douce plutôt que tout en même temps) : après l'intro, le hero
-       doit continuer sur la même retenue — jamais un "pop" sec après une
-       mise en scène posée. Chaque élément se matérialise depuis un léger
-       flou plutôt que de se jeter en place (pas de chute ni de rebond
-       élastique), avec des départs étalés dans le temps, pas empilés à 0.
-       Part en pause : si l'intro de marque est présente, elle ne joue qu'au
-       moment précis où celle-ci s'envole vers la navbar (cf. fin de
-       fichier), pour que le hero se construise sous les yeux au lieu d'être
-       déjà entièrement formé, invisible, derrière l'écran d'intro. */
+    /* Chorégraphie en plusieurs pièces distinctes qui s'assemblent l'une
+       après l'autre (~3.8s au total) plutôt qu'un seul bloc qui s'estompe :
+       repère, étiquette, titre, visuel, badge, texte, boutons (un par un),
+       preuves (une par une), chiffres, puis l'invite à scroller en tout
+       dernier — chacune part d'un léger flou/décalage/rotation qui lui est
+       propre. Part en pause : si l'intro de marque est présente, elle ne
+       joue qu'au moment précis où celle-ci s'envole vers la navbar (cf. fin
+       de fichier), pour que le hero se construise sous les yeux au lieu
+       d'être déjà entièrement formé, invisible, derrière l'écran d'intro. */
     var tl = gsap.timeline({ defaults: { ease: 'sine.out' }, paused: true });
 
     /* Le repère de marque s'estompe doucement, sans chute ni à-coup */
@@ -195,18 +196,28 @@
     if (eyebrowRow) { gsap.set(eyebrowRow, { opacity: 0, y: 10, filter: 'blur(7px)' }); tl.to(eyebrowRow, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1 }, 0); }
     if (h1) {
       var spans = h1.querySelectorAll('.split-word > span');
-      tl.to(spans, { yPercent: 0, opacity: 1, duration: .95, stagger: .022, ease: 'power2.out' }, 0.22);
+      tl.to(spans, { yPercent: 0, opacity: 1, duration: 1.1, stagger: .032, ease: 'power2.out' }, 0.3);
     }
-    if (subCol) { gsap.set(subCol, { opacity: 0, y: 14, filter: 'blur(5px)' }); tl.to(subCol, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1 }, 0.55); }
     if (visual) {
-      gsap.set(visual, { opacity: 0, x: 22, y: 18, scale: .97, filter: 'blur(12px)' });
-      tl.to(visual, { opacity: 1, x: 0, y: 0, scale: 1, filter: 'blur(0px)', duration: 1.3, ease: 'power2.out' }, 0.4);
+      gsap.set(visual, { opacity: 0, x: 34, y: 26, scale: .95, rotate: 2, filter: 'blur(14px)' });
+      tl.to(visual, { opacity: 1, x: 0, y: 0, scale: 1, rotate: 0, filter: 'blur(0px)', duration: 1.6, ease: 'power2.out' }, 0.5);
       tl.call(function () { floatAndParallax(visual); });
     }
     var cornerBadge = hero.querySelector('.spin-badge--corner');
     if (cornerBadge) {
-      gsap.set(cornerBadge, { y: -14, opacity: 0, rotate: -4, filter: 'blur(5px)' });
-      tl.to(cornerBadge, { y: 0, opacity: 1, rotate: 0, filter: 'blur(0px)', duration: 1 }, 0.5);
+      gsap.set(cornerBadge, { y: -16, opacity: 0, rotate: -6, filter: 'blur(6px)' });
+      tl.to(cornerBadge, { y: 0, opacity: 1, rotate: 0, filter: 'blur(0px)', duration: 1.1 }, 0.65);
+    }
+    if (lede) { gsap.set(lede, { opacity: 0, y: 14, filter: 'blur(6px)' }); tl.to(lede, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1 }, 1.15); }
+    /* Les boutons arrivent un par un, avec un très léger rebond — comme
+       deux pièces distinctes qui se posent plutôt qu'un bloc unique */
+    if (ctaBtns.length) {
+      gsap.set(ctaBtns, { opacity: 0, y: 16, scale: .94, filter: 'blur(5px)' });
+      tl.to(ctaBtns, { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: .85, stagger: .12, ease: 'back.out(1.4)' }, 1.55);
+    }
+    if (proofItems.length) {
+      gsap.set(proofItems, { opacity: 0, y: 10 });
+      tl.to(proofItems, { opacity: 1, y: 0, duration: .6, stagger: .09 }, 2.05);
     }
 
     /* Les 3 vrais chiffres du hero (0€ / 6 / 24h) comptent jusqu'à leur valeur —
@@ -222,11 +233,11 @@
         tl.to(counter, {
           val: finalVal, duration: .9, ease: 'power1.out',
           onUpdate: function () { el.textContent = Math.round(counter.val) + suffix; }
-        }, 0.6);
+        }, 1.3);
       });
     }
 
-    if (cue) { gsap.set(cue, { opacity: 0 }); tl.to(cue, { opacity: 1, duration: .9 }, 0.95); }
+    if (cue) { gsap.set(cue, { opacity: 0 }); tl.to(cue, { opacity: 1, duration: 1 }, 3.1); }
 
     var brandIntro = document.getElementById('brandIntro');
     if (brandIntro) {
@@ -285,12 +296,30 @@
       var strength = 0.3;
       var xTo = gsap.quickTo(btn, 'x', { duration: .5, ease: 'power3.out' });
       var yTo = gsap.quickTo(btn, 'y', { duration: .5, ease: 'power3.out' });
+      /* Le suivi de souris pilote x/y en continu via GSAP (transform inline) :
+         une règle CSS :active seule y serait écrasée à chaque mousemove. Le
+         retour au clic passe donc par le même canal GSAP (propriété scale),
+         mais via .to() plutôt que .quickTo() : certains de ces boutons
+         (CTA du hero) ont aussi leur scale piloté une fois par la
+         chorégraphie d'entrée — un quickTo pré-câblé au chargement de la
+         page entre alors en conflit avec elle (avertissement GSAP "scale
+         not eligible for reset"), alors qu'un .to() créé à la volée à
+         chaque clic ne réserve rien à l'avance. */
       btn.addEventListener('mousemove', function (e) {
         var r = btn.getBoundingClientRect();
         xTo((e.clientX - (r.left + r.width / 2)) * strength);
         yTo((e.clientY - (r.top + r.height / 2)) * strength);
       });
-      btn.addEventListener('mouseleave', function () { xTo(0); yTo(0); });
+      btn.addEventListener('mouseleave', function () {
+        xTo(0); yTo(0);
+        gsap.to(btn, { scale: 1, duration: .2, ease: 'power2.out', overwrite: 'auto' });
+      });
+      btn.addEventListener('mousedown', function () {
+        gsap.to(btn, { scale: .95, duration: .12, ease: 'power2.out', overwrite: 'auto' });
+      });
+      btn.addEventListener('mouseup', function () {
+        gsap.to(btn, { scale: 1, duration: .25, ease: 'power2.out', overwrite: 'auto' });
+      });
     });
   })();
 

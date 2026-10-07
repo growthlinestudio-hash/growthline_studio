@@ -347,12 +347,19 @@ h1,h2,h3,h4,p{ margin:0; }
   white-space:nowrap;
 }
 .btn:hover{ background:var(--surface-hover); border-color:var(--border); transform:translateY(-2px); }
+/* Retour tactile au clic : chaque bouton du site se "tasse" légèrement à
+   l'appui puis reprend sa forme au relâchement — aucun bouton sans retour
+   immédiat. Les boutons [data-magnetic] reçoivent le même geste en JS
+   (cf. magneticButtons) car leur transform est déjà piloté par GSAP :
+   une règle CSS seule y serait écrasée par le style inline du suivi souris. */
+.btn:active{ transform:translateY(0) scale(.95); transition-duration:.12s; }
 .btn-solid{
   background:var(--accent); color:var(--accent-ink); border:1px solid var(--accent);
   box-shadow:0 14px 30px -14px rgba(143,174,141,.7);
   position:relative; overflow:hidden;
 }
 .btn-solid:hover{ background:var(--accent-bright); border-color:var(--accent-bright); transform:translateY(-3px); box-shadow:0 20px 38px -16px rgba(143,174,141,.8); }
+.btn-solid:active{ transform:translateY(0) scale(.95); box-shadow:0 8px 18px -12px rgba(143,174,141,.7); transition-duration:.12s; }
 /* --- Reflet lumineux qui balaie le bouton au survol --- */
 .btn-solid::before{
   content:""; position:absolute; top:0; left:-60%; width:40%; height:100%;
@@ -427,8 +434,10 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .main-nav{ display:flex; align-items:center; gap:8px; }
 .main-nav a{
   position:relative; padding:8px 16px; font-size:.92rem; font-weight:500; color:var(--ink-dim);
-  transition:color .3s ease;
+  transition:color .3s ease, transform .15s ease;
+  display:inline-block;
 }
+.main-nav a:active{ transform:scale(.94); transition-duration:.1s; }
 .main-nav a::after{
   content:""; position:absolute; left:16px; right:16px; bottom:2px; height:1px; background:var(--ink);
   transform:scaleX(0); transform-origin:left; transition:transform .4s var(--ease);
