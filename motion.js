@@ -85,10 +85,18 @@
   })();
 
   /* ---------- 3. Split-text mot par mot ([data-split]) ---------- */
+  /* data-accent-word="confiance" : met ce mot précis en italique serif
+     (.accent-script) pendant le split, sans casser l'animation (qui cible
+     toujours le span intérieur .split-word > span, pas l'accent lui-même). */
   function splitWords(el) {
+    var accentWord = el.getAttribute('data-accent-word');
     var words = el.textContent.trim().split(/\s+/);
     el.innerHTML = words.map(function (w) {
-      return '<span class="split-word"><span>' + w + '</span></span> ';
+      var bare = w.replace(/[.,!?;:]+$/, '');
+      var inner = (accentWord && bare === accentWord)
+        ? w.replace(bare, '<span class="accent-script">' + bare + '</span>')
+        : w;
+      return '<span class="split-word"><span>' + inner + '</span></span> ';
     }).join('');
     return el.querySelectorAll('.split-word > span');
   }
@@ -124,6 +132,33 @@
       ScrollTrigger.create({
         trigger: el, start: 'top 85%', once: true,
         onEnter: function () { gsap.to(inner, { yPercent: 0, duration: .9, ease: 'power4.out' }); }
+      });
+    });
+  })();
+
+  /* ---------- 3ter. Révélation d'encre au scroll ([data-ink-reveal]) ----------
+     Inspiré du site de référence analysé pour ce brief : chaque mot passe
+     d'un ton pâle au plein noir d'encre AU FIL du défilement (scrub, pas un
+     déclenchement ponctuel) — un effet "le titre s'écrit devant vous",
+     volontairement réservé à un seul titre signature de la page, pas
+     généralisé à toutes les sections (cf. règle "10 effets exceptionnels,
+     pas 100 génériques" déjà appliquée ailleurs sur ce site). */
+  (function inkReveals() {
+    var targets = document.querySelectorAll('[data-ink-reveal]');
+    if (!targets.length) return;
+    targets.forEach(function (el) {
+      var words = el.textContent.trim().split(/\s+/);
+      el.innerHTML = words.map(function (w) {
+        return '<span class="ink-word">' + w + '</span>';
+      }).join(' ');
+      var spans = el.querySelectorAll('.ink-word');
+      if (reduced) { gsap.set(spans, { color: 'var(--ink)' }); return; }
+      if (!window.ScrollTrigger) { gsap.set(spans, { color: 'var(--ink)' }); return; }
+      gsap.to(spans, {
+        color: 'var(--ink)',
+        stagger: 0.5,
+        ease: 'none',
+        scrollTrigger: { trigger: el, start: 'top 82%', end: 'bottom 50%', scrub: 0.4 }
       });
     });
   })();

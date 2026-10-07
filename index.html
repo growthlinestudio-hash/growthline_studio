@@ -31,43 +31,88 @@
   "priceRange":"0€ - 890€"
 }
 </script>
-<link rel="preconnect" href="https://api.fontshare.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <div id="brandIntro" class="brand-intro" aria-hidden="true">
-  <div class="brand-intro-mark">
-    <span class="brand-intro-ring"></span>
-    <img class="brand-intro-logo" src="images/logo-growthline-pastel-icon.png" alt="">
+  <div class="brand-intro-row">
+    <div class="brand-intro-mark">
+      <span class="brand-intro-ring"></span>
+      <img class="brand-intro-logo" src="images/logo-growthline-pastel-icon.png" alt="">
+    </div>
+    <span class="brand-intro-word">Growthline</span>
   </div>
-  <p class="brand-intro-tagline">Un site qui inspire confiance.</p>
 </div>
 <script>
 (function () {
   var KEY = 'growthlineIntroSeen';
   var intro = document.getElementById('brandIntro');
   if (!intro) return;
+
   var reduced = false;
   try { reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
   var seen = false;
   try { seen = !!sessionStorage.getItem(KEY); } catch (e) {}
-  if (reduced || seen) { intro.remove(); return; }
+
+  /* Désactivation sur machine modeste : on ne bloque jamais sur l'ABSENCE
+     de l'API (Safari n'expose pas deviceMemory), seulement si elle est
+     présente ET indique explicitement un appareil limité — seuil bas
+     exprès pour ne pas priver la majorité des visiteurs de l'intro. */
+  var lowPower = false;
+  try {
+    if (navigator.deviceMemory && navigator.deviceMemory <= 2) lowPower = true;
+    if (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2) lowPower = true;
+  } catch (e) {}
+
+  if (reduced || seen || lowPower) { intro.remove(); return; }
   try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
+
+  var mark = intro.querySelector('.brand-intro-mark');
+  var word = intro.querySelector('.brand-intro-word');
 
   document.body.style.overflow = 'hidden';
   requestAnimationFrame(function () {
     requestAnimationFrame(function () { intro.classList.add('is-playing'); });
   });
+
+  /* Étape 5 : le logo et le nom glissent naturellement vers leur position
+     réelle dans la navbar (transition FLIP calculée sur les vraies
+     coordonnées de l'élément .brand déjà rendu en dessous, jamais une
+     position devinée/codée en dur). */
+  setTimeout(function () {
+    var navMark = document.querySelector('.brand .mark');
+    var navWord = document.querySelector('.brand .brand-word');
+    if (navMark && navWord && mark && word) {
+      var mr = mark.getBoundingClientRect();
+      var wr = word.getBoundingClientRect();
+      var nmr = navMark.getBoundingClientRect();
+      var nwr = navWord.getBoundingClientRect();
+
+      var markScale = nmr.width / mr.width;
+      var markDx = (nmr.left + nmr.width / 2) - (mr.left + mr.width / 2);
+      var markDy = (nmr.top + nmr.height / 2) - (mr.top + mr.height / 2);
+
+      var wordScale = nwr.width / wr.width;
+      var wordDx = (nwr.left + nwr.width / 2) - (wr.left + wr.width / 2);
+      var wordDy = (nwr.top + nwr.height / 2) - (wr.top + wr.height / 2);
+
+      mark.style.transform = 'translate(' + markDx + 'px,' + markDy + 'px) scale(' + markScale + ')';
+      word.style.transform = 'translate(' + wordDx + 'px,' + wordDy + 'px) scale(' + wordScale + ')';
+    }
+    intro.classList.add('is-leaving');
+  }, 1900);
+
+  /* Étape 6 : une fois posé dans la navbar, fondu vers le hero déjà rendu
+     en dessous. */
   setTimeout(function () {
     intro.classList.add('is-done');
     document.body.style.overflow = '';
-    setTimeout(function () { intro.remove(); }, 700);
-  }, 2400);
+    setTimeout(function () { intro.remove(); }, 600);
+  }, 3000);
 })();
 </script>
 <div class="scroll-progress" aria-hidden="true"><span></span></div>
@@ -76,7 +121,7 @@
   <div class="container nav-inner">
     <a href="index.html" class="brand">
       <span class="mark"><img src="images/logo-growthline-pastel-icon.png" alt="Growthline"></span>
-      Growthline
+      <span class="brand-word">Growthline</span>
     </a>
     <nav class="main-nav">
       <a href="services.html">Services</a>
@@ -134,7 +179,7 @@
       <div class="hero-eyebrow-row">
         <span class="eyebrow">Agence digitale · Audit gratuit</span>
       </div>
-      <h1 class="display-1" data-split data-split-immediate>Un site web qui donne confiance dès la première visite</h1>
+      <h1 class="display-1" data-split data-split-immediate data-accent-word="confiance">Un site web qui donne confiance dès la première visite</h1>
 
       <div class="hero-bottom">
         <div class="hero-sub-col">
@@ -207,7 +252,7 @@
   <section class="section section--tight" id="probleme">
     <div class="container">
       <div class="section-head section-head--compact" data-reveal>
-        <h2 class="display-2" data-mask>Pourquoi votre site peut freiner votre croissance</h2>
+        <h2 class="display-2" data-ink-reveal>Pourquoi votre site peut freiner votre croissance</h2>
       </div>
       <div class="pb-grid">
         <div class="pb-card" data-reveal>
