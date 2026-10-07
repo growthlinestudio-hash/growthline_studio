@@ -175,8 +175,12 @@
 
     /* Chorégraphie volontairement courte (~0.6s au total, tout en grande
        partie simultané) : le hero doit sembler déjà là à l'arrivée sur le
-       site, pas s'assembler morceau par morceau pendant plusieurs secondes. */
-    var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+       site, pas s'assembler morceau par morceau pendant plusieurs secondes.
+       Elle part en pause : si l'intro de marque est présente, elle ne joue
+       qu'au moment précis où celle-ci s'envole vers la navbar (cf. fin de
+       fichier), pour que le hero se construise sous les yeux au lieu d'être
+       déjà entièrement formé, invisible, derrière l'écran d'intro. */
+    var tl = gsap.timeline({ defaults: { ease: 'power3.out' }, paused: true });
 
     /* Le repère de marque tombe légèrement du haut à l'ouverture, comme suspendu puis lâché */
     var brandMark = document.querySelector('.brand .mark');
@@ -220,6 +224,13 @@
     }
 
     if (cue) { gsap.set(cue, { opacity: 0 }); tl.to(cue, { opacity: 1, duration: .3 }, 0.35); }
+
+    var brandIntro = document.getElementById('brandIntro');
+    if (brandIntro) {
+      window.addEventListener('growthline:introflip', function () { tl.play(); }, { once: true });
+    } else {
+      tl.play();
+    }
   })();
 
   /* ---------- 4bis. Tilt 3D discret : les cartes réagissent à la perspective ---------- */

@@ -74,16 +74,50 @@
   var mark = intro.querySelector('.brand-intro-mark');
   var word = intro.querySelector('.brand-intro-word');
 
+  /* Le nom s'écrit lettre par lettre, pas en un seul bloc qui s'efface :
+     chaque lettre reçoit son délai via --d (en secondes), décalé pour
+     démarrer une fois le repère visuel presque entièrement matérialisé —
+     deux temps bien distincts (le logo, puis le nom) plutôt qu'un seul
+     fondu simultané. */
+  (function splitLetters() {
+    var text = word.textContent, base = 0.55, step = 0.034;
+    word.textContent = '';
+    Array.prototype.forEach.call(text, function (ch, i) {
+      var s = document.createElement('span');
+      s.className = 'lw';
+      s.style.setProperty('--d', (base + i * step).toFixed(3) + 's');
+      s.textContent = ch === ' ' ? ' ' : ch;
+      word.appendChild(s);
+    });
+  })();
+
   document.body.style.overflow = 'hidden';
   requestAnimationFrame(function () {
     requestAnimationFrame(function () { intro.classList.add('is-playing'); });
   });
 
-  /* Étape 5 : le logo et le nom glissent naturellement vers leur position
-     réelle dans la navbar (transition FLIP calculée sur les vraies
-     coordonnées de l'élément .brand déjà rendu en dessous, jamais une
-     position devinée/codée en dur). */
-  setTimeout(function () {
+  var HOLD_AT = 1450;   // repère + nom installés : un souffle du halo tient la mise en scène
+  var FLIP_AT = 2100;   // départ du FLIP vers la navbar
+  var FLIP_MS = 900;    // doit correspondre à la transition .is-leaving en CSS
+  var DONE_GAP = 150;   // petit silence une fois posé, avant le fondu final
+  var REMOVE_GAP = 650; // doit couvrir la transition opacity/visibility .is-done en CSS
+
+  var holdTimer, flipTimer, doneTimer, removeTimer;
+  var flipped = false, finished = false;
+  var SKIP_EVS = ['pointerdown', 'keydown', 'wheel'];
+
+  /* Étape : le logo et le nom glissent vers leur position réelle dans la
+     navbar (FLIP calculé sur les vraies coordonnées de .brand, jamais
+     devinées). Un évènement est émis pile à cet instant pour que le hero
+     commence sa propre entrée PENDANT le vol — au lieu d'apparaître déjà
+     entièrement formé une fois l'intro terminée. */
+  function playFlip() {
+    if (flipped) return;
+    flipped = true;
+    SKIP_EVS.forEach(function (ev) { window.removeEventListener(ev, skip); });
+    clearTimeout(holdTimer);
+    clearTimeout(flipTimer);
+
     var navMark = document.querySelector('.brand .mark');
     var navWord = document.querySelector('.brand .brand-word');
     if (navMark && navWord && mark && word) {
@@ -103,16 +137,28 @@
       mark.style.transform = 'translate(' + markDx + 'px,' + markDy + 'px) scale(' + markScale + ')';
       word.style.transform = 'translate(' + wordDx + 'px,' + wordDy + 'px) scale(' + wordScale + ')';
     }
+    intro.classList.remove('is-holding');
     intro.classList.add('is-leaving');
-  }, 1900);
+    try { window.dispatchEvent(new CustomEvent('growthline:introflip')); } catch (e) {}
+    doneTimer = setTimeout(finishIntro, FLIP_MS + DONE_GAP);
+  }
 
-  /* Étape 6 : une fois posé dans la navbar, fondu vers le hero déjà rendu
-     en dessous. */
-  setTimeout(function () {
+  function finishIntro() {
+    if (finished) return;
+    finished = true;
     intro.classList.add('is-done');
     document.body.style.overflow = '';
-    setTimeout(function () { intro.remove(); }, 600);
-  }, 3000);
+    removeTimer = setTimeout(function () { intro.remove(); }, REMOVE_GAP);
+  }
+
+  /* Un clic, une touche ou un geste de scroll abrège l'intro directement
+     vers le FLIP : jamais de visiteur pressé bloqué devant une mise en
+     scène qu'il n'a pas demandée. */
+  function skip() { playFlip(); }
+  SKIP_EVS.forEach(function (ev) { window.addEventListener(ev, skip, { passive: true }); });
+
+  holdTimer = setTimeout(function () { intro.classList.add('is-holding'); }, HOLD_AT);
+  flipTimer = setTimeout(playFlip, FLIP_AT);
 })();
 </script>
 <div class="scroll-progress" aria-hidden="true"><span></span></div>

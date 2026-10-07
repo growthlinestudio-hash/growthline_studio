@@ -88,6 +88,7 @@
 
   --ease: cubic-bezier(.16,1,.3,1);
   --ease-spring: cubic-bezier(.34,1.56,.64,1);
+  --ease-soft: cubic-bezier(.65,0,.35,1);
   --dur: .6s;
 }
 
@@ -214,21 +215,39 @@ h1,h2,h3,h4,p{ margin:0; }
   100%{ opacity:0; transform:scale(2.1); }
 }
 .brand-intro-word{
+  position:relative; display:inline-block;
   font-family:var(--font-display); font-weight:700; letter-spacing:-.01em; color:var(--ink);
-  font-size:clamp(1.8rem, 5vw, 2.7rem);
-  opacity:0; transform:translateX(-14px);
-  transition:opacity .6s var(--ease) .55s, transform .6s var(--ease) .55s;
+  font-size:clamp(1.8rem, 5vw, 2.7rem); white-space:nowrap;
 }
-.brand-intro.is-playing .brand-intro-word{ opacity:1; transform:translateX(0); }
+/* Le nom s'écrit lettre par lettre (plutôt qu'un seul bloc qui s'efface) :
+   chaque lettre reçoit son délai via --d, posé par le script au moment du
+   découpage. Rythme délibérément plus lent qu'un simple fondu de mot —
+   la marque "se construit" sous les yeux plutôt que d'apparaître d'un coup. */
+.brand-intro-word .lw{
+  display:inline-block; opacity:0; transform:translateY(62%);
+  transition:opacity .5s var(--ease) var(--d,0s), transform .5s var(--ease) var(--d,0s);
+}
+.brand-intro.is-playing .brand-intro-word .lw{ opacity:1; transform:translateY(0); }
 
-/* Étape 5 : une fois le nom affiché et la courte pause passée, le logo et
-   le mot glissent vers leur position réelle dans la navbar (transform
-   calculé en JS à partir des coordonnées exactes de .brand) — transition
-   plus lente et posée que l'entrée, pour une sensation de "rangement"
-   naturel plutôt qu'un bond. */
+/* Étape « mise en scène » : une fois le logo et le nom installés, un très
+   léger second souffle du halo marque un temps de présentation avant le
+   départ — la pause ne doit jamais ressembler à une attente mais à un
+   instant volontairement tenu. */
+.brand-intro.is-holding .brand-intro-ring{ animation:introRingBreathe 1.3s var(--ease) forwards; }
+@keyframes introRingBreathe{
+  0%{ opacity:0; transform:scale(.92); }
+  45%{ opacity:.32; transform:scale(1.05); }
+  100%{ opacity:0; transform:scale(1.22); }
+}
+
+/* Étape : une fois le nom affiché et la pause passée, le logo et le mot
+   glissent vers leur position réelle dans la navbar (FLIP calculé en JS à
+   partir des coordonnées exactes de .brand) — transition plus lente et
+   posée que l'entrée, atterrissage en décélération franche plutôt qu'un
+   simple glissement mécanique. */
 .brand-intro.is-leaving .brand-intro-mark,
 .brand-intro.is-leaving .brand-intro-word{
-  transition:transform .9s cubic-bezier(.65,0,.2,1);
+  transition:transform .9s var(--ease-soft);
 }
 .brand-intro.is-done{ opacity:0; visibility:hidden; }
 @media (prefers-reduced-motion:reduce){ .brand-intro{ display:none; } }
