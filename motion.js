@@ -177,17 +177,18 @@
     var cornerBadge = hero.querySelector('.spin-badge--corner');
     var brandMark = document.querySelector('.brand .mark');
 
-    /* Chaque pièce du hero semble jaillir du repère de marque qui vient de
-       se poser dans la navbar à la fin du FLIP de l'intro — comme s'il
-       "recrachait" tout le contenu, qui glisse ensuite lentement et
-       fluidement vers sa position naturelle (~8s au total, sans rebond :
-       une arrivée posée, pas un pop). Calcul façon FLIP, comme pour
-       l'intro elle-même : on mesure la position NATURELLE de chaque pièce
-       (déjà disposée par le CSS, simplement cachée derrière l'écran
-       d'intro) puis on la fait partir minuscule et transparente, au point
-       exact où se trouve le repère. Part en pause : si l'intro de marque
-       est présente, elle ne joue qu'au moment précis où celle-ci s'envole
-       vers la navbar (cf. fin de fichier). */
+    /* Chaque pièce du hero jaillit du repère de marque qui vient de se
+       poser dans la navbar à la fin du FLIP de l'intro — comme s'il
+       "recrachait" tout le contenu. Calcul façon FLIP, comme pour l'intro
+       elle-même : on mesure la position NATURELLE de chaque pièce (déjà
+       disposée par le CSS, simplement cachée derrière l'écran d'intro)
+       puis on la fait partir minuscule et transparente, au point exact où
+       se trouve le repère. Séquence volontairement stricte (~4s au
+       total) : chaque groupe de pièces finit sa course avant que le
+       suivant ne parte, pour qu'on voie clairement UNE pièce sortir du
+       logo à la fois plutôt que tout bouger ensemble. Part en pause : si
+       l'intro de marque est présente, elle ne joue qu'au moment précis où
+       celle-ci s'envole vers la navbar (cf. fin de fichier). */
     var tl = gsap.timeline({ defaults: { ease: 'power2.out' }, paused: true });
 
     function emerge(el, startTime, duration, scaleFrom) {
@@ -196,36 +197,33 @@
       var er = el.getBoundingClientRect(), mr = brandMark.getBoundingClientRect();
       var dx = (mr.left + mr.width / 2) - (er.left + er.width / 2);
       var dy = (mr.top + mr.height / 2) - (er.top + er.height / 2);
-      gsap.set(el, { x: dx, y: dy, scale: scaleFrom, opacity: 0, filter: 'blur(10px)' });
+      gsap.set(el, { x: dx, y: dy, scale: scaleFrom, opacity: 0, filter: 'blur(9px)' });
       tl.to(el, { x: 0, y: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: duration }, startTime);
     }
 
     /* Le repère de marque lui-même s'estompe doucement sur place, sans chute */
     if (brandMark) {
       gsap.set(brandMark, { opacity: 0, filter: 'blur(4px)' });
-      tl.to(brandMark, { opacity: 1, filter: 'blur(0px)', duration: .9, ease: 'sine.out' }, 0);
+      tl.to(brandMark, { opacity: 1, filter: 'blur(0px)', duration: .4, ease: 'sine.out' }, 0);
     }
 
-    emerge(eyebrowRow, 0, 2.3, .3);
+    emerge(eyebrowRow, 0, .55, .12);
     if (h1) {
       /* Le titre part comme un seul bloc (le split-word ne sert plus ici
          qu'à l'accent-script "confiance" et au sitewide reveal, pas à un
          second niveau d'animation qui entrerait en collision avec celle-ci) */
       gsap.set(h1.querySelectorAll('.split-word > span'), { yPercent: 0, opacity: 1 });
-      emerge(h1, 0.7, 2.9, .22);
+      emerge(h1, .5, .85, .1);
     }
-    emerge(visual, 1.6, 3.3, .15);
+    emerge(visual, 1.3, .95, .08);
     if (visual) tl.call(function () { floatAndParallax(visual); });
-    emerge(cornerBadge, 1.8, 1.9, .25);
-    emerge(lede, 3.1, 2.3, .35);
+    emerge(cornerBadge, 1.3, .55, .15);
+    emerge(lede, 2.25, .55, .18);
     /* Les boutons puis les preuves arrivent un par un, chacun depuis le
        même point d'origine — comme des pièces distinctes recrachées en
-       séquence plutôt qu'un bloc unique. Décalages calculés pour que la
-       dernière pièce réelle de la page (le 3e élément de preuve) arrive
-       pile vers 8s, même sur les pages où le badge/les chiffres/l'invite
-       à scroller plus bas dans cette fonction n'existent pas. */
-    ctaBtns.forEach(function (btn, i) { emerge(btn, 4.6 + i * .35, 1.7, .3); });
-    proofItems.forEach(function (li, i) { emerge(li, 6.2 + i * .28, 1.4, .5); });
+       séquence plutôt qu'un bloc unique */
+    ctaBtns.forEach(function (btn, i) { emerge(btn, 2.8 + i * .15, .5, .15); });
+    proofItems.forEach(function (li, i) { emerge(li, 3.35 + i * .1, .42, .25); });
 
     /* Les 3 vrais chiffres du hero (0€ / 6 / 24h) comptent jusqu'à leur valeur —
        ce sont les seules stats du site, pas d'inventer de faux compteurs ailleurs */
@@ -238,13 +236,13 @@
         var counter = { val: 0 };
         el.textContent = '0' + suffix;
         tl.to(counter, {
-          val: finalVal, duration: 1.2, ease: 'power1.out',
+          val: finalVal, duration: .7, ease: 'power1.out',
           onUpdate: function () { el.textContent = Math.round(counter.val) + suffix; }
-        }, 3.4);
+        }, 1.9);
       });
     }
 
-    if (cue) { gsap.set(cue, { opacity: 0 }); tl.to(cue, { opacity: 1, duration: 1, ease: 'sine.out' }, 7.1); }
+    if (cue) { gsap.set(cue, { opacity: 0 }); tl.to(cue, { opacity: 1, duration: .6, ease: 'sine.out' }, 3.9); }
 
     var brandIntro = document.getElementById('brandIntro');
     if (brandIntro) {
