@@ -369,6 +369,18 @@
         depth: depth
       });
     });
+    /* Le texte avance très légèrement À CONTRE-SENS des blobs (profondeur
+       négative) : c'est ce contraste de vitesse entre deux plans — pas
+       l'amplitude — qui crée la sensation de profondeur façon Stripe/Linear,
+       jamais perceptible comme "un élément qui bouge" pris isolément. */
+    var inner = hero.querySelector('.hero-inner');
+    if (inner) {
+      layers.push({
+        xTo: gsap.quickTo(inner, 'x', { duration: 1.1, ease: 'power3.out' }),
+        yTo: gsap.quickTo(inner, 'y', { duration: 1.1, ease: 'power3.out' }),
+        depth: -3.5
+      });
+    }
     if (!layers.length) return;
     hero.addEventListener('mousemove', function (e) {
       var r = hero.getBoundingClientRect();
@@ -378,6 +390,35 @@
     });
     hero.addEventListener('mouseleave', function () {
       layers.forEach(function (l) { l.xTo(0); l.yTo(0); });
+    });
+  })();
+
+  /* ---------- 11bis. Ambiance globale (halos qui persistent sous toutes
+     les sections, injectés une seule fois, partagés par tout le site) ---------- */
+  (function ambientField() {
+    if (document.querySelector('.ambient-field')) return;
+    var field = document.createElement('div');
+    field.className = 'ambient-field';
+    field.setAttribute('aria-hidden', 'true');
+    field.innerHTML =
+      '<div class="ambient-glow-wrap ambient-glow-wrap--1"><div class="ambient-glow ambient-glow--1"></div></div>' +
+      '<div class="ambient-glow-wrap ambient-glow-wrap--2"><div class="ambient-glow ambient-glow--2"></div></div>' +
+      '<div class="ambient-glow-wrap ambient-glow-wrap--3"><div class="ambient-glow ambient-glow--3"></div></div>';
+    document.body.insertBefore(field, document.body.firstChild);
+    if (reduced || !canHover) return;
+
+    var moves = [];
+    field.querySelectorAll('.ambient-glow-wrap').forEach(function (el, i) {
+      moves.push({
+        xTo: gsap.quickTo(el, 'x', { duration: 1.5, ease: 'power2.out' }),
+        yTo: gsap.quickTo(el, 'y', { duration: 1.5, ease: 'power2.out' }),
+        depth: 18 + i * 10
+      });
+    });
+    window.addEventListener('mousemove', function (e) {
+      var px = e.clientX / window.innerWidth - .5;
+      var py = e.clientY / window.innerHeight - .5;
+      moves.forEach(function (m) { m.xTo(px * m.depth); m.yTo(py * m.depth); });
     });
   })();
 

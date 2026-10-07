@@ -186,11 +186,25 @@ h1,h2,h3,h4,p{ margin:0; }
    rendu en dessous — le contenu n'attend jamais cette mise en scène.
    ========================================================================== */
 .brand-intro{
-  position:fixed; inset:0; z-index:9999; background:var(--bg);
+  position:fixed; inset:0; z-index:9999; background:var(--bg); overflow:hidden;
   display:flex; align-items:center; justify-content:center;
   transition:opacity .6s var(--ease), visibility .6s var(--ease);
 }
-.brand-intro-row{ display:flex; align-items:center; gap:16px; }
+/* Atmosphère de l'écran d'intro : un halo qui respire doucement en fond,
+   pour que la scène d'ouverture ne soit pas un aplat vide avant l'arrivée
+   du repère — la mise en scène commence avant même que le logo apparaisse. */
+.brand-intro-atmo{
+  position:absolute; width:900px; height:900px; border-radius:50%;
+  background:radial-gradient(closest-side, var(--sage), transparent 68%);
+  filter:blur(80px); opacity:0; transform:scale(.85); pointer-events:none;
+}
+.brand-intro.is-playing .brand-intro-atmo{
+  opacity:.22; transform:scale(1);
+  transition:opacity 1.8s var(--ease), transform 1.8s var(--ease);
+  animation:introAtmoBreathe 7s ease-in-out 1.8s infinite;
+}
+@keyframes introAtmoBreathe{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.08); } }
+.brand-intro-row{ position:relative; z-index:1; display:flex; align-items:center; gap:16px; }
 .brand-intro-mark{
   position:relative; width:72px; height:72px; flex:none;
   transition:transform .6s var(--ease);
@@ -215,10 +229,28 @@ h1,h2,h3,h4,p{ margin:0; }
   100%{ opacity:0; transform:scale(2.1); }
 }
 .brand-intro-word{
-  position:relative; display:inline-block;
+  position:relative; display:inline-block; overflow:hidden;
   font-family:var(--font-display); font-weight:700; letter-spacing:-.01em; color:var(--ink);
   font-size:clamp(1.8rem, 5vw, 2.7rem); white-space:nowrap;
 }
+/* Glint : un seul passage de lumière traverse le nom une fois qu'il est
+   entièrement écrit — le moment "poli" d'une révélation de marque, jamais
+   répété (1 itération), pour rester un instant précis plutôt qu'un effet. */
+.brand-intro-word::after{
+  content:""; position:absolute; top:-40%; left:-50%; width:55%; height:180%; z-index:1;
+  background:linear-gradient(100deg, transparent, rgba(255,255,255,.9) 50%, transparent);
+  transform:translateX(-140%) skewX(-18deg); opacity:0; pointer-events:none;
+}
+.brand-intro.is-playing .brand-intro-word::after{
+  animation:introWordGlint .9s ease-out 1.5s 1 both;
+}
+@keyframes introWordGlint{
+  0%{ transform:translateX(-140%) skewX(-18deg); opacity:0; }
+  18%{ opacity:.85; }
+  62%{ opacity:.4; }
+  100%{ transform:translateX(260%) skewX(-18deg); opacity:0; }
+}
+@media (prefers-reduced-motion:reduce){ .brand-intro-word::after{ animation:none; } }
 /* Le nom s'écrit lettre par lettre (plutôt qu'un seul bloc qui s'efface) :
    chaque lettre reçoit son délai via --d, posé par le script au moment du
    découpage. Rythme délibérément plus lent qu'un simple fondu de mot —
@@ -509,16 +541,94 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .blob{
   position:absolute; border-radius:42% 58% 65% 35% / 45% 45% 55% 55%;
   filter:blur(2px); opacity:.55; will-change:transform;
-  animation:blobFloat var(--blob-float-dur,7s) ease-in-out infinite, blobPulse var(--blob-pulse-dur,15s) ease-in-out infinite;
+  animation:
+    blobFloat var(--blob-float-dur,32s) ease-in-out infinite,
+    blobPulse var(--blob-pulse-dur,46s) ease-in-out infinite,
+    blobMorph var(--blob-morph-dur,38s) ease-in-out infinite;
 }
 .blob--sage{ background:var(--sage); }
 .blob--lavender{ background:var(--lavender); }
 .blob--pink{ background:var(--pink); }
 .blob--sky{ background:var(--sky); }
 .blob--peach{ background:var(--peach); }
+/* Cycles longs (20-60s) et désynchronisés entre eux (durées distinctes par
+   instance) : une dérive qu'on ressent sans jamais surprendre l'œil en
+   plein mouvement — jamais le même battement perçu deux fois de suite. */
 @keyframes blobFloat{ 0%,100%{ transform:translateY(0) rotate(0deg); } 50%{ transform:translateY(-18px) rotate(6deg); } }
 @keyframes blobPulse{ 0%,100%{ scale:1; } 50%{ scale:1.1; } }
+/* Légère variation de forme (pas de recalcul de layout : border-radius
+   n'affecte que la peinture, jamais la position des autres éléments) —
+   la masse semble respirer plutôt que se contenter de flotter et grossir. */
+@keyframes blobMorph{
+  0%,100%{ border-radius:42% 58% 65% 35% / 45% 45% 55% 55%; }
+  50%{ border-radius:58% 42% 48% 52% / 38% 55% 45% 62%; }
+}
 @media (prefers-reduced-motion:reduce){ .blob{ animation:none; } }
+
+/* ==========================================================================
+   AMBIANCE GLOBALE — une seule source de lumière, partagée par tout le
+   site (position:fixed, injectée une fois par motion.js), plutôt que des
+   décors isolés section par section. C'est ce qui relie les sections entre
+   elles au défilement : les mêmes halos continuent sous vos pieds d'un
+   bloc à l'autre, au lieu que chaque section reparte de zéro visuellement.
+   Toujours derrière le contenu (z-index négatif) : invisible derrière une
+   surface opaque (carte, section sombre), visible partout ailleurs puisque
+   .section n'a pas de fond propre par défaut (hérite de --bg du body).
+   Deux couches découplées comme pour .blob-parallax/.blob : le wrap reçoit
+   la parallaxe souris (GSAP, propriété x/y), le halo sa dérive autonome
+   (CSS, propriété transform) — jamais les deux sur le même élément, pour
+   ne jamais se marcher dessus. ========================================================================== */
+.ambient-field{ position:fixed; inset:0; z-index:-1; pointer-events:none; overflow:hidden; }
+.ambient-glow-wrap{ position:absolute; will-change:transform; }
+.ambient-glow-wrap--1{ width:1150px; height:1150px; top:-18%; left:-20%; }
+.ambient-glow-wrap--2{ width:1020px; height:1020px; top:30%; right:-22%; }
+.ambient-glow-wrap--3{ width:920px; height:920px; bottom:-22%; left:10%; }
+.ambient-glow{
+  width:100%; height:100%; border-radius:50%; filter:blur(68px); will-change:transform;
+  animation-timing-function:ease-in-out; animation-iteration-count:infinite;
+}
+/* Intensité relevée : halos plus grands, moins flous (la couleur se lit
+   mieux) et deux fois plus opaques, dérive deux fois plus ample et plus
+   rapide — reste calme (46-64s par cycle) mais devient clairement
+   perceptible au lieu d'un fond presque immobile. */
+.ambient-glow--1{ background:radial-gradient(closest-side, var(--sage), transparent 70%); opacity:.34; animation-name:ambientDrift1; animation-duration:52s; }
+.ambient-glow--2{ background:radial-gradient(closest-side, var(--lavender), transparent 70%); opacity:.3; animation-name:ambientDrift2; animation-duration:64s; }
+.ambient-glow--3{ background:radial-gradient(closest-side, var(--sky), transparent 70%); opacity:.28; animation-name:ambientDrift3; animation-duration:46s; }
+@keyframes ambientDrift1{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(100px,68px) scale(1.24); } }
+@keyframes ambientDrift2{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(-86px,-60px) scale(1.2); } }
+@keyframes ambientDrift3{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(72px,-86px) scale(1.22); } }
+@media (prefers-reduced-motion:reduce){ .ambient-glow{ animation:none; } }
+/* Coût de 3 grands flous composités jugé superflu sur petit écran, où le
+   gain visuel est marginal (moins d'espace pour percevoir la dérive) —
+   priorité donnée au budget de performance mobile. */
+@media (max-width:760px){ .ambient-field{ display:none; } }
+
+/* --- Reflet ambiant des surfaces élevées : un seul mécanisme partagé
+   (pas un réglage par type de carte) traverse très lentement craft-card,
+   proof-cell, location-card et price-card, même sans survol — la matière
+   du site semble baignée de lumière plutôt que figée. soft-light + faible
+   opacité : perceptible seulement en y prêtant attention, jamais "une
+   animation qu'on remarque". .price-card.featured garde son propre halo
+   respirant (règle plus spécifique, déclarée après — rien à faire ici). --- */
+.craft-card, .proof-cell, .location-card, .price-card{ isolation:isolate; }
+.craft-card::before, .proof-cell::before, .location-card::before, .price-card::before{
+  content:""; position:absolute; top:-60%; left:-70%; width:240%; height:220%; z-index:0; pointer-events:none;
+  background:linear-gradient(115deg, transparent 44%, rgba(255,255,255,.55) 50%, transparent 56%);
+  opacity:.4; mix-blend-mode:soft-light; will-change:transform;
+  animation:cardSheen 34s linear infinite;
+}
+.craft-card:nth-of-type(3n+2)::before, .proof-cell:nth-child(3n+2)::before{ animation-duration:29s; animation-delay:-11s; }
+.craft-card:nth-of-type(3n)::before, .proof-cell:nth-child(3n)::before{ animation-duration:38s; animation-delay:-22s; }
+/* translateX/Y uniquement : jamais background-position (repaint à chaque
+   frame) — ici juste une bande en biais qu'on déplace, intégralement
+   composable par le GPU, quel que soit le nombre de cartes à l'écran. */
+@keyframes cardSheen{
+  0%{ transform:translate(-30%,-22%); }
+  100%{ transform:translate(30%,22%); }
+}
+@media (prefers-reduced-motion:reduce){
+  .craft-card::before, .proof-cell::before, .location-card::before, .price-card::before{ animation:none; opacity:0; }
+}
 
 /* --- Petites formes qui dérivent doucement vers le bas (façon confettis discrets) --- */
 .drift-shape{
@@ -714,13 +824,24 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 }
 
 .hero-glow{
-  position:absolute; top:-20%; left:50%; width:1200px; height:1100px; transform:translateX(-50%);
+  position:absolute; top:-20%; left:50%; width:1200px; height:1100px;
   background:
     radial-gradient(closest-side at 20% 20%, var(--accent-dim), transparent 55%),
     radial-gradient(closest-side at 88% 38%, var(--accent-2-dim), transparent 55%),
     radial-gradient(closest-side at 92% 96%, rgba(235,196,204,.35), transparent 50%);
   pointer-events:none; z-index:0; filter:blur(16px);
+  animation:heroGlowDrift 42s ease-in-out infinite;
 }
+/* La lumière du hero dérive très lentement entre ses trois foyers — jamais
+   assez vite pour être vue en train de bouger, juste assez pour qu'un
+   visiteur qui revient sur l'écran quelques secondes plus tard la trouve
+   légèrement différente. */
+@keyframes heroGlowDrift{
+  0%,100%{ transform:translateX(-50%) translate(0,0) scale(1); }
+  33%{ transform:translateX(-50%) translate(22px,-14px) scale(1.035); }
+  66%{ transform:translateX(-50%) translate(-16px,10px) scale(.98); }
+}
+@media (prefers-reduced-motion:reduce){ .hero-glow{ animation:none; } }
 .hero-grid-lines{
   position:absolute; inset:0; z-index:0; pointer-events:none; opacity:.5;
   background-image:linear-gradient(to right, var(--border-soft) 1px, transparent 1px);
@@ -1450,7 +1571,7 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
    PROOF — chiffres réels + retours illustratifs
    ========================================================================== */
 .proof-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
-.proof-cell{ background:var(--bg-elevated); padding:var(--space-7) var(--space-6); border:1px solid var(--border-soft); border-radius:var(--radius-md); transform-style:preserve-3d; }
+.proof-cell{ position:relative; overflow:hidden; background:var(--bg-elevated); padding:var(--space-7) var(--space-6); border:1px solid var(--border-soft); border-radius:var(--radius-md); transform-style:preserve-3d; }
 .proof-cell:nth-child(1){ box-shadow:0 22px 44px -26px rgba(143,174,141,.7); }
 .proof-cell:nth-child(2){ box-shadow:0 22px 44px -26px rgba(207,195,232,.7); }
 .proof-cell:nth-child(3){ box-shadow:0 22px 44px -26px rgba(235,196,204,.7); }
@@ -1921,6 +2042,21 @@ footer{ padding:var(--space-6) 0; }
 .price-card:hover::after{ opacity:1; }
 .price-card.featured{ box-shadow:var(--soft-shadow), 0 0 0 2px var(--accent-line); }
 .price-card.featured::after{ background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%), rgba(127,169,140,.14), transparent 65%); }
+/* Seule l'offre mise en avant respire au repos (règle des 10% qui attirent
+   l'œil) : un halo très doux, indépendant du survol, pour qu'elle reste
+   vivante même quand personne n'interagit. opacity + transform uniquement
+   (jamais box-shadow animé) : aucun repaint coûteux, 100% composité GPU. */
+.price-card.featured::before{
+  content:""; position:absolute; inset:-14px; z-index:0; pointer-events:none; border-radius:inherit;
+  box-shadow:0 0 30px 4px rgba(127,169,140,.34);
+  opacity:0; transform:scale(.98);
+  animation:featuredBreathe 6.5s ease-in-out infinite;
+}
+@keyframes featuredBreathe{
+  0%,100%{ opacity:.35; transform:scale(.98); }
+  50%{ opacity:.85; transform:scale(1.015); }
+}
+@media (prefers-reduced-motion:reduce){ .price-card.featured::before{ animation:none; opacity:.5; } }
 .price-card-art{
   position:absolute; right:-22px; bottom:-22px; width:170px; height:170px;
   color:var(--ink); opacity:.06; pointer-events:none;
