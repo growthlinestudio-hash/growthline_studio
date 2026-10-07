@@ -540,7 +540,7 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .blob-parallax .blob{ position:static; }
 .blob{
   position:absolute; border-radius:42% 58% 65% 35% / 45% 45% 55% 55%;
-  filter:blur(2px); opacity:.55; will-change:transform;
+  filter:blur(2px); opacity:.68; will-change:transform;
   animation:
     blobFloat var(--blob-float-dur,32s) ease-in-out infinite,
     blobPulse var(--blob-pulse-dur,46s) ease-in-out infinite,
@@ -1408,8 +1408,13 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .craft-card:nth-child(3n) .craft-icon,
 .value-item:nth-child(3n) .value-icon,
 .price-card:nth-child(3n) .price-card-icon{ animation-delay:1.4s; }
+/* La même lévitation s'étend à l'étiquette en haut de chaque section — le
+   texte "entête" lui-même semble vivant au repos, pas seulement les icônes,
+   sur toutes les pages (classe partagée, aucune page à retoucher). */
+@keyframes gentle-float-sm{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-4px); } }
+.eyebrow{ animation:gentle-float-sm 5s ease-in-out infinite; }
 @media (prefers-reduced-motion:reduce){
-  .craft-icon, .value-icon, .price-card-icon{ animation:none; }
+  .craft-icon, .value-icon, .price-card-icon, .eyebrow{ animation:none; }
 }
 .craft-card b{ font-family:var(--font-display); font-weight:500; font-size:.92rem; letter-spacing:0; }
 @media (max-width:900px){ .craft-grid{ grid-template-columns:repeat(2,1fr); } }

@@ -59,17 +59,14 @@
   var seen = false;
   try { seen = !!sessionStorage.getItem(KEY); } catch (e) {}
 
-  /* Désactivation sur machine modeste : on ne bloque jamais sur l'ABSENCE
-     de l'API (Safari n'expose pas deviceMemory), seulement si elle est
-     présente ET indique explicitement un appareil limité — seuil bas
-     exprès pour ne pas priver la majorité des visiteurs de l'intro. */
-  var lowPower = false;
-  try {
-    if (navigator.deviceMemory && navigator.deviceMemory <= 2) lowPower = true;
-    if (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2) lowPower = true;
-  } catch (e) {}
-
-  if (reduced || seen || lowPower) { intro.remove(); return; }
+  /* Le site de référence (Titouan Agency) ne désactive son intro que sur
+     prefers-reduced-motion, jamais sur les specs de l'appareil — un seuil
+     "appareil modeste" sur hardwareConcurrency/deviceMemory <= 2 touchait en
+     pratique une part significative des visiteurs (beaucoup d'ordinateurs
+     portables courants rapportent 2 cœurs) et privait silencieusement la
+     majorité de l'effet recherché. Seule l'accessibilité (reduced-motion)
+     et le garde-fou "une fois par session" restent des raisons de l'éviter. */
+  if (reduced || seen) { intro.remove(); return; }
   try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
 
   var mark = intro.querySelector('.brand-intro-mark');
@@ -216,10 +213,10 @@
     <div class="hero-grid-lines" aria-hidden="true"></div>
     <div class="blob-field" aria-hidden="true">
       <div class="blob-parallax" data-depth="10" style="top:8%;left:2%;">
-        <div class="blob blob--sage" style="width:180px;height:180px;--blob-float-dur:34s;--blob-pulse-dur:48s;--blob-morph-dur:41s;"></div>
+        <div class="blob blob--sage" style="width:260px;height:260px;--blob-float-dur:34s;--blob-pulse-dur:48s;--blob-morph-dur:41s;"></div>
       </div>
       <div class="blob-parallax" data-depth="18" style="top:66%;left:7%;">
-        <div class="blob blob--lavender" style="width:130px;height:130px;--blob-float-dur:26s;--blob-pulse-dur:38s;--blob-morph-dur:33s;"></div>
+        <div class="blob blob--lavender" style="width:190px;height:190px;--blob-float-dur:26s;--blob-pulse-dur:38s;--blob-morph-dur:33s;"></div>
       </div>
     </div>
     <div class="container hero-inner">
@@ -474,8 +471,8 @@
   <section class="section section--tight" id="audit">
     <div class="container">
       <div class="blob-field" aria-hidden="true" style="opacity:.5;">
-        <div class="blob blob--sage" style="width:200px;height:200px;top:10%;left:6%;--blob-float-dur:40s;--blob-pulse-dur:55s;--blob-morph-dur:47s;"></div>
-        <div class="blob blob--sky" style="width:140px;height:140px;top:58%;left:16%;--blob-float-dur:30s;--blob-pulse-dur:44s;--blob-morph-dur:36s;"></div>
+        <div class="blob blob--sage" style="width:280px;height:280px;top:10%;left:6%;--blob-float-dur:40s;--blob-pulse-dur:55s;--blob-morph-dur:47s;"></div>
+        <div class="blob blob--sky" style="width:200px;height:200px;top:58%;left:16%;--blob-float-dur:30s;--blob-pulse-dur:44s;--blob-morph-dur:36s;"></div>
       </div>
       <div class="audit-panel" data-reveal style="position:relative;z-index:1;">
         <div class="audit-panel-head">
