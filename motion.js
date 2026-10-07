@@ -173,37 +173,40 @@
     var visual = hero.querySelector('.hero-signature');
     var cue = hero.querySelector('.scroll-cue');
 
-    /* Chorégraphie volontairement courte (~0.6s au total, tout en grande
-       partie simultané) : le hero doit sembler déjà là à l'arrivée sur le
-       site, pas s'assembler morceau par morceau pendant plusieurs secondes.
-       Elle part en pause : si l'intro de marque est présente, elle ne joue
-       qu'au moment précis où celle-ci s'envole vers la navbar (cf. fin de
+    /* Chorégraphie volontairement lente et fondue (~1.9s au total, en
+       cascade douce plutôt que tout en même temps) : après l'intro, le hero
+       doit continuer sur la même retenue — jamais un "pop" sec après une
+       mise en scène posée. Chaque élément se matérialise depuis un léger
+       flou plutôt que de se jeter en place (pas de chute ni de rebond
+       élastique), avec des départs étalés dans le temps, pas empilés à 0.
+       Part en pause : si l'intro de marque est présente, elle ne joue qu'au
+       moment précis où celle-ci s'envole vers la navbar (cf. fin de
        fichier), pour que le hero se construise sous les yeux au lieu d'être
        déjà entièrement formé, invisible, derrière l'écran d'intro. */
-    var tl = gsap.timeline({ defaults: { ease: 'power3.out' }, paused: true });
+    var tl = gsap.timeline({ defaults: { ease: 'sine.out' }, paused: true });
 
-    /* Le repère de marque tombe légèrement du haut à l'ouverture, comme suspendu puis lâché */
+    /* Le repère de marque s'estompe doucement, sans chute ni à-coup */
     var brandMark = document.querySelector('.brand .mark');
     if (brandMark) {
-      gsap.set(brandMark, { y: -46, opacity: 0 });
-      tl.to(brandMark, { y: 0, opacity: 1, duration: .35, ease: 'expo.out' }, 0);
+      gsap.set(brandMark, { y: -10, opacity: 0, filter: 'blur(4px)' });
+      tl.to(brandMark, { y: 0, opacity: 1, filter: 'blur(0px)', duration: .9, ease: 'power2.out' }, 0);
     }
 
-    if (eyebrowRow) { gsap.set(eyebrowRow, { opacity: 0, y: 16, filter: 'blur(6px)' }); tl.to(eyebrowRow, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .3 }, 0); }
+    if (eyebrowRow) { gsap.set(eyebrowRow, { opacity: 0, y: 10, filter: 'blur(7px)' }); tl.to(eyebrowRow, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1 }, 0); }
     if (h1) {
       var spans = h1.querySelectorAll('.split-word > span');
-      tl.to(spans, { yPercent: 0, opacity: 1, duration: .4, stagger: .012 }, 0.05);
+      tl.to(spans, { yPercent: 0, opacity: 1, duration: .95, stagger: .022, ease: 'power2.out' }, 0.22);
     }
-    if (subCol) { gsap.set(subCol, { opacity: 0, y: 22 }); tl.to(subCol, { opacity: 1, y: 0, duration: .35 }, 0.15); }
+    if (subCol) { gsap.set(subCol, { opacity: 0, y: 14, filter: 'blur(5px)' }); tl.to(subCol, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1 }, 0.55); }
     if (visual) {
-      gsap.set(visual, { opacity: 0, x: 40, y: 30, scale: .96, filter: 'blur(10px)' });
-      tl.to(visual, { opacity: 1, x: 0, y: 0, scale: 1, filter: 'blur(0px)', duration: .4 }, 0.1);
+      gsap.set(visual, { opacity: 0, x: 22, y: 18, scale: .97, filter: 'blur(12px)' });
+      tl.to(visual, { opacity: 1, x: 0, y: 0, scale: 1, filter: 'blur(0px)', duration: 1.3, ease: 'power2.out' }, 0.4);
       tl.call(function () { floatAndParallax(visual); });
     }
     var cornerBadge = hero.querySelector('.spin-badge--corner');
     if (cornerBadge) {
-      gsap.set(cornerBadge, { y: -60, opacity: 0, rotate: -12 });
-      tl.to(cornerBadge, { y: 0, opacity: 1, rotate: 0, duration: .35, ease: 'back.out(1.4)' }, 0.2);
+      gsap.set(cornerBadge, { y: -14, opacity: 0, rotate: -4, filter: 'blur(5px)' });
+      tl.to(cornerBadge, { y: 0, opacity: 1, rotate: 0, filter: 'blur(0px)', duration: 1 }, 0.5);
     }
 
     /* Les 3 vrais chiffres du hero (0€ / 6 / 24h) comptent jusqu'à leur valeur —
@@ -217,13 +220,13 @@
         var counter = { val: 0 };
         el.textContent = '0' + suffix;
         tl.to(counter, {
-          val: finalVal, duration: .5, ease: 'power1.out',
+          val: finalVal, duration: .9, ease: 'power1.out',
           onUpdate: function () { el.textContent = Math.round(counter.val) + suffix; }
-        }, 0.2);
+        }, 0.6);
       });
     }
 
-    if (cue) { gsap.set(cue, { opacity: 0 }); tl.to(cue, { opacity: 1, duration: .3 }, 0.35); }
+    if (cue) { gsap.set(cue, { opacity: 0 }); tl.to(cue, { opacity: 1, duration: .9 }, 0.95); }
 
     var brandIntro = document.getElementById('brandIntro');
     if (brandIntro) {

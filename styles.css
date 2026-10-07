@@ -1021,6 +1021,13 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 .section--dark .disclaimer-note{ color:rgba(246,239,222,.55); }
 .section--dark .quote-marquee-wrap::before{ background:repeating-linear-gradient(to right, rgba(246,239,222,.18) 0 6px, transparent 6px 14px); }
 .section--dark .proof-cell{ box-shadow:none; }
+/* Étapes du processus (section #processus, seule section dark de l'accueil) */
+.section--dark .proc-h-step{ border-top-color:rgba(246,239,222,.18); }
+.section--dark .proc-h-num{ color:var(--accent-bright); }
+.section--dark .proc-h-step p{ color:rgba(246,239,222,.68); }
+.section--dark .video-preview-mini-label{ color:rgba(246,239,222,.6); }
+.section--dark .video-preview-mini:hover .video-preview-mini-label,
+.section--dark .video-preview-mini:focus-visible .video-preview-mini-label{ color:var(--inverse-ink); }
 /* ==========================================================================
    FILM DE MARQUE — carte de prévisualisation + modal plein écran
    ========================================================================== */
