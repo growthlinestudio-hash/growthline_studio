@@ -244,36 +244,48 @@
           </ul>
         </div>
 
-        <div class="hero-video" data-reveal>
-          <video class="hero-video-el" id="heroVideo" poster="images/hero-loop-poster.jpg" muted playsinline loop autoplay preload="auto">
-            <source src="video/growthline-hero-loop.mp4" type="video/mp4">
-          </video>
+        <!-- Visuel signature : ligne de croissance animée, pensée pour être
+             réutilisée ailleurs (intro, vidéos de marque, futures animations) —
+             c'est la pièce d'identité visuelle de Growthline, pas un décor.
+             Pas de data-reveal ici : son entrée est gérée par la chorégraphie
+             dédiée du hero dans motion.js (.hero-signature), synchronisée avec
+             la fin de l'intro de marque. -->
+        <div class="hero-video hero-signature">
+          <div class="hvl-blob hvl-blob--1" aria-hidden="true"></div>
+          <div class="hvl-blob hvl-blob--2" aria-hidden="true"></div>
+          <svg class="growth-line-svg" viewBox="0 0 420 236" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+            <defs>
+              <linearGradient id="glFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" style="stop-color:var(--sage)" stop-opacity=".32"/>
+                <stop offset="100%" style="stop-color:var(--sage)" stop-opacity="0"/>
+              </linearGradient>
+              <linearGradient id="glStroke" x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0%" style="stop-color:var(--accent)"/>
+                <stop offset="100%" style="stop-color:var(--sky)"/>
+              </linearGradient>
+            </defs>
+            <path class="gl-area" d="M0,190 C60,180 90,140 140,130 C190,120 210,90 260,80 C310,70 330,40 420,20 L420,236 L0,236 Z" style="fill:url(#glFill)"/>
+            <path class="gl-line" pathLength="100" d="M0,190 C60,180 90,140 140,130 C190,120 210,90 260,80 C310,70 330,40 420,20" style="fill:none;stroke:url(#glStroke)" stroke-width="3" stroke-linecap="round"/>
+            <circle class="gl-dot" r="6" style="fill:var(--accent)">
+              <animateMotion dur="4.5s" repeatCount="indefinite" begin="2.2s" path="M0,190 C60,180 90,140 140,130 C190,120 210,90 260,80 C310,70 330,40 420,20" rotate="auto"/>
+            </circle>
+          </svg>
         </div>
       </div>
     </div>
   </section>
   <script>
   (function () {
-    var video = document.getElementById('heroVideo');
-    if (!video) return;
-
+    /* Le point qui voyage le long de la ligne est une animation SMIL
+       (<animateMotion>) : prefers-reduced-motion ne s'applique pas
+       automatiquement au SMIL comme il le fait pour CSS, donc on la retire
+       explicitement ici si besoin. */
     var reduced = false;
     try { reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
-
     if (reduced) {
-      /* Respecte la préférence : pas de lecture auto, le poster fait office
-         d'image statique. */
-      video.removeAttribute('autoplay');
-      return;
+      var dot = document.querySelector('.gl-dot animateMotion');
+      if (dot) dot.remove();
     }
-
-    /* La lecture auto (même muette) peut être bloquée par le navigateur dans
-       de rares cas (économie de batterie stricte...) - échec silencieux vers
-       le poster plutôt qu'une vidéo figée à l'air cassée. Ne jamais cacher
-       video.hidden sur erreur : le <video poster> reste affiché nativement
-       comme image statique tant qu'on ne touche pas à l'élément lui-même. */
-    var playPromise = video.play();
-    if (playPromise && playPromise.catch) { playPromise.catch(function () {}); }
   })();
   </script>
 
