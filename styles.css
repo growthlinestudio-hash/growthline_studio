@@ -905,19 +905,6 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 @keyframes cueDrop{ 0%{ top:-40%; } 60%,100%{ top:100%; } }
 @media (max-width:720px){ .scroll-cue{ display:none; } }
 
-/* --- Visuel hero : scène de marque (illustration, pas un dashboard) —
-   remplace l'ancienne carte "signal" pour ne pas être le 3e dashboard du
-   site (déjà Growthline Intelligence + Réalisations). Recadrée en CSS sur
-   la partie sculpture de l'image, le texte anglais d'origine reste hors
-   cadre. --- */
-.hero-signature{
-  position:relative; z-index:1; width:100%; max-width:340px; aspect-ratio:1/1; margin-left:auto;
-  border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--border-soft);
-  box-shadow:var(--soft-shadow), 0 0 0 10px rgba(191,211,190,.16);
-}
-.hero-signature-img{ width:100%; height:100%; object-fit:cover; object-position:52% 40%; transform:scale(1.08); display:block; }
-@media (max-width:900px){ .hero-signature{ max-width:100%; margin-left:0; } }
-
 /* --- Liste de preuve compacte sous les CTA du hero (checkmarks) --- */
 .hero-proof-list{
   display:flex; gap:20px; flex-wrap:wrap; list-style:none; margin:0; padding:0;
@@ -937,37 +924,41 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
   .hero-video{ max-width:100%; margin-left:0; aspect-ratio:16/10; }
 }
 
-/* --- Visuel signature du hero : ligne de croissance animée. Remplace
-   l'ancien film (laptop générique, peu différenciant) par une pièce
-   directement liée au nom Growthline, pensée pour être réutilisée ailleurs
-   (intro, vidéos de marque, futures animations) — c'est une identité
-   visuelle, pas un décor. Entrée + flottement pris en charge par la
-   chorégraphie dédiée du hero dans motion.js (classe .hero-signature,
-   réutilise floatAndParallax déjà existant pour l'ambiance au repos). --- */
+/* --- Visuel signature du hero : showreel de marque avec sound design,
+   masqué derrière une affiche + bouton tant qu'on n'a pas cliqué (voir le
+   commentaire HTML pour le pourquoi). Entrée + flottement pris en charge
+   par la chorégraphie dédiée du hero dans motion.js (classe
+   .hero-signature, réutilise floatAndParallax déjà existant). --- */
 .hero-signature{ position:relative; overflow:hidden; }
-.hero-signature .hvl-blob{
-  position:absolute; border-radius:50%; filter:blur(38px); opacity:.5; pointer-events:none;
-  animation:hvlDrift 16s ease-in-out infinite alternate;
+.hero-showreel{ cursor:pointer; background:#000; }
+.hero-showreel-poster{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  transition:opacity .4s ease;
 }
-.hero-signature .hvl-blob--1{ width:160px; height:160px; background:var(--sage); top:-30px; left:-20px; animation-duration:14s; }
-.hero-signature .hvl-blob--2{ width:140px; height:140px; background:var(--lavender); bottom:-30px; right:-10px; animation-duration:18s; animation-delay:-4s; }
-@keyframes hvlDrift{ 0%{ transform:translate(0,0) scale(1); } 100%{ transform:translate(14px,-10px) scale(1.08); } }
-.growth-line-svg{ position:relative; z-index:1; width:100%; height:100%; display:block; }
-.gl-area{ opacity:0; animation:glFadeIn 1s var(--ease) .5s forwards; }
-@keyframes glFadeIn{ to{ opacity:1; } }
-.gl-line{
-  stroke-dasharray:100; stroke-dashoffset:100;
-  animation:glDraw 1.6s var(--ease) .3s forwards;
-  filter:drop-shadow(0 2px 10px rgba(127,169,140,.35));
+.hero-showreel-video{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  opacity:0; pointer-events:none; transition:opacity .4s ease;
 }
-@keyframes glDraw{ to{ stroke-dashoffset:0; } }
-.gl-dot{ opacity:0; animation:glDotIn .4s ease 1.7s forwards; filter:drop-shadow(0 0 6px var(--sage)); }
-@keyframes glDotIn{ to{ opacity:1; } }
-@media (prefers-reduced-motion:reduce){
-  .hero-signature .hvl-blob{ animation:none; }
-  .gl-area{ animation:none; opacity:1; }
-  .gl-line{ animation:none; stroke-dashoffset:0; }
-  .gl-dot{ animation:none; opacity:1; }
+.hero-showreel.is-playing .hero-showreel-video{ opacity:1; pointer-events:auto; }
+.hero-showreel.is-playing .hero-showreel-poster{ opacity:0; }
+.hero-showreel-play{
+  position:absolute; inset:0; z-index:1; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:12px; border:0; padding:0; appearance:none;
+  background:linear-gradient(180deg, rgba(20,18,15,.12), rgba(20,18,15,.34));
+  transition:opacity .35s ease, visibility .35s ease;
+}
+.hero-showreel.is-playing .hero-showreel-play{ opacity:0; visibility:hidden; pointer-events:none; }
+.hero-showreel-play-icon{
+  width:58px; height:58px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:rgba(247,244,239,.95); color:var(--ink); flex:none;
+  box-shadow:0 14px 30px -10px rgba(0,0,0,.4);
+  transition:transform .3s var(--ease-spring), background .25s ease;
+}
+.hero-showreel-play-icon svg{ width:20px; height:20px; margin-left:3px; }
+.hero-showreel-play:hover .hero-showreel-play-icon{ transform:scale(1.08); background:var(--bg-elevated); }
+.hero-showreel-play-label{
+  font-family:var(--font-body); font-size:.8rem; font-weight:500; letter-spacing:.02em;
+  color:rgba(247,244,239,.92); text-shadow:0 1px 6px rgba(0,0,0,.35);
 }
 
 /* --- Visuel signature de la page Services (illustration système, réutilise

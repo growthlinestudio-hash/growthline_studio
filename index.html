@@ -242,48 +242,60 @@
           </ul>
         </div>
 
-        <!-- Visuel signature : ligne de croissance animée, pensée pour être
-             réutilisée ailleurs (intro, vidéos de marque, futures animations) —
-             c'est la pièce d'identité visuelle de Growthline, pas un décor.
-             Pas de data-reveal ici : son entrée est gérée par la chorégraphie
-             dédiée du hero dans motion.js (.hero-signature), synchronisée avec
-             la fin de l'intro de marque. -->
-        <div class="hero-video hero-signature">
-          <div class="hvl-blob hvl-blob--1" aria-hidden="true"></div>
-          <div class="hvl-blob hvl-blob--2" aria-hidden="true"></div>
-          <svg class="growth-line-svg" viewBox="0 0 420 236" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-            <defs>
-              <linearGradient id="glFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" style="stop-color:var(--sage)" stop-opacity=".32"/>
-                <stop offset="100%" style="stop-color:var(--sage)" stop-opacity="0"/>
-              </linearGradient>
-              <linearGradient id="glStroke" x1="0" y1="1" x2="1" y2="0">
-                <stop offset="0%" style="stop-color:var(--accent)"/>
-                <stop offset="100%" style="stop-color:var(--sky)"/>
-              </linearGradient>
-            </defs>
-            <path class="gl-area" d="M0,190 C60,180 90,140 140,130 C190,120 210,90 260,80 C310,70 330,40 420,20 L420,236 L0,236 Z" style="fill:url(#glFill)"/>
-            <path class="gl-line" pathLength="100" d="M0,190 C60,180 90,140 140,130 C190,120 210,90 260,80 C310,70 330,40 420,20" style="fill:none;stroke:url(#glStroke)" stroke-width="3" stroke-linecap="round"/>
-            <circle class="gl-dot" r="6" style="fill:var(--accent)">
-              <animateMotion dur="4.5s" repeatCount="indefinite" begin="2.2s" path="M0,190 C60,180 90,140 140,130 C190,120 210,90 260,80 C310,70 330,40 420,20" rotate="auto"/>
-            </circle>
-          </svg>
+        <!-- Showreel de marque, avec sound design : masqué derrière une
+             affiche + bouton lecture par défaut (preload="none", rien n'est
+             téléchargé tant que le visiteur ne clique pas) — un lecteur
+             autoplay ne pourrait de toute façon jouer le son (politique
+             navigateur), donc autant en faire un vrai moment volontaire
+             plutôt qu'une boucle muette. Pas de data-reveal : son entrée est
+             gérée par la chorégraphie dédiée du hero dans motion.js
+             (.hero-signature), synchronisée avec la fin de l'intro. -->
+        <div class="hero-video hero-signature hero-showreel" id="heroShowreel">
+          <img class="hero-showreel-poster" src="images/hero-showreel-poster.jpg" alt="Aperçu du film de marque Growthline" loading="lazy">
+          <button type="button" class="hero-showreel-play" aria-label="Lire le film de marque Growthline, avec le son">
+            <span class="hero-showreel-play-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M8 5.5v13a1 1 0 0 0 1.52.85l10.5-6.5a1 1 0 0 0 0-1.7l-10.5-6.5A1 1 0 0 0 8 5.5z" fill="currentColor"/></svg>
+            </span>
+            <span class="hero-showreel-play-label">Voir le film · avec le son</span>
+          </button>
+          <video class="hero-showreel-video" playsinline preload="none" poster="images/hero-showreel-poster.jpg">
+            <source src="video/growthline-showreel.mp4" type="video/mp4">
+          </video>
         </div>
       </div>
     </div>
   </section>
   <script>
   (function () {
-    /* Le point qui voyage le long de la ligne est une animation SMIL
-       (<animateMotion>) : prefers-reduced-motion ne s'applique pas
-       automatiquement au SMIL comme il le fait pour CSS, donc on la retire
-       explicitement ici si besoin. */
-    var reduced = false;
-    try { reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
-    if (reduced) {
-      var dot = document.querySelector('.gl-dot animateMotion');
-      if (dot) dot.remove();
+    var card = document.getElementById('heroShowreel');
+    if (!card) return;
+    var video = card.querySelector('.hero-showreel-video');
+    var playBtn = card.querySelector('.hero-showreel-play');
+
+    function play() {
+      card.classList.add('is-playing');
+      video.currentTime = 0;
+      video.muted = false;
+      var p = video.play();
+      /* Lecture avec son bloquée par le navigateur en dehors d'un geste
+         utilisateur direct (rare ici puisqu'on part d'un vrai clic) :
+         on retente en muet plutôt que de laisser un cadre figé. */
+      if (p && p.catch) {
+        p.catch(function () { video.muted = true; video.play().catch(function () {}); });
+      }
     }
+    playBtn.addEventListener('click', play);
+    /* Cliquer la vidéo en cours de lecture bascule pause/reprise */
+    video.addEventListener('click', function () {
+      if (video.paused) video.play(); else video.pause();
+    });
+    /* Pas de boucle : le son construit une montée d'énergie, la rejouer en
+       coupe aurait recommencé plat juste après le point culminant. On
+       revient à l'affiche pour que revoir le film reste un choix explicite. */
+    video.addEventListener('ended', function () {
+      card.classList.remove('is-playing');
+      video.currentTime = 0;
+    });
   })();
   </script>
 
