@@ -242,43 +242,60 @@
           </ul>
         </div>
 
-        <!-- Showreel de marque, avec sound design : même mécanique que les
-             autres vidéos du site (ex. "Voir la vidéo du processus" plus
-             bas) — affiche + bouton qui ouvre la modal plein écran dédiée,
-             pilotée par film-modal.js déjà chargé sur cette page, pas une
-             lecture inline avec ses propres boutons. Pas de data-reveal :
-             son entrée est gérée par la chorégraphie dédiée du hero dans
-             motion.js (.hero-signature), synchronisée avec la fin de
-             l'intro. -->
-        <div class="hero-video hero-signature">
-          <button type="button" class="hero-showreel-trigger" data-video-open="showreelModal" aria-haspopup="dialog" aria-controls="showreelModal">
-            <img class="hero-showreel-poster" src="images/hero-showreel-poster.jpg" alt="Aperçu du film de marque Growthline" loading="lazy">
-            <span class="hero-showreel-play-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M8 5.5v13a1 1 0 0 0 1.52.85l10.5-6.5a1 1 0 0 0 0-1.7l-10.5-6.5A1 1 0 0 0 8 5.5z" fill="currentColor"/></svg>
-            </span>
-            <span class="hero-showreel-play-label">Voir le film de marque</span>
+        <!-- Showreel de marque, avec sound design : boucle muette par défaut
+             (seule façon de l'autoplay — un navigateur refuse toujours
+             l'autoplay avec son), le film de fond vit en continu dans le
+             hero. "Regarder avec le son" passe en plein écran natif de la
+             vidéo ET active le son au même geste ; en ressortant du plein
+             écran, retour à la boucle muette par défaut. Pas de
+             data-reveal : son entrée est gérée par la chorégraphie dédiée
+             du hero dans motion.js (.hero-signature), synchronisée avec la
+             fin de l'intro. -->
+        <div class="hero-showreel-wrap">
+          <div class="hero-video hero-signature">
+            <video class="hero-showreel-video" id="heroShowreelVideo" autoplay muted loop playsinline preload="auto" poster="images/hero-showreel-poster.jpg">
+              <source src="video/growthline-showreel.mp4" type="video/mp4">
+            </video>
+          </div>
+          <button type="button" class="hero-showreel-sound-cta" id="heroShowreelSoundBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+            Regarder avec le son
           </button>
         </div>
       </div>
     </div>
   </section>
+  <script>
+  (function () {
+    var video = document.getElementById('heroShowreelVideo');
+    var btn = document.getElementById('heroShowreelSoundBtn');
+    if (!video || !btn) return;
 
-  <!-- ============ MODAL SHOWREEL (plein écran) ============ -->
-  <div class="film-modal" id="showreelModal" hidden>
-    <div class="film-modal-backdrop" data-film-close tabindex="-1"></div>
-    <div class="film-modal-panel" role="dialog" aria-modal="true" aria-label="Film de marque Growthline">
-      <button type="button" class="film-modal-fullscreen" data-film-fullscreen aria-label="Plein écran">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path data-fs-icon d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-      </button>
-      <button type="button" class="film-modal-close" data-film-close aria-label="Fermer la vidéo">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
-      </button>
-      <video class="film-modal-video" playsinline preload="metadata" poster="images/hero-showreel-poster.jpg">
-        <source src="video/growthline-showreel.mp4" type="video/mp4">
-      </video>
-      <div class="film-modal-loader" aria-hidden="true"></div>
-    </div>
-  </div>
+    function isFs() {
+      return !!(document.fullscreenElement || document.webkitFullscreenElement || video.webkitDisplayingFullscreen);
+    }
+
+    btn.addEventListener('click', function () {
+      /* iOS Safari n'autorise le plein écran que via la méthode propre à
+         <video> (webkitEnterFullscreen), jamais l'API Fullscreen standard
+         sur un conteneur quelconque. */
+      try {
+        if (video.requestFullscreen) { var p = video.requestFullscreen(); if (p && p.catch) p.catch(function () {}); }
+        else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
+        else if (video.webkitEnterFullscreen) video.webkitEnterFullscreen();
+      } catch (e) {}
+      video.muted = false;
+    });
+
+    /* Retour à la boucle muette par défaut en sortant du plein écran -
+       "le film vit en fond" reste l'état normal, le son est un choix
+       ponctuel, pas un nouvel état permanent. */
+    ['fullscreenchange', 'webkitfullscreenchange', 'webkitendfullscreen'].forEach(function (evt) {
+      document.addEventListener(evt, function () { if (!isFs()) video.muted = true; });
+      video.addEventListener(evt, function () { if (!isFs()) video.muted = true; });
+    });
+  })();
+  </script>
 
   <!-- ============ MODAL PROCESSUS (plein écran) ============ -->
   <div class="film-modal" id="processModal" hidden>
