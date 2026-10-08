@@ -935,6 +935,9 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
    réutilise floatAndParallax déjà existant). --- */
 .hero-signature{ position:relative; overflow:hidden; }
 .hero-showreel-video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+/* Plein écran : toute la vidéo visible, sans rognage */
+.hero-showreel-video:fullscreen{ object-fit:contain !important; background:#000; border-radius:0; }
+.hero-showreel-video:-webkit-full-screen{ object-fit:contain !important; background:#000; border-radius:0; }
 
 /* --- Légende sous la vidéo : seul moyen d'avoir le son (plein écran natif
    de la vidéo, activé au même geste). Repris en pastille verte (même
