@@ -189,7 +189,12 @@
        logo à la fois plutôt que tout bouger ensemble. Part en pause : si
        l'intro de marque est présente, elle ne joue qu'au moment précis où
        celle-ci s'envole vers la navbar (cf. fin de fichier). */
-    var tl = gsap.timeline({ defaults: { ease: 'power2.out' }, paused: true });
+    /* power3.out : décélération franche, l'équivalent GSAP le plus proche
+       de cubic-bezier(.16,1,.3,1) — la courbe d'arrivée du site de
+       référence (déjà --ease dans styles.css), réutilisée ici pour que
+       l'atterrissage de chaque pièce ait la même retenue "premium" que
+       son intro, plutôt que le power2.out plus générique d'avant. */
+    var tl = gsap.timeline({ defaults: { ease: 'power3.out' }, paused: true });
 
     function emerge(el, startTime, duration, scaleFrom) {
       if (!el) return;
