@@ -916,7 +916,7 @@ header.scrolled .brand .mark{ width:28px; height:28px; }
 /* --- Cadre du visuel hero : conteneur neutre (fond, rayon, ombre douce,
    format), rempli par la pièce signature ci-dessous. --- */
 .hero-video{
-  position:relative; z-index:1; width:100%; max-width:420px; margin-left:auto;
+  position:relative; z-index:1; width:100%; max-width:540px; margin-left:auto;
   border-radius:var(--radius-lg); overflow:hidden; aspect-ratio:16/9;
   background:var(--bg-elevated); box-shadow:0 1px 0 rgba(46,43,39,.04), var(--soft-shadow);
 }

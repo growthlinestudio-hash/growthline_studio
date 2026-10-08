@@ -44,7 +44,25 @@
     var closeEls = modal.querySelectorAll('[data-film-close]');
     var fsBtn = modal.querySelector('[data-film-fullscreen]');
     var fsIcon = fsBtn && fsBtn.querySelector('[data-fs-icon]');
+    var panel = modal.querySelector('.film-modal-panel');
     var lastFocused = null;
+
+    /* Zoom depuis la vignette cliquée plutôt qu'un simple fondu centré : le
+       panneau démarre exactement à la taille/position du bouton d'ouverture
+       (mesurée en direct, jamais codée en dur), puis rejoint sa taille
+       finale via la transition déjà posée sur .film-modal-panel — la vidéo
+       semble jaillir de l'endroit cliqué plutôt qu'apparaître toute faite. */
+    function flipFrom(sourceEl) {
+      if (!panel || !sourceEl) return;
+      var sr = sourceEl.getBoundingClientRect(), tr = panel.getBoundingClientRect();
+      var scale = sr.width / tr.width;
+      var dx = (sr.left + sr.width / 2) - (tr.left + tr.width / 2);
+      var dy = (sr.top + sr.height / 2) - (tr.top + tr.height / 2);
+      panel.style.transition = 'none';
+      panel.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(' + scale + ')';
+      panel.getBoundingClientRect(); // force le reflow avant de réactiver la transition
+      panel.style.transition = '';
+    }
 
     function updateFsIcon() {
       if (!fsIcon || !video) return;
@@ -79,8 +97,10 @@
       modal.hidden = false;
       document.body.style.overflow = 'hidden';
       if (loader) loader.classList.add('is-visible');
+      flipFrom(openBtn);
       requestAnimationFrame(function () {
         modal.classList.add('is-open');
+        if (panel) panel.style.transform = ''; // laisse .is-open piloter l'arrivée
         if (video) video.play().catch(function () {});
       });
       document.addEventListener('keydown', onKeydown);
@@ -88,6 +108,17 @@
 
     function closeModal() {
       if (isFullscreen() || (video && video.webkitDisplayingFullscreen)) exitFs();
+      /* Rétrécit symétriquement vers la vignette avant de disparaître,
+         plutôt qu'un simple fondu — la transition de .film-modal-panel
+         reste active (elle n'est pas conditionnée à .is-open), donc ce
+         changement de transform s'anime tout seul. */
+      if (panel && openBtn) {
+        var sr = openBtn.getBoundingClientRect(), tr = panel.getBoundingClientRect();
+        var scale = sr.width / tr.width;
+        var dx = (sr.left + sr.width / 2) - (tr.left + tr.width / 2);
+        var dy = (sr.top + sr.height / 2) - (tr.top + tr.height / 2);
+        panel.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(' + scale + ')';
+      }
       modal.classList.remove('is-open');
       document.body.style.overflow = '';
       document.removeEventListener('keydown', onKeydown);
@@ -98,6 +129,7 @@
       if (loader) loader.classList.remove('is-visible');
       var hide = function () {
         modal.hidden = true;
+        if (panel) panel.style.transform = '';
         modal.removeEventListener('transitionend', hide);
       };
       modal.addEventListener('transitionend', hide);
