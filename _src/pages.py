@@ -508,11 +508,11 @@ def about(b):
 def contact(b):
     ic = b.icon
     bubbles = ('<div class="bubbles" aria-hidden="true">'
-               '<span class="bubble float-a" style="left:6%;top:30%"><span class="dot"></span>Bonjour 👋</span>'
-               '<span class="bubble float-b" style="left:40%;top:16%"><span class="dot"></span>Votre projet</span>'
-               '<span class="bubble float-c" style="right:8%;top:34%"><span class="dot"></span>Stratégie</span>'
-               '<span class="bubble float-b" style="left:14%;bottom:12%"><span class="dot"></span>Growth</span>'
-               '<span class="bubble bubble--accent float-a" style="right:14%;bottom:10%"><span class="dot"></span>Let\'s build</span></div>')
+               '<span class="bubble float-a" style="right:26%;top:30%"><span class="dot"></span>Bonjour 👋</span>'
+               '<span class="bubble float-b" style="right:8%;top:22%"><span class="dot"></span>Stratégie</span>'
+               '<span class="bubble float-c" style="right:14%;top:44%"><span class="dot"></span>Votre projet</span>'
+               '<span class="bubble float-b" style="right:36%;top:56%"><span class="dot"></span>Growth</span>'
+               '<span class="bubble bubble--accent float-a" style="right:6%;top:64%"><span class="dot"></span>Let&#39;s build</span></div>')
     topics = [("Devis%20-%20Corrections%20cibl%C3%A9es", "Devis · Corrections ciblées"), ("Devis%20-%20Refonte%20compl%C3%A8te", "Devis · Refonte complète"),
               ("Projet%20sur-mesure", "Projet sur-mesure"), ("Question%20g%C3%A9n%C3%A9rale", "Question générale")]
     topics_html = "".join(f'<a href="mailto:{b.EMAIL}?subject={s}">{t}</a>' for s, t in topics)

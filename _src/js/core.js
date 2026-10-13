@@ -52,8 +52,8 @@
     var btn = $('.faq-q', item), panel = $('.faq-a', item);
     if (!btn || !panel) return;
     var id = 'faq-panel-' + (item.closest('[data-faq-scope]') ? 'x' : '') + i + '-' + Math.random().toString(36).slice(2, 6);
-    panel.id = id; btn.setAttribute('aria-controls', id); btn.setAttribute('aria-expanded', 'false');
-    panel.setAttribute('role', 'region');
+    panel.id = id; btn.id = id + '-btn'; btn.setAttribute('aria-controls', id); btn.setAttribute('aria-expanded', 'false');
+    panel.setAttribute('role', 'region'); panel.setAttribute('aria-labelledby', btn.id);
     btn.addEventListener('click', function () {
       var wasOpen = item.classList.contains('is-open');
       $$('.faq-item.is-open', item.parentElement).forEach(function (el) {

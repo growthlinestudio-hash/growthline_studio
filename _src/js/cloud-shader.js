@@ -90,7 +90,8 @@
     if (!gl) return null;
 
     var params = {
-      speed: 1, count: 6, cloudColor: '#fbf8f2', skyTopColor: '#4f93dd', skyBottomColor: '#b9dcf7', maxDpr: 2
+      speed: 1, count: 6, cloudColor: '#fbf8f2', skyTopColor: '#4f93dd', skyBottomColor: '#b9dcf7', maxDpr: 2,
+      scale: 0.6   // part de la résolution rendue : les nuages sont doux, inutile de calculer chaque pixel
     };
     function merge(o) { if (o) for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) params[k] = o[k]; }
     merge(options);
@@ -125,9 +126,9 @@
     if (!build()) return null;
 
     function resize() {
-      var dpr = Math.min(window.devicePixelRatio || 1, params.maxDpr);
-      var w = Math.max(1, Math.floor(canvas.clientWidth * dpr));
-      var h = Math.max(1, Math.floor(canvas.clientHeight * dpr));
+      var dpr = Math.min(window.devicePixelRatio || 1, params.maxDpr) * params.scale;
+      var w = Math.max(2, Math.floor(canvas.clientWidth * dpr));
+      var h = Math.max(2, Math.floor(canvas.clientHeight * dpr));
       if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
       gl.viewport(0, 0, w, h);
       gl.uniform2f(loc.res, w, h);
@@ -145,8 +146,23 @@
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
 
+    // Qualité adaptative : si l'appareil peine (images > 28 ms en moyenne), on réduit la résolution du ciel.
+    var lastT = 0, slow = 0, frames = 0;
+    function adapt(now) {
+      if (lastT) {
+        var dt = now - lastT;
+        if (dt > 28 && dt < 500) slow++;
+        frames++;
+        if (frames >= 40) {
+          if (slow > 24 && params.scale > 0.3) { params.scale = Math.max(0.3, params.scale * 0.75); resize(); }
+          frames = 0; slow = 0;
+        }
+      }
+      lastT = now;
+    }
     function loop(now) {
       if (!running) return;
+      adapt(now);
       draw(now);
       raf = requestAnimationFrame(loop);
     }
@@ -160,6 +176,7 @@
       if (!running) return;
       running = false;
       cancelAnimationFrame(raf);
+      lastT = 0;
       pausedAt = performance.now();
     }
     function sync() { if (visible && !document.hidden) start(); else stop(); }
@@ -200,7 +217,8 @@
       var inst = mount(cv, {
         speed: parseFloat(cv.getAttribute('data-speed') || '1'),
         count: lowEnd ? Math.min(count, 4) : count,
-        maxDpr: lowEnd ? 1.25 : 2
+        maxDpr: lowEnd ? 1.25 : 2,
+        scale: lowEnd ? 0.45 : 0.6
       });
       if (inst) { cv.parentElement.classList.add('has-webgl'); }
     });

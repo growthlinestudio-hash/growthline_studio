@@ -78,7 +78,7 @@
     $$('[data-split]').forEach(function (el) {
       if (!window.SplitText) { el.classList.add('is-split'); return; }
       var immediate = el.hasAttribute('data-split-immediate') || !!el.closest('.hero, .page-hero');
-      var split = SplitText.create(el, { type: 'lines,words', mask: 'lines', linesClass: 'sl', wordsClass: 'sw' });
+      var split = SplitText.create(el, { type: 'lines,words', mask: 'lines', linesClass: 'sl', wordsClass: 'sw', aria: /^H[1-6]$/.test(el.tagName) ? 'auto' : 'none' });
       el.classList.add('is-split');
       var anim = gsap.from(split.words, { yPercent: 118, rotate: 4, duration: 1.05, stagger: .045, ease: 'expo.out', paused: true, onComplete: function () { gsap.set(split.words, { clearProps: 'transform' }); } });
       if (immediate) { el.__split = anim; }
@@ -123,6 +123,10 @@
     if (hero && sky) gsap.to(sky, { yPercent: 14, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
     var copy = $('.hero-copy, .page-hero .container');
     if (hero && copy) gsap.to(copy, { yPercent: -8, opacity: .35, ease: 'none', scrollTrigger: { trigger: hero, start: '60% top', end: 'bottom top', scrub: true } });
+    // zoom doux des visuels pendant le défilement
+    $$('.proj-card-img img, .services-signature img, .film-preview-img').forEach(function (img) {
+      gsap.fromTo(img, { scale: 1.14 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: img.closest('.proj-card, .services-signature, .film-preview'), start: 'top bottom', end: 'center center', scrub: true } });
+    });
     var bar = $('.scroll-progress span');
     if (bar) gsap.to(bar, { scaleX: 1, ease: 'none', scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: .2 } });
 
