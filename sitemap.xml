@@ -23,11 +23,11 @@
   <url>
     <loc>https://growthlineagency.fr/contact.html</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://growthlineagency.fr/growthline-intelligence.html</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.5</priority>
   </url>
 </urlset>
