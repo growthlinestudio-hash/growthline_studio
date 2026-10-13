@@ -122,7 +122,7 @@ def home(b):
     </div>
     <div class="hero-stage">
       <div class="hero-card">
-        <button type="button" class="hero-video" data-video-open="showreelModal" aria-haspopup="dialog" aria-controls="showreelModal" aria-label="Regarder le showreel Growthline avec le son" data-cursor-view>
+        <button type="button" class="hero-video" data-video-open="showreelModal" aria-haspopup="dialog" aria-controls="showreelModal" aria-label="Regarder avec le son : showreel Growthline" data-cursor-view>
           <video muted loop playsinline preload="metadata" poster="images/hero-loop-poster.jpg" aria-hidden="true" tabindex="-1"><source src="video/growthline-hero-loop.mp4" type="video/mp4"></video>
           <span class="hero-play"><span>{ic("play")}</span>Regarder avec le son</span>
         </button>

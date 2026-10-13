@@ -33,7 +33,7 @@
     var counter = { v: 0 }, count = $('.intro-count', introEl), bar = $('.intro-bar span', introEl);
     var tl = gsap.timeline({ defaults: { ease: EASE }, onComplete: function () { introEl.remove(); root.classList.remove('has-intro'); done(); } });
     introTl = tl;
-    tl.fromTo('.intro-mark', { scale: .55, opacity: 0, rotate: -12 }, { scale: 1, opacity: 1, rotate: 0, duration: .9, ease: 'back.out(1.8)' }, 0)
+    tl.fromTo('.intro-mark', { scale: .55, rotate: -12 }, { scale: 1, rotate: 0, duration: .9, ease: 'back.out(1.8)' }, 0)
       .fromTo('.intro-ring', { scale: .7, opacity: 0 }, { scale: 1.25, opacity: .9, duration: .8 }, .15)
       .to('.intro-ring', { opacity: 0, duration: .5 }, .95)
       .to('.intro-word .lw', { yPercent: 0, y: 0, opacity: 1, duration: .8, stagger: .045, startAt: { y: 60 } }, .35)
@@ -66,7 +66,7 @@
     if (eyebrow) tl.fromTo(eyebrow, { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: .8 }, 0);
     if (h1 && h1.__split) tl.add(function () { h1.__split.play(); }, .1);
     else if (h1) tl.fromTo(h1, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 1 }, .1);
-    tl.fromTo($$('.lede, .hero-ctas, .hero-proof-list', hero), { y: 26, opacity: 0 }, { y: 0, opacity: 1, duration: .9, stagger: .12, clearProps: 'transform,opacity' }, .55)
+    tl.fromTo($$('.lede, .hero-ctas, .hero-proof-list', hero), { y: 26, opacity: 0 }, { y: 0, opacity: 1, duration: .7, stagger: .1, clearProps: 'transform,opacity' }, .15)
       .fromTo($$('.hero-card', hero), { y: 70, opacity: 0, scale: .92, rotate: 6 }, { y: 0, opacity: 1, scale: 1, rotate: 1.6, duration: 1.3, ease: 'expo.out' }, .35)
       .fromTo($$('.hero-chip, .bubble', hero), { scale: .4, opacity: 0 }, { scale: 1, opacity: 1, duration: .9, stagger: .14, ease: 'back.out(2)', clearProps: 'transform,opacity' }, .9)
       .fromTo($$('.scroll-cue', hero), { opacity: 0 }, { opacity: 1, duration: 1 }, 1.6);
@@ -233,14 +233,18 @@
   }
 
   /* -------------------------------------------------------------------- Init */
+  var introActive = !!(introEl && root.classList.contains('has-intro'));
+  // L'intro démarre tout de suite (le logo est déjà visible en CSS) ; le reste attend les polices.
+  if (introActive) runIntro(function () { if (window.ScrollTrigger) ScrollTrigger.refresh(); });
+  else if (introEl) introEl.remove();
+
   function init() {
     prepareSplits();
     setupReveals(); setupCounters(); setupScrollEffects(); setupTilt(); setupMagnetic(); setupCursor(); setupPageTransitions();
-    if (introEl && root.classList.contains('has-intro')) runIntro(function () { ScrollTrigger.refresh(); });
-    else { if (introEl) introEl.remove(); startHero(); }
+    if (!introActive) startHero();
     ScrollTrigger.refresh();
   }
 
-  var fontsReady = (document.fonts && document.fonts.ready) ? Promise.race([document.fonts.ready, new Promise(function (r) { setTimeout(r, 1200); })]) : Promise.resolve();
+  var fontsReady = (document.fonts && document.fonts.ready) ? Promise.race([document.fonts.ready, new Promise(function (r) { setTimeout(r, 450); })]) : Promise.resolve();
   fontsReady.then(init);
 })();

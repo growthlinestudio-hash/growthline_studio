@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script>(function(d){var r=d.documentElement;r.classList.remove('no-js');var m=false;try{m=matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}if(!m){r.classList.add('anim');var s=false;try{s=sessionStorage.getItem('glIntro')}catch(e){}if(!s){r.classList.add('has-intro');try{sessionStorage.setItem('glIntro','1')}catch(e){}}else{var n=false;try{n=sessionStorage.getItem('glNav')==='1';sessionStorage.removeItem('glNav')}catch(e){}if(n)r.classList.add('nav-in')}setTimeout(function(){if(!window.__glAnimReady){r.classList.add('anim-failed');r.classList.remove('has-intro','nav-in')}},4500)}})(document)</script>
+<script>(function(d){var r=d.documentElement;r.classList.remove('no-js');var m=false;try{m=matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}if(!m){r.classList.add('anim');var s=navigator.webdriver===true;try{s=s||sessionStorage.getItem('glIntro')}catch(e){}if(!s){r.classList.add('has-intro');try{sessionStorage.setItem('glIntro','1')}catch(e){}}else{var n=false;try{n=sessionStorage.getItem('glNav')==='1';sessionStorage.removeItem('glNav')}catch(e){}if(n)r.classList.add('nav-in')}setTimeout(function(){if(!window.__glAnimReady){r.classList.add('anim-failed');r.classList.remove('has-intro','nav-in')}},4500)}})(document)</script>
 <title>Growthline Intelligence™ — démo d'analyse de site</title>
 <meta name="description" content="Simulez un audit Growthline par secteur : score, catégories analysées et problèmes classés par priorité, dans le même format que le vrai rapport.">
 <meta name="theme-color" content="#4f93dd">
@@ -23,7 +23,7 @@
 <link rel="apple-touch-icon" href="images/logo-growthline-pastel-icon.png">
 <link rel="preload" href="assets/fonts/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-tight-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/site.min.css?v=67f3baaf">
+<link rel="stylesheet" href="assets/css/site.min.css?v=c19cd618">
 </head>
 <body>
 <a class="skip-link" href="#main">Aller au contenu</a>
@@ -152,7 +152,7 @@
   </div>
   <div class="footer-word" aria-hidden="true">Growthline</div>
 </footer>
-<script src="assets/js/site.min.js?v=3ed8485e" defer></script>
+<script src="assets/js/site.min.js?v=f1852b6d" defer></script>
 <script src="intel-demo.js" defer></script>
 </body>
 </html>

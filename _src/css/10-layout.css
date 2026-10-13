@@ -123,7 +123,19 @@ header.site-header.scrolled .nav-inner { background: var(--glass-strong); paddin
   background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%);
 }
 .sky { position: absolute; inset: 0; z-index: -2; }
-.sky canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sky canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1.2s var(--ease-out); }
+.sky.has-webgl canvas { opacity: 1; }
+/* ciel de repli (sans WebGL, rendu logiciel, chargement) : bancs de nuages en CSS, remplacés en fondu par le shader */
+.sky::before {
+  content: ""; position: absolute; inset: -6% -4%; pointer-events: none; transition: opacity 1.2s var(--ease-out); filter: blur(8px);
+  --p: radial-gradient(closest-side, rgba(255, 255, 255, .95) 0, rgba(255, 255, 255, .75) 50%, rgba(255, 255, 255, 0) 100%);
+  background:
+    var(--p) 62% 18% / 34% 22% no-repeat, var(--p) 78% 26% / 30% 18% no-repeat, var(--p) 8% 52% / 38% 24% no-repeat,
+    var(--p) 28% 62% / 40% 24% no-repeat, var(--p) 70% 68% / 42% 24% no-repeat, var(--p) 92% 50% / 26% 18% no-repeat, var(--p) 40% 12% / 26% 14% no-repeat;
+  animation: drift 60s ease-in-out infinite alternate;
+}
+.sky.has-webgl::before { opacity: 0; animation: none; }
+@keyframes drift { to { transform: translateX(3%); } }
 .hero::after {  /* fondu vers la section suivante + voile de lisibilité côté texte */
   content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
   background:

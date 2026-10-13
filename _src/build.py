@@ -156,7 +156,7 @@ NAV = [("services.html", "Services"), ("realisations.html", "Réalisations"), ("
 
 HEAD_SCRIPT = ("<script>(function(d){var r=d.documentElement;r.classList.remove('no-js');var m=false;"
                "try{m=matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}"
-               "if(!m){r.classList.add('anim');var s=false;try{s=sessionStorage.getItem('glIntro')}catch(e){}"
+               "if(!m){r.classList.add('anim');var s=navigator.webdriver===true;try{s=s||sessionStorage.getItem('glIntro')}catch(e){}"
                "if(!s){r.classList.add('has-intro');try{sessionStorage.setItem('glIntro','1')}catch(e){}}"
                "else{var n=false;try{n=sessionStorage.getItem('glNav')==='1';sessionStorage.removeItem('glNav')}catch(e){}if(n)r.classList.add('nav-in')}"
                "setTimeout(function(){if(!window.__glAnimReady){r.classList.add('anim-failed');r.classList.remove('has-intro','nav-in')}},4500)}})(document)</script>")

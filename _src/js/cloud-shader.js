@@ -88,6 +88,13 @@
       gl = canvas.getContext('webgl', { alpha: false, antialias: false, premultipliedAlpha: false, powerPreference: 'low-power' });
     } catch (e) { gl = null; }
     if (!gl) return null;
+    // Rendu logiciel (SwiftShader, llvmpipe, machines virtuelles, outils de test) : le shader serait trop lourd,
+    // on garde le ciel CSS de repli. ?forcegl dans l'URL force le shader (démo / débogage).
+    try {
+      var dbg = gl.getExtension('WEBGL_debug_renderer_info');
+      var gpu = dbg ? String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)) : '';
+      if (/swiftshader|llvmpipe|software|basic render/i.test(gpu) && !/forcegl/.test(location.search)) return null;
+    } catch (e) {}
 
     var params = {
       speed: 1, count: 6, cloudColor: '#fbf8f2', skyTopColor: '#4f93dd', skyBottomColor: '#b9dcf7', maxDpr: 2,
@@ -225,5 +232,10 @@
   }
 
   window.GLCloudShader = { mount: mount, auto: auto };
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', auto); else auto();
+  // Montage différé : le ciel ne doit jamais retarder le premier affichage ni les interactions.
+  function defer() {
+    var go = function () { (window.requestIdleCallback || function (f) { setTimeout(f, 200); })(auto, { timeout: 1500 }); };
+    if (document.readyState === 'complete') go(); else window.addEventListener('load', go, { once: true });
+  }
+  defer();
 })();

@@ -91,7 +91,7 @@
     return (
       '<div class="issue-card ' + item.severity + '">' +
         '<div class="issue-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + ICONS[item.severity] + '</svg></div>' +
-        '<div class="issue-body"><span class="tag">' + TAGS[item.severity] + '</span><h4>' + escapeHtml(item.title) + '</h4><p>' + escapeHtml(item.description) + '</p></div>' +
+        '<div class="issue-body"><span class="tag">' + TAGS[item.severity] + '</span><h2>' + escapeHtml(item.title) + '</h2><p>' + escapeHtml(item.description) + '</p></div>' +
       '</div>'
     );
   }
