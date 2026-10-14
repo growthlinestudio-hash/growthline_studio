@@ -107,7 +107,7 @@ Si l'onglet 21st du propriétaire montre une autre animation, donner son adresse
 * Structure : `_src/pages.py` (`<div class="reel">…`), styles : `_src/css/10-layout.css` (bloc « Hero Reel »), animations : `_src/js/motion.js` (`revealReel`, `setupReel`, `setupSectionEffects`, `watchFps`).
 * Régler l'épinglage : `end: '+=70%'` dans `setupReel`. Taille du cadre : `.reel-frame { width: … }`.
 * Ré-encoder la vidéo (ffmpeg) : `ffmpeg -i video/growthline-showreel.mp4 -an -vf fps=30 -c:v libx264 -preset medium -crf 27 -pix_fmt yuv420p -movflags +faststart video/growthline-hero-reel.mp4`.
-* Tests visuels : script Node via le protocole de débogage de Chrome (captures dans `Bureau\growthline-apercu2\`). Astuce : `html { scroll-behavior: smooth }` ralentit les `scrollTo` en test ; utiliser `behavior: 'instant'`.
+* Tests visuels : script Node via le protocole de débogage de Chrome (captures dans `Bureau\growthline-apercuv2\`). Astuce : `html { scroll-behavior: smooth }` ralentit les `scrollTo` en test ; utiliser `behavior: 'instant'`.
 
 ### Limites connues
 * Rendu vérifié en **logiciel (SwiftShader)** seulement : pas de GPU réel, pas de mesure sur le PC à Intel HD 530. Le garde-fou `lowfx` est prévu pour ce cas.
