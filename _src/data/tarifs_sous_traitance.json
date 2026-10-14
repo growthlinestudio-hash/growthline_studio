@@ -1,0 +1,10 @@
+{
+  "_aide": "Renseignez ici vos tarifs de sous-traitance, puis relancez : python _src/build.py. Tant que TOUS les champs 'prix' valent null, la page affiche « Tarifs sur devis » (aucun chiffre). Dès qu'au moins un 'prix' est un nombre, la grille s'affiche : les forfaits dont le prix reste null apparaissent « Sur devis ». 'prix' : nombre en euros (ex. 650). 'prefixe' : texte devant le prix (ex. \"À partir de\") ou null. 'unite' : texte sous le prix (ex. \"par site, HT\") ou null. 'delai' : texte (ex. \"10 jours ouvrés\") ou null : affiché seulement s'il est renseigné. 'inclus' : liste de phrases, affichée seulement si elle n'est pas vide. 'note' : texte libre sous la grille (conditions, remise de volume, TVA...) ou null.",
+  "forfaits": [
+    { "nom": "Création de site", "description": "Un site neuf pour le client final de votre agence.", "prefixe": null, "prix": null, "unite": null, "delai": null, "inclus": [] },
+    { "nom": "Refonte de site", "description": "La reconstruction complète d'un site existant.", "prefixe": null, "prix": null, "unite": null, "delai": null, "inclus": [] },
+    { "nom": "Audit & optimisation", "description": "Analyse et corrections ciblées d'un site.", "prefixe": null, "prix": null, "unite": null, "delai": null, "inclus": [] },
+    { "nom": "Sur-mesure", "description": "Fonctionnalités spécifiques, e-commerce, volumes importants.", "prefixe": null, "prix": null, "unite": null, "delai": null, "inclus": [] }
+  ],
+  "note": null
+}

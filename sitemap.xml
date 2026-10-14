@@ -16,6 +16,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://growthlineagency.fr/sous-traitance.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://growthlineagency.fr/a-propos.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

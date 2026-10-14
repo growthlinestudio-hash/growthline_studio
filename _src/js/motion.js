@@ -66,10 +66,11 @@
     if (eyebrow) tl.fromTo(eyebrow, { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: .8 }, 0);
     if (h1 && h1.__split) tl.add(function () { h1.__split.play(); }, .1);
     else if (h1) tl.fromTo(h1, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 1 }, .1);
-    tl.fromTo($$('.lede, .hero-ctas, .hero-proof-list', hero), { y: 26, opacity: 0 }, { y: 0, opacity: 1, duration: .7, stagger: .1, clearProps: 'transform,opacity' }, .15)
-      .fromTo($$('.hero-card', hero), { y: 70, opacity: 0, scale: .92, rotate: 6 }, { y: 0, opacity: 1, scale: 1, rotate: 1.6, duration: 1.3, ease: 'expo.out' }, .35)
-      .fromTo($$('.hero-chip, .bubble', hero), { scale: .4, opacity: 0 }, { scale: 1, opacity: 1, duration: .9, stagger: .14, ease: 'back.out(2)', clearProps: 'transform,opacity' }, hero.querySelector('.reel') ? 1.9 : .9)
-      .fromTo($$('.scroll-cue', hero), { opacity: 0 }, { opacity: 1, duration: 1 }, 1.6);
+    var parts = $$('.lede, .hero-ctas, .hero-proof-list', hero), cards = $$('.hero-card', hero), chips = $$('.hero-chip, .bubble', hero), cue = $$('.scroll-cue', hero);
+    if (parts.length) tl.fromTo(parts, { y: 26, opacity: 0 }, { y: 0, opacity: 1, duration: .7, stagger: .1, clearProps: 'transform,opacity' }, .15);
+    if (cards.length) tl.fromTo(cards, { y: 70, opacity: 0, scale: .92, rotate: 6 }, { y: 0, opacity: 1, scale: 1, rotate: 1.6, duration: 1.3, ease: 'expo.out' }, .35);
+    if (chips.length) tl.fromTo(chips, { scale: .4, opacity: 0 }, { scale: 1, opacity: 1, duration: .9, stagger: .14, ease: 'back.out(2)', clearProps: 'transform,opacity' }, hero.querySelector('.reel') ? 1.9 : .9);
+    if (cue.length) tl.fromTo(cue, { opacity: 0 }, { opacity: 1, duration: 1 }, 1.6);
     revealReel(hero, tl);
     root.classList.add('hero-ready');
   }
@@ -144,7 +145,7 @@
   }
 
   /* ------------------------------------------------------ Révélations au scroll */
-  function done(el) { el.classList.add('is-revealed'); gsap.set(el, { clearProps: 'transform,opacity,visibility' }); }
+  function done(el) { el.classList.add('is-revealed'); gsap.set(el, { clearProps: el.hasAttribute('data-keep-transform') ? 'opacity,visibility' : 'transform,opacity,visibility' }); }
   function setupReveals() {
     $$('[data-reveal]').forEach(function (el) {
       if (el.closest('.hero, .page-hero') && !el.hasAttribute('data-reveal-scroll')) {
@@ -174,20 +175,20 @@
   function setupScrollEffects() {
     $$('[data-parallax]').forEach(function (el) {
       var amt = parseFloat(el.getAttribute('data-parallax')) || 10;
-      gsap.to(el, { yPercent: amt, ease: 'none', scrollTrigger: { trigger: el.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } });
+      gsap.fromTo(el, { yPercent: 0 }, { yPercent: amt, ease: 'none', immediateRender: false, scrollTrigger: { trigger: el.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } });
     });
     setupReel();
     setupSectionEffects();
     var hero = $('.hero, .page-hero'), sky = $('.hero .sky, .page-hero .sky');
-    if (hero && sky) gsap.to(sky, { yPercent: 14, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
+    if (hero && sky) gsap.fromTo(sky, { yPercent: 0 }, { yPercent: 14, ease: 'none', immediateRender: false, scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
     var copy = $('.hero-copy, .page-hero .container');
-    if (hero && copy) gsap.to(copy, { yPercent: -8, opacity: .35, ease: 'none', scrollTrigger: { trigger: hero, start: '60% top', end: 'bottom top', scrub: true } });
+    if (hero && copy) gsap.fromTo(copy, { yPercent: 0, opacity: 1 }, { yPercent: -8, opacity: .35, ease: 'none', immediateRender: false, scrollTrigger: { trigger: hero, start: '60% top', end: 'bottom top', scrub: true } });
     // zoom doux des visuels pendant le défilement
     $$('.proj-card-img img, .services-signature img, .film-preview-img').forEach(function (img) {
       gsap.fromTo(img, { scale: 1.14 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: img.closest('.proj-card, .services-signature, .film-preview'), start: 'top bottom', end: 'center center', scrub: true } });
     });
     var bar = $('.scroll-progress span');
-    if (bar) gsap.to(bar, { scaleX: 1, ease: 'none', scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: .2 } });
+    if (bar) gsap.fromTo(bar, { scaleX: 0 }, { scaleX: 1, ease: 'none', scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: .2 } });
 
     // Ligne de progression du processus : épinglée sur grand écran, simple scrub ailleurs
     var proc = $('.proc-h-grid');
@@ -208,7 +209,7 @@
       });
     }
     var fill = $('.process-track-fill span');
-    if (fill) gsap.to(fill, { scaleY: 1, ease: 'none', scrollTrigger: { trigger: '.process-row', start: 'top 70%', end: 'bottom 60%', scrub: true } });
+    if (fill) gsap.fromTo(fill, { scaleY: 0 }, { scaleY: 1, ease: 'none', scrollTrigger: { trigger: '.process-row', start: 'top 70%', end: 'bottom 60%', scrub: true } });
   }
 
 
@@ -220,18 +221,18 @@
     var docTop = function () { return Math.max(0, Math.round(reel.getBoundingClientRect().top + window.scrollY)); };
     var mm = gsap.matchMedia();
     mm.add('(min-width: 921px)', function () {
-      gsap.set(frame, { rotationX: 20, scale: .8 });
+      // fromTo + valeurs explicites : un « to » relirait l'état courant à chaque refresh (reload au milieu de la page, resize,
+      // retour navigateur) et figerait le titre à moitié transparent une fois revenu en haut.
       var st = { trigger: reel, start: function () { return 'top ' + docTop() + 'px'; }, end: function () { return 'top ' + (hdr() + 14) + 'px'; }, scrub: .6, invalidateOnRefresh: true };
-      gsap.to(frame, { rotationX: 0, scale: 1, ease: 'none', scrollTrigger: st });
-      gsap.to('.hero--reel .hero-inner', { y: -60, opacity: .3, ease: 'none', scrollTrigger: st });
-      gsap.to('.reel-halo', { scale: 1.25, opacity: .5, ease: 'none', scrollTrigger: st });
+      gsap.fromTo(frame, { rotationX: 20, scale: .8 }, { rotationX: 0, scale: 1, ease: 'none', scrollTrigger: st });
+      gsap.fromTo('.hero--reel .hero-inner', { y: 0, opacity: 1 }, { y: -60, opacity: .3, ease: 'none', immediateRender: false, scrollTrigger: st });
+      gsap.fromTo('.reel-halo', { scale: 1 }, { scale: 1.25, ease: 'none', immediateRender: false, scrollTrigger: st });
       // la vidéo reste épinglée un moment, plein cadre, pour qu'on la savoure
       ScrollTrigger.create({ trigger: reel, start: function () { return 'top ' + (hdr() + 14) + 'px'; }, end: '+=70%', pin: true, pinSpacing: true, anticipatePin: 1, invalidateOnRefresh: true });
       return function () { gsap.set(frame, { clearProps: 'transform' }); };
     });
     mm.add('(max-width: 920px)', function () {
-      gsap.set(frame, { rotationX: 9, scale: .9 });
-      gsap.to(frame, { rotationX: 0, scale: 1, ease: 'none', scrollTrigger: { trigger: reel, start: 'top 88%', end: 'top 38%', scrub: .4 } });
+      gsap.fromTo(frame, { rotationX: 9, scale: .9 }, { rotationX: 0, scale: 1, ease: 'none', scrollTrigger: { trigger: reel, start: 'top 88%', end: 'top 38%', scrub: .4 } });
       return function () { gsap.set(frame, { clearProps: 'transform' }); };
     });
   }
@@ -354,6 +355,33 @@
     });
   }
 
+  /* ------------------------------------------- Défilement fluide inertiel (Lenis ↔ ScrollTrigger) */
+  var lenis = null;
+  function setupSmooth() {
+    if (!window.Lenis || /[?&]nolenis/.test(location.search)) return;
+    var hdr = function () { var h = $('.site-header'); return (h ? h.offsetHeight : 80) + 14; };
+    lenis = new window.Lenis({
+      duration: 1.2, smoothWheel: true, syncTouch: false, wheelMultiplier: .95,
+      easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); }
+    });
+    window.__lenis = lenis;
+    lenis.on('scroll', ScrollTrigger.update);                       // ScrollTrigger lit la position lissée
+    gsap.ticker.add(function (time) { lenis.raf(time * 1000); });  // une seule boucle d'animation pour tout le site
+    gsap.ticker.lagSmoothing(0);
+    // menu mobile, lightbox et vidéo modale verrouillent le défilement via body.style.overflow
+    var lock = function () { if (document.body.style.overflow === 'hidden') lenis.stop(); else lenis.start(); };
+    new MutationObserver(lock).observe(document.body, { attributes: true, attributeFilter: ['style'] });
+    // ancres internes (#audit, #faq…) : glissement inertiel avec le décalage de l'en-tête
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="#"]');
+      if (!a || e.defaultPrevented) return;
+      var id = a.getAttribute('href'); if (id.length < 2) return;
+      var t = document.getElementById(id.slice(1)); if (!t) return;
+      e.preventDefault(); lenis.scrollTo(t, { offset: -hdr(), duration: 1.6 });
+      if (history.replaceState) history.replaceState(null, '', id);
+    });
+  }
+
   /* -------------------------------------------------------------------- Init */
   var introActive = !!(introEl && root.classList.contains('has-intro'));
   // L'intro démarre tout de suite (le logo est déjà visible en CSS) ; le reste attend les polices.
@@ -361,11 +389,15 @@
   else if (introEl) introEl.remove();
 
   function init() {
+    setupSmooth();
     prepareSplits();
     setupReveals(); setupCounters(); setupScrollEffects(); setupTilt(); setupMagnetic(); setupCursor(); setupPageTransitions();
+    if (window.GLAscent) window.GLAscent.init({ gsap: gsap, ScrollTrigger: ScrollTrigger, lenis: lenis, root: root });
     if (!introActive) startHero();
     ScrollTrigger.refresh();
     watchFps();
+    // la vidéo/les polices peuvent changer la hauteur de la page : on remesure sans casser l'état des animations
+    if (document.readyState !== 'complete') window.addEventListener('load', function () { ScrollTrigger.refresh(); });
   }
 
   var fontsReady = (document.fonts && document.fonts.ready) ? Promise.race([document.fonts.ready, new Promise(function (r) { setTimeout(r, 450); })]) : Promise.resolve();

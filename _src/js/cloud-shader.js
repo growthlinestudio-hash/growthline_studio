@@ -14,7 +14,7 @@
     'precision highp float;',
     'varying vec2 v_uv;',
     'uniform vec2 u_res;uniform float u_time;uniform float u_count;',
-    'uniform vec3 u_cloud;uniform vec3 u_skyTop;uniform vec3 u_skyBottom;',
+    'uniform vec3 u_cloud;uniform vec3 u_skyTop;uniform vec3 u_skyBottom;uniform float u_alt;uniform float u_warm;',
     'const mat2 R=mat2(0.80,0.60,-0.60,0.80);',
     'float hash(vec2 p){return fract(sin(dot(p,vec2(41.31,289.17)))*26737.367);}',
     'float vnoise(vec2 p){vec2 i=floor(p);vec2 f=fract(p);f=f*f*(3.0-2.0*f);',
@@ -44,19 +44,21 @@
     ' return shadeCloud(color,sky,p,vec2(cx,cy),r,seed,t,dist);}',
     'void main(){',
     ' float aspect=u_res.x/u_res.y;vec2 p=vec2(v_uv.x*aspect,v_uv.y);float t=u_time;',
-    ' vec3 sky=mix(u_skyBottom,u_skyTop,v_uv.y);vec3 color=sky;',
+    ' vec2 pc=vec2(p.x,p.y+u_alt*0.85);',
+    ' vec3 sky=mix(u_skyBottom,u_skyTop,v_uv.y);',
+    ' sky=mix(sky,vec3(1.0,0.70,0.36),u_warm*smoothstep(0.85,0.0,v_uv.y)*0.62);vec3 color=sky;',
     ' color=mix(color,u_skyBottom*1.06,smoothstep(0.35,0.0,v_uv.y)*0.5);',
-    ' vec2 sunPos=vec2(aspect*0.78,0.92);float sunDist=length(p-sunPos);',
-    ' color+=vec3(1.0,0.95,0.82)*exp(-sunDist*sunDist*5.0)*0.28;',
+    ' vec2 sunPos=vec2(aspect*0.78,0.92-u_warm*0.5-u_alt*0.2);float sunDist=length(p-sunPos);',
+    ' color+=mix(vec3(1.0,0.95,0.82),vec3(1.0,0.62,0.25),u_warm)*exp(-sunDist*sunDist*5.0)*(0.28+u_warm*0.32);',
     ' float cirrusBand=smoothstep(0.55,0.8,v_uv.y)*(1.0-smoothstep(0.9,1.0,v_uv.y));',
     ' if(cirrusBand>0.01){float streak=fbm(vec2(p.x*1.6-t*0.006,p.y*12.0));',
     '  float wisp=smoothstep(0.52,0.78,streak)*cirrusBand;color=mix(color,u_cloud*0.98,wisp*0.35);}',
-    ' if(u_count>5.5){color=cloudPass(color,sky,p,aspect,t,0.006,0.10,0.84,vec2(0.20,0.10),43.7,1.0);}',
-    ' if(u_count>4.5){color=cloudPass(color,sky,p,aspect,t,0.008,0.62,0.73,vec2(0.24,0.12),71.3,0.85);}',
-    ' if(u_count>3.5){color=cloudPass(color,sky,p,aspect,t,0.011,0.33,0.60,vec2(0.34,0.16),17.3,0.55);}',
-    ' if(u_count>2.5){color=cloudPass(color,sky,p,aspect,t,0.013,0.80,0.47,vec2(0.30,0.15),29.9,0.45);}',
-    ' if(u_count>1.5){color=cloudPass(color,sky,p,aspect,t,0.016,0.05,0.35,vec2(0.46,0.20),91.1,0.15);}',
-    ' color=cloudPass(color,sky,p,aspect,t,0.020,0.48,0.20,vec2(0.56,0.24),57.2,0.0);',
+    ' if(u_count>5.5){color=cloudPass(color,sky,pc,aspect,t,0.006,0.10,0.84,vec2(0.20,0.10),43.7,1.0);}',
+    ' if(u_count>4.5){color=cloudPass(color,sky,pc,aspect,t,0.008,0.62,0.73,vec2(0.24,0.12),71.3,0.85);}',
+    ' if(u_count>3.5){color=cloudPass(color,sky,pc,aspect,t,0.011,0.33,0.60,vec2(0.34,0.16),17.3,0.55);}',
+    ' if(u_count>2.5){color=cloudPass(color,sky,pc,aspect,t,0.013,0.80,0.47,vec2(0.30,0.15),29.9,0.45);}',
+    ' if(u_count>1.5){color=cloudPass(color,sky,pc,aspect,t,0.016,0.05,0.35,vec2(0.46,0.20),91.1,0.15);}',
+    ' color=cloudPass(color,sky,pc,aspect,t,0.020,0.48,0.20,vec2(0.56,0.24),57.2,0.0);',
     ' gl_FragColor=vec4(color,1.0);}'
   ].join('\n');
 
@@ -126,7 +128,8 @@
       loc = {
         res: gl.getUniformLocation(program, 'u_res'), time: gl.getUniformLocation(program, 'u_time'),
         count: gl.getUniformLocation(program, 'u_count'), cloud: gl.getUniformLocation(program, 'u_cloud'),
-        skyTop: gl.getUniformLocation(program, 'u_skyTop'), skyBottom: gl.getUniformLocation(program, 'u_skyBottom')
+        skyTop: gl.getUniformLocation(program, 'u_skyTop'), skyBottom: gl.getUniformLocation(program, 'u_skyBottom'),
+        alt: gl.getUniformLocation(program, 'u_alt'), warm: gl.getUniformLocation(program, 'u_warm')
       };
       return true;
     }
@@ -150,6 +153,9 @@
       gl.uniform3f(loc.cloud, c[0], c[1], c[2]);
       gl.uniform3f(loc.skyTop, t[0], t[1], t[2]);
       gl.uniform3f(loc.skyBottom, b[0], b[1], b[2]);
+      var drive = window.__glSky || {};   // piloté par le défilement (ascent.js) : altitude 0..1, chaleur du ciel 0..1
+      gl.uniform1f(loc.alt, drive.alt || 0);
+      gl.uniform1f(loc.warm, drive.warm || 0);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
 

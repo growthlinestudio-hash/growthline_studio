@@ -112,3 +112,48 @@ Si l'onglet 21st du propriétaire montre une autre animation, donner son adresse
 ### Limites connues
 * Rendu vérifié en **logiciel (SwiftShader)** seulement : pas de GPU réel, pas de mesure sur le PC à Intel HD 530. Le garde-fou `lowfx` est prévu pour ce cas.
 * L'intro d'ouverture n'a pas pu être rejouée en test automatisé (Chrome pilotable impose `navigator.webdriver`), mais l'apparition du Reel est branchée sur le même point de départ (`startHero`).
+
+
+---
+
+## Version 3 — « Voler vers le septième ciel » (octobre 2026)
+
+Demande : corriger le titre du hero qui restait invisible quand on remonte tout en haut, rendre le défilement plus fluide, pousser l'esprit « 21st » (voyage au scroll,
+on vole, on monte au septième ciel) et ajouter les tarifs de sous-traitance.
+
+### 1. Bug du hero invisible au retour en haut — cause et correctif
+* **Cause** : les animations de scroll du hero (`setupReel`, `setupScrollEffects`) utilisaient `gsap.to(...)` avec `invalidateOnRefresh`. Au `refresh()` (rechargement au milieu de la page,
+  redimensionnement, retour navigateur, chargement tardif de la vidéo/polices) GSAP **relit l'état courant** de l'élément comme valeur de départ : si l'élément était déjà à moitié estompé,
+  « la valeur initiale » devenait 0,3 et le titre restait à 30 % d'opacité même une fois revenu à `scrollY = 0`.
+* **Correctif** : tous les tweens pilotés par le scroll sont des `fromTo` avec des valeurs de départ **explicites** (`opacity: 1`, `y: 0`, `scale`, `yPercent: 0`…).
+* **Test automatisé** : `_src/tests/hero_visible.mjs` (Node 22+ + Chrome headless, protocole de débogage, temps réel). Vérifie par `getComputedStyle` que badge, titre, sous-titre, boutons et liste de preuves
+  sont visibles (opacité cumulée > 0,95, dans le viewport) après : chargement, 3 allers-retours instantanés, molette rapide bas/haut, rechargement au milieu de la page, redimensionnement, retour navigateur.
+  Avant le correctif : 4 échecs (opacité 0,3 bloquée) ; après : tout est visible. Lancer : `python -m http.server 8821` à la racine puis `node _src/tests/hero_visible.mjs`.
+
+### 2. Défilement fluide
+* **Lenis 1.3.26** (MIT, `assets/vendor/lenis.min.js`, téléchargé depuis jsDelivr) synchronisé avec ScrollTrigger : `lenis.on('scroll', ScrollTrigger.update)`, une seule boucle `gsap.ticker`, `lagSmoothing(0)`.
+  Inertie à la molette ; **tactile natif** (pas de `syncTouch`). Désactivé en `prefers-reduced-motion` (motion.js ne s'exécute pas). `?nolenis` dans l'URL le coupe (test).
+* Les ancres (`#audit`, `#faq`…) glissent avec inertie et tiennent compte de l'en-tête ; menu mobile, lightbox et vidéo modale arrêtent Lenis (`body.style.overflow = 'hidden'`).
+* Autres gains de fluidité : pas de cibles GSAP vides (avertissements supprimés), `ScrollTrigger.refresh()` après `load`, couche d'ambiance en `contain: strict`, uniquement transform/opacity.
+
+### 3. « Septième ciel » — l'ascension (`_src/js/ascent.js`, `_src/css/40-ascent.css`)
+* **Ciel du hero piloté par le scroll** (`cloud-shader.js`, nouveaux uniforms `u_alt`, `u_warm` via `window.__glSky`) : en défilant, les nuages descendent (on monte), l'horizon se réchauffe, le soleil se couche.
+* **Nuages d'avant-plan** qui traversent l'écran DEVANT le contenu, **avions en papier**, **rayons de soleil** dans le hero, **étoiles filantes** dans les sections nuit et le pied de page.
+* **Ambiance** : dégradé fixe en haut/bas d'écran qui évolue du bleu du jour à l'or du soleil couchant puis à la nuit, selon la progression dans la page.
+* **Jauge d'altitude** (≥ 1100 px) : sept « ciels » du Sol au 7ᵉ ciel, qui se remplit ; elle s'efface pendant que la vidéo est plein écran.
+* **Cartes qui s'élèvent puis se posent** (`scale` + légère rotation en scrub), logo qui plane, bouton doré qui respire.
+* **Atterrissage au 7ᵉ ciel** : en arrivant sur « Prêt à monter au septième ciel ? » (pied de page de toutes les pages), explosion douce de lumière + confettis dorés (canvas 2D, ~100 particules, une fois).
+* **Garde-fous** : tout est coupé par `.lowfx` (FPS < 28), allégé sur mobile (2 nuages, pas de jauge ni d'étoiles filantes hors pied de page), absent en mouvement réduit.
+* Réglages : durées/cycles dans `ascent.js` (`cyc`, `frac`), couleurs `DAY`/`GOLD`/`NIGHT`, intensité des nuages (`.46`) ; CSS dans `40-ascent.css`.
+
+### 4. Page « Sous-traitance » (`sous-traitance.html`)
+* **Aucun prix, délai ni promesse n'est écrit dans le code.** Tout vient de `_src/data/tarifs_sous_traitance.json`.
+* Tant que tous les `prix` valent `null`, la page affiche un bloc « **Tarifs sur devis** » (aucun chiffre) avec un lien e-mail.
+* **Pour publier vos tarifs** : ouvrez `_src/data/tarifs_sous_traitance.json`, renseignez pour chaque forfait `prix` (nombre en euros), éventuellement `prefixe` (« À partir de »), `unite` (« par site, HT »),
+  `delai`, la liste `inclus` et la `note` générale (conditions, remise de volume, TVA…), puis `python _src/build.py`. La grille apparaît dès qu'un prix est renseigné ; un forfait sans prix reste « Sur devis ».
+* Liens ajoutés : navigation principale, pied de page, sitemap. Le numéro de téléphone devient une pastille d'icône sous 1280 px (7 liens dans l'en-tête).
+* Aucun texte légal (mention de non-engagement, TVA, CGV) n'a été inventé : à fournir par le propriétaire.
+
+### Limites connues (version 3)
+* Rendu vérifié en logiciel (SwiftShader) ; fluidité réelle de Lenis et des couches fixes non mesurée sur GPU ni sur Intel HD 530 (garde-fou `lowfx` en secours).
+* Les photos de captures du dossier `growthline-apercu/v3/` sont des images fixes : le mouvement (nuages, avions, confettis) ne s'y voit pas.

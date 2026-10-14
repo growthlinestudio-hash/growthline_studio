@@ -733,7 +733,70 @@ def legal(b):
                   robots="noindex, follow")
 
 
+# =============================================================================== SOUS-TRAITANCE
+def subcontract(b):
+    """Page « Sous-traitance ». Aucun prix, délai ni promesse n'est écrit ici : tout vient de _src/data/tarifs_sous_traitance.json.
+    Tant que les prix sont null, la grille est remplacée par un bloc « Tarifs sur devis » sans chiffre."""
+    import json
+    ic = b.icon
+    data = json.load(open(SRC / "data" / "tarifs_sous_traitance.json", encoding="utf-8"))
+    forfaits = data.get("forfaits", [])
+    has_prices = any(f.get("prix") is not None for f in forfaits)
+
+    def fmt(n):
+        return (f"{n:,}".replace(",", " ") if isinstance(n, int) else str(n).replace(".", ",")) + "€"
+
+    if has_prices:
+        cards = []
+        for f in forfaits:
+            pr = f.get("prix")
+            value = fmt(pr) if pr is not None else "Sur devis"
+            pref = f'<div class="price-period">{f["prefixe"]}</div>' if pr is not None and f.get("prefixe") else ""
+            unit = f'<div class="price-period">{f["unite"]}</div>' if pr is not None and f.get("unite") else ""
+            delai = f'<p class="price-desc"><strong>Délai :</strong> {f["delai"]}</p>' if f.get("delai") else ""
+            inc = ('<ul class="price-features">' + "".join(f"<li>{ic('check')}{x}</li>" for x in f["inclus"]) + "</ul>") if f.get("inclus") else ""
+            cards.append(f'''<div class="price-card tarif-card"><div class="price-card-head"><h3>{f["nom"]}</h3></div>{pref}<div class="price-value">{value}</div>{unit}
+<p class="price-desc">{f.get("description", "")}</p>{delai}{inc}<a href="contact.html" class="btn btn-block">Demander un devis</a></div>''')
+        note = f'<p class="disclaimer-note" data-reveal>{ic("info")}{data["note"]}</p>' if data.get("note") else ""
+        tarifs = f'''<div class="pricing-grid" data-stagger>{"".join(cards)}</div>{note}'''
+    else:
+        tarifs = f'''<div class="sub-quote" data-reveal>
+  <span class="price-card-icon">{ic("message")}</span>
+  <h3>Tarifs sur devis</h3>
+  <p>Chaque projet de sous-traitance est chiffré selon le besoin : type de site, volume, calendrier. Décrivez-nous votre demande, nous revenons vers vous avec une proposition.</p>
+  <a href="mailto:{b.EMAIL}?subject=Sous-traitance%20-%20demande%20de%20devis" class="btn btn-solid btn-lg" data-magnetic>Demander un devis {ic("arrow", "arrow")}</a>
+</div>'''
+
+    scope = [("layout", "Création de site", "Un site neuf, pensé pour convertir, pour le client final de votre agence."),
+             ("wrench", "Refonte de site", "La reconstruction complète d'un site existant qui ne sert plus son activité."),
+             ("chart", "Audit &amp; optimisation", "L'analyse d'un site et la correction de ce qui bloque la conversion.")]
+    scope_html = "".join(f'<div class="sol-card"><span class="pb-card-icon">{ic(i)}</span><h3>{t}</h3><p>{d}</p></div>' for i, t, d in scope)
+    body = f'''
+{page_hero("Sous-traitance", "Confiez-nous <em>vos sites</em> pour vos clients.", "Agences, freelances et studios : externalisez la création, la refonte ou l'optimisation de sites web pour vos propres clients.")}
+
+<section class="section section--tight" id="perimetre">
+  <div class="container">
+    <div class="section-head"><h2 class="display-2" data-split>Ce que nous pouvons <em>prendre en charge</em></h2></div>
+    <div class="sol-grid" data-stagger>{scope_html}</div>
+  </div>
+</section>
+
+<section class="section" id="tarifs-sous-traitance">
+  <div class="container">
+    <div class="section-head">
+      <div><span class="eyebrow">Tarifs sous-traitance</span><h2 class="display-2" data-split style="margin-top:16px;">Un cadre clair, <em>pour travailler ensemble.</em></h2></div>
+    </div>
+    {tarifs}
+  </div>
+</section>
+
+{cta_final(b, "Un projet à externaliser ?", "Parlons de votre prochain site.", primary=("contact.html", "Nous écrire"), secondary=("index.html#audit", "Demander un audit gratuit"))}'''
+    return b.page("sous-traitance.html", "Sous-traitance de sites web — Growthline",
+                  "Agences, freelances et studios : confiez à Growthline la création, la refonte ou l'optimisation de sites web pour vos clients. Tarifs de sous-traitance.",
+                  body)
+
+
 def render_all(b):
     return {"index.html": home(b), "services.html": services(b), "realisations.html": realisations(b), "a-propos.html": about(b),
             "contact.html": contact(b), "growthline-intelligence.html": intelligence(b), "outil-audit.html": tool(b),
-            "mentions-legales.html": legal(b)}
+            "mentions-legales.html": legal(b), "sous-traitance.html": subcontract(b)}

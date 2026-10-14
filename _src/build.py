@@ -131,10 +131,10 @@ def build_assets():
     (ROOT / "assets" / "css" / "site.min.css").write_text(mini, encoding="utf-8")
     # JS : vendeurs (déjà minifiés) + code du site (minifié si esbuild est disponible)
     parts = []
-    for v in ("gsap.min.js", "ScrollTrigger.min.js", "SplitText.min.js"):
+    for v in ("gsap.min.js", "ScrollTrigger.min.js", "SplitText.min.js", "lenis.min.js"):
         parts.append((ROOT / "assets" / "vendor" / v).read_text(encoding="utf-8"))
     own = []
-    for f in ("cloud-shader.js", "core.js", "motion.js"):
+    for f in ("cloud-shader.js", "core.js", "ascent.js", "motion.js"):
         own.append((SRC / "js" / f).read_text(encoding="utf-8"))
     own_js = "\n;\n".join(own)
     esbuild = shutil.which("esbuild") or os.environ.get("ESBUILD")
@@ -152,7 +152,7 @@ def build_assets():
 
 # --------------------------------------------------------------------------- squelette de page
 NAV = [("services.html", "Services"), ("realisations.html", "Réalisations"), ("index.html#processus", "Processus"),
-       ("a-propos.html", "À propos"), ("index.html#faq", "FAQ"), ("contact.html", "Contact")]
+       ("sous-traitance.html", "Sous-traitance"), ("a-propos.html", "À propos"), ("index.html#faq", "FAQ"), ("contact.html", "Contact")]
 
 HEAD_SCRIPT = ("<script>(function(d){var r=d.documentElement;r.classList.remove('no-js');var m=false;"
                "try{m=matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}"
@@ -222,7 +222,7 @@ def footer_html():
       </div>
       <div><h3>Navigation</h3><ul>
         <li><a href="services.html">Services</a></li><li><a href="realisations.html">Réalisations</a></li>
-        <li><a href="a-propos.html">À propos</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+        <li><a href="sous-traitance.html">Sous-traitance</a></li><li><a href="a-propos.html">À propos</a></li><li><a href="contact.html">Contact</a></li></ul></div>
       <div><h3>Ressources</h3><ul>
         <li><a href="index.html#faq">Questions fréquentes</a></li><li><a href="growthline-intelligence.html">Démo Growthline Intelligence™</a></li>
         <li><a href="services.html#tarifs">Tarifs</a></li><li><a href="mentions-legales.html">Mentions légales</a></li></ul></div>
@@ -297,7 +297,7 @@ def main():
         print("écrit", fname, len(html) // 1024, "Ko")
     # sitemap
     urls = [("", "1.0", "weekly"), ("services.html", "0.8", "monthly"), ("realisations.html", "0.8", "monthly"),
-            ("a-propos.html", "0.6", "monthly"), ("contact.html", "0.7", "monthly"), ("growthline-intelligence.html", "0.5", "monthly")]
+            ("sous-traitance.html", "0.6", "monthly"), ("a-propos.html", "0.6", "monthly"), ("contact.html", "0.7", "monthly"), ("growthline-intelligence.html", "0.5", "monthly")]
     sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for u, p, f in urls:
         sm.append(f"  <url>\n    <loc>{SITE}/{u}</loc>\n    <changefreq>{f}</changefreq>\n    <priority>{p}</priority>\n  </url>")
