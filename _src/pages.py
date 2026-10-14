@@ -95,7 +95,6 @@ def film_modal(b, mid, label, poster, video):
 # =============================================================================== ACCUEIL
 def home(b):
     ic = b.icon
-    hero_poster = b.pic("images/hero-loop-poster.jpg", "", widths=(640, 960), sizes="(max-width: 920px) 92vw, 46vw", loading="eager", fetchpriority="high")
     marquee_items = ["Performance", "SEO technique", "Accessibilité", "Sécurité", "Présence locale", "Conversion"]
     marquee = "".join(f'<span class="marquee-item">{m}</span>' for m in marquee_items)
     proj = [("secteur-restaurant", "Restaurant", "Refonte complète", "Objectif : plus de réservations en ligne"),
@@ -105,12 +104,14 @@ def home(b):
   <div class="proj-card-img">{b.pic(f"images/{img}.jpg", "", widths=(640, 960), sizes="(max-width: 860px) 92vw, 30vw")}</div>
   <div class="proj-card-body"><span class="proj-card-type">{t}</span><h3>{h}</h3><p>{p}</p></div></a>''' for img, t, h, p in proj)
     body = f'''
-<section class="hero" id="top">
+<section class="hero hero--reel" id="top">
   {sky(6)}
   <div class="container hero-inner">
     <div class="hero-copy">
       <span class="eyebrow">Agence digitale · Audit gratuit</span>
       <h1 class="display-1" data-split>Un site web qui donne <em>confiance</em> dès la première visite</h1>
+    </div>
+    <div class="hero-aside">
       <p class="lede">Création et refonte de sites web pour entreprises locales. Audit gratuit, accompagnement personnalisé et paiement unique.</p>
       <div class="hero-ctas">
         <a href="#audit" class="btn btn-solid btn-lg" data-magnetic>Audit gratuit {ic("arrow", "arrow")}</a>
@@ -120,19 +121,26 @@ def home(b):
         <li>{ic("check")}Réponse sous 24h</li><li>{ic("check")}Paiement unique</li><li>{ic("check")}Accompagnement personnalisé</li>
       </ul>
     </div>
-    <div class="hero-stage">
-      <div class="hero-card">
-        <button type="button" class="hero-video" data-video-open="showreelModal" aria-haspopup="dialog" aria-controls="showreelModal" aria-label="Regarder avec le son : showreel Growthline" data-cursor-view>
-          <video muted loop playsinline preload="metadata" poster="images/hero-loop-poster.jpg" aria-hidden="true" tabindex="-1"><source src="video/growthline-hero-loop.mp4" type="video/mp4"></video>
-          <span class="hero-play"><span>{ic("play")}</span>Regarder avec le son</span>
-        </button>
+  </div>
+  <div class="reel">
+    <div class="reel-halo" aria-hidden="true"></div>
+    <div class="reel-persp">
+      <div class="reel-intro">
+        <div class="reel-frame">
+          <span class="reel-aura" aria-hidden="true"></span>
+          <button type="button" class="hero-video reel-video" data-video-open="showreelModal" aria-haspopup="dialog" aria-controls="showreelModal" aria-label="Regarder avec le son : showreel Growthline" data-cursor-view data-cursor-label="Lire">
+            <video muted loop playsinline preload="metadata" poster="images/hero-showreel-poster.jpg" aria-hidden="true" tabindex="-1" data-src-sm="video/growthline-hero-reel-sm.mp4"><source src="video/growthline-hero-reel.mp4" type="video/mp4"></video>
+            <span class="reel-glint" aria-hidden="true"></span>
+            <span class="hero-play"><span>{ic("play")}</span>Regarder avec le son</span>
+          </button>
+          <span class="hero-chip hero-chip--a float-a"><i>{ic("search")}</i>Audit gratuit</span>
+          <span class="hero-chip hero-chip--b float-b"><i>{ic("clock")}</i>Réponse sous 24h</span>
+          <span class="hero-chip hero-chip--c float-c"><i>{ic("check")}</i>Paiement unique</span>
+        </div>
       </div>
-      <span class="hero-chip hero-chip--a float-a"><i>{ic("search")}</i>Audit gratuit</span>
-      <span class="hero-chip hero-chip--b float-b"><i>{ic("clock")}</i>Réponse sous 24h</span>
-      <span class="hero-chip hero-chip--c float-c"><i>{ic("check")}</i>Paiement unique</span>
     </div>
   </div>
-  <a class="scroll-cue" href="#probleme" aria-label="Descendre"><i></i>Défiler</a>
+  <a class="scroll-cue" href="#chiffres" aria-label="Descendre"><i></i>Défiler</a>
 </section>
 
 {film_modal(b, "showreelModal", "Showreel Growthline", "images/hero-showreel-poster.jpg", "video/growthline-showreel.mp4")}
@@ -253,7 +261,7 @@ def home(b):
     return b.page("index.html", "Growthline — Agence d'audit digital &amp; performance",
                   "Growthline analyse manuellement votre présence digitale, puis corrige ce qui compte : performance, SEO technique, conversion. Audit gratuit, réponse sous 24h.",
                   body, extra_ld=ld, extra_js=("film-modal.js",),
-                  preload='<link rel="preload" as="image" type="image/webp" href="images/opt/hero-loop-poster-960.webp" fetchpriority="high">\n')
+                  preload='<link rel="preload" as="image" href="images/hero-showreel-poster.jpg" fetchpriority="high">\n')
 
 
 # =============================================================================== SERVICES

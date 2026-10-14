@@ -210,7 +210,10 @@ html.anim:not(.anim-failed) [data-reveal]:not(.is-revealed),
 html.anim:not(.anim-failed) [data-stagger] > *:not(.is-revealed) { opacity: 0; transform: translateY(34px); }
 html.anim:not(.anim-failed) [data-split] { opacity: 0; }
 html.anim:not(.anim-failed) [data-split].is-split { opacity: 1; }
-html.anim:not(.anim-failed):not(.hero-ready) :is(.hero, .page-hero) :is(.eyebrow, .lede, .hero-ctas, .hero-proof-list, .hero-card, .hero-chip, .bubble, .scroll-cue) { opacity: 0; }
+html.anim:not(.anim-failed):not(.hero-ready) :is(.hero, .page-hero) :is(.eyebrow, .lede, .hero-ctas, .hero-proof-list, .hero-card, .hero-chip, .bubble, .scroll-cue, .reel-intro, .reel-halo) { opacity: 0; }
+html.anim:not(.anim-failed) .hero--reel .lede:not(.is-revealed) { transform: none; }
+/* textes qui se composent (lignes masquées) : cachés tant que le découpage n'est pas prêt */
+html.anim:not(.anim-failed) [data-compose]:not(.is-split) { opacity: 0; }
 /* titres découpés : le dégradé sur du texte transformé n'est pas fiable, on utilise une teinte pleine */
 [data-split] em, [data-split] .accent-script { background: none; -webkit-text-fill-color: currentColor; color: #2347c9; }
 .section--night [data-split] em, .footer-cta [data-split] em { color: #ffd27a; }

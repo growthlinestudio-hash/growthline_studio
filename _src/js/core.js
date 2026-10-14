@@ -71,6 +71,11 @@
 
   /* ---------- Hero : la vidéo de fond ne tourne que lorsqu'elle est visible ---------- */
   var heroVideo = $('.hero-video video');
+  // petits écrans : version 720p allégée de la vidéo
+  if (heroVideo && heroVideo.getAttribute('data-src-sm') && window.matchMedia && window.matchMedia('(max-width: 920px)').matches) {
+    var srcEl = heroVideo.querySelector('source');
+    if (srcEl) { srcEl.src = heroVideo.getAttribute('data-src-sm'); heroVideo.load(); }
+  }
   if (heroVideo && 'IntersectionObserver' in window) {
     var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) { heroVideo.removeAttribute('autoplay'); heroVideo.pause(); }

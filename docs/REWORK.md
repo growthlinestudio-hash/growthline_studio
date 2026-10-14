@@ -67,3 +67,48 @@ python _src/check_links.py    # liens, images et ancres
 3. `outil-audit.html` appelle `/api/audit` (serveur local `server/`) : il ne fonctionne pas sur l'hébergement statique ; il est en `noindex`.
 4. Lighthouse (Chrome headless sans GPU) : accessibilité, bonnes pratiques et SEO à 100 ; la note de performance est faussée par le rendu
    logiciel du lab et les ressources non compressées du serveur de test — mesurer sur le site déployé (gzip/brotli) avec PageSpeed Insights.
+
+
+---
+
+## Version 2 — hero « Reel » (octobre 2026)
+
+Demande : la vidéo du hero d'origine (le showreel de marque) revient, **beaucoup plus grande**, avec une apparition spectaculaire et une animation de scroll
+inspirée de 21st.dev.
+
+### Ce qui a changé
+* **Vidéo** : `video/growthline-hero-reel.mp4` = le showreel d'origine (`growthline-showreel.mp4`, 42 s) ré-encodé pour le web : 1080p, 30 i/s, **sans piste audio**,
+  7,2 Mo (au lieu de 30 Mo). Version `growthline-hero-reel-sm.mp4` (720p, 2,2 Mo) servie automatiquement en dessous de 920 px de large. Poster : `images/hero-showreel-poster.jpg`
+  (préchargé). Le showreel complet avec le son (30 Mo) n'est toujours chargé qu'**au clic** sur « Regarder avec le son » (modal FLIP existant, `film-modal.js`).
+* **Taille** : le cadre fait jusqu'à `min(96 vw, 88 svh × 16/9, 1760 px)`, soit ≈ 1 380 × 775 px sur un écran 1440 × 900 (avant : ≈ 620 × 390 px).
+* **Apparition** (`revealReel` dans `_src/js/motion.js`, juste après l'intro) : le cadre monte en flou net (blur 16 px → 0), grandit de 60 % à 100 %, la vidéo s'ouvre par un
+  **masque circulaire** depuis le centre, deux **anneaux d'onde** et 18 **étincelles** jaillissent, le **halo** lumineux respire derrière, et un **reflet** balaie la vidéo toutes les ~8 s.
+  Un liseré dégradé (or / rose / violet / vert / bleu) **tourne autour du cadre** en continu.
+* **Animation de scroll** (`setupReel`) : écran de verre en perspective 3D (`rotateX 20° → 0`, `scale .8 → 1`) qui se redresse et grandit pendant le défilement,
+  titre qui recule, halo qui s'étend, puis la vidéo reste **épinglée plein cadre pendant 70 % de la hauteur d'écran** avant de repartir. Le ciel (canvas WebGL) reste collé à l'écran
+  pendant l'épinglage (`position: sticky`, un seul canvas de la taille de la fenêtre). Sur mobile (≤ 920 px) : version allégée (inclinaison 9° → 0, pas d'épinglage).
+* **Autres animations** (`setupSectionEffects`) : sections « nuit » et pied de page qui s'ouvrent comme un **rideau** (`clip-path` arrondi → plein), **textes qui se composent** ligne par ligne
+  (SplitText, masques), cartes à **vitesses de parallaxe différentes** (profondeur), **bandeau qui s'incline** avec la vitesse de défilement, curseur « **Lire** » sur les vidéos
+  (`data-cursor-label`), parallaxe du pointeur sur la vidéo.
+* **PC faible** : après l'apparition, `watchFps()` mesure la fluidité (2 × 2,5 s). Sous 28 i/s, la classe `lowfx` coupe halo, reflet, flou d'apparition, rideaux, et ralentit le liseré.
+  `?fx` dans l'URL désactive ce garde-fou (tests). `prefers-reduced-motion` : aucune animation, le cadre s'affiche à plat, plein format, immédiatement.
+
+### Composants 21st.dev (inspiration ; le code est réécrit en JavaScript natif + GSAP, aucun code copié)
+Le code source de ces composants n'est pas lisible sans compte/clé 21st (installation shadcn). Candidats trouvés, à choisir par le propriétaire :
+1. **Container Scroll Animation** (Aceternity / Manu Arora, MIT) — carte 3D qui se redresse au scroll : https://21st.dev/@manuarora700/components/container-scroll-animation
+   → **implémenté** (rotateX + scale + titre qui recule), combiné avec l'effet 3.
+2. **Scroll Expansion Hero** (arunachalam, MIT) — le média s'agrandit jusqu'au plein écran : https://21st.dev/@arunachalam/components/scroll-expansion-hero
+   → **implémenté** (agrandissement + épinglage plein cadre).
+3. **Video Scroll Hero** (isaiahbjork, licence inconnue) : https://21st.dev/@isaiahbjork/components/video-scroll-hero — vidéo à 25 % qui grandit.
+4. **Scroll Animated Video** (lovesickfromthe6ix, GSAP + Lenis, licence inconnue) : https://21st.dev/@lovesickfromthe6ix/components/scroll-animated-video — conteneur épinglé avec overlay qui se révèle.
+Si l'onglet 21st du propriétaire montre une autre animation, donner son adresse : elle se branche dans `setupReel()`.
+
+### Où modifier
+* Structure : `_src/pages.py` (`<div class="reel">…`), styles : `_src/css/10-layout.css` (bloc « Hero Reel »), animations : `_src/js/motion.js` (`revealReel`, `setupReel`, `setupSectionEffects`, `watchFps`).
+* Régler l'épinglage : `end: '+=70%'` dans `setupReel`. Taille du cadre : `.reel-frame { width: … }`.
+* Ré-encoder la vidéo (ffmpeg) : `ffmpeg -i video/growthline-showreel.mp4 -an -vf fps=30 -c:v libx264 -preset medium -crf 27 -pix_fmt yuv420p -movflags +faststart video/growthline-hero-reel.mp4`.
+* Tests visuels : script Node via le protocole de débogage de Chrome (captures dans `Bureau\growthline-apercu2\`). Astuce : `html { scroll-behavior: smooth }` ralentit les `scrollTo` en test ; utiliser `behavior: 'instant'`.
+
+### Limites connues
+* Rendu vérifié en **logiciel (SwiftShader)** seulement : pas de GPU réel, pas de mesure sur le PC à Intel HD 530. Le garde-fou `lowfx` est prévu pour ce cas.
+* L'intro d'ouverture n'a pas pu être rejouée en test automatisé (Chrome pilotable impose `navigator.webdriver`), mais l'apparition du Reel est branchée sur le même point de départ (`startHero`).

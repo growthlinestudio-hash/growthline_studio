@@ -184,6 +184,65 @@ header.site-header.scrolled .nav-inner { background: var(--glass-strong); paddin
   .hero-chip--a { left: 2%; top: -6%; } .hero-chip--b { right: 2%; } .scroll-cue { display: none; }
 }
 
+/* ---------- Hero « Reel » : vidéo plein cadre, inclinée en 3D, qui se redresse et grandit au scroll ---------- */
+.hero--reel { --hp: calc(var(--header-h) + 40px); display: block; min-height: 0; padding: 0 0 clamp(70px, 9vh, 120px); overflow: hidden; overflow: clip; }
+/* le ciel reste collé à l'écran pendant que la vidéo est épinglée (un seul canvas de la taille de la fenêtre) */
+.hero--reel .sky { position: sticky; top: 0; left: 0; right: 0; bottom: auto; inset: auto; width: 100%; height: 100svh; margin-bottom: -100svh; }
+.hero--reel .hero-inner { padding-top: var(--hp); }
+.hero--reel .scroll-cue { display: none; }
+.hero--reel .hero-inner { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); align-items: end; gap: clamp(20px, 4vw, 64px); }
+.hero--reel .hero-copy .display-1 { max-width: 20ch; font-size: clamp(2.3rem, 1.1rem + 3.9vw, 4.9rem); }
+.hero-aside { display: grid; gap: 18px; justify-items: start; padding-bottom: 8px; }
+.hero--reel .hero-aside .lede { max-width: 46ch; }
+.hero--reel .hero-ctas { gap: 10px; flex-wrap: nowrap; }
+.hero--reel .hero-ctas .btn-lg { padding-inline: 20px; font-size: .98rem; white-space: nowrap; }
+.reel { position: relative; margin-top: clamp(28px, 4.5vw, 56px); display: grid; place-items: start center; }
+.reel-persp { position: relative; width: 100%; display: grid; place-items: start center; }
+.reel-intro { position: relative; width: 100%; display: grid; place-items: start center; perspective: 1700px; perspective-origin: 50% 0; }
+.reel-frame {
+  position: relative; width: min(96vw, calc(88svh * 16 / 9), 1760px); aspect-ratio: 16 / 9;
+  transform-origin: 50% 0; transform: rotateX(var(--reel-rx, 0deg)) scale(var(--reel-s, 1));
+}
+.reel-aura {  /* liseré lumineux qui tourne autour du cadre */
+  position: absolute; inset: -3px; z-index: 0; border-radius: calc(var(--r-xl, 36px) + 3px); overflow: hidden; pointer-events: none;
+  box-shadow: 0 50px 140px -30px rgba(11, 22, 51, .55), 0 18px 50px rgba(34, 87, 217, .25);
+}
+.reel-aura::before {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 220%; aspect-ratio: 1; margin: -110% 0 0 -110%;
+  background: conic-gradient(from 0deg, #ffb547, #ff7ab6, #6552e8, #2fc4a6, #2257d9, #ffb547); opacity: .9; animation: aura 9s linear infinite;
+}
+@keyframes aura { to { transform: rotate(360deg); } }
+.reel-video { position: relative; z-index: 1; display: block; width: 100%; height: 100%; aspect-ratio: auto; border-radius: var(--r-xl, 36px); overflow: hidden; background: #0b1633; cursor: pointer; border: 3px solid transparent; background-clip: padding-box; }
+.reel-video video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.reel-video::after { background: linear-gradient(180deg, transparent 62%, rgba(7, 16, 42, .5)); }
+.reel-glint {  /* reflet qui balaie la vidéo */
+  position: absolute; inset: -10% -30%; z-index: 1; pointer-events: none; opacity: 0;
+  background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, .0) 42%, rgba(255, 255, 255, .42) 50%, rgba(255, 255, 255, 0) 58%, transparent 62%);
+  transform: translateX(-70%);
+}
+.reel-halo {
+  position: absolute; left: 50%; top: 52%; z-index: -1; width: min(90vw, 1500px); aspect-ratio: 16 / 7; transform: translate(-50%, -50%); pointer-events: none; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 214, 140, .75), rgba(120, 140, 255, .35) 55%, transparent 100%); filter: blur(30px); opacity: .85; animation: halo 5.5s ease-in-out infinite;
+}
+@keyframes halo { 0%, 100% { opacity: .55; transform: translate(-50%, -50%) scale(.94); } 50% { opacity: .95; transform: translate(-50%, -50%) scale(1.05); } }
+.reel-spark, .reel-ring { position: absolute; left: 50%; top: 50%; z-index: 4; pointer-events: none; }
+.reel-spark { width: 8px; height: 8px; margin: -4px; border-radius: 50%; background: radial-gradient(circle, #fff, #ffd27a 55%, transparent 70%); }
+.reel-ring { width: 40%; aspect-ratio: 16 / 9; margin: 0; border-radius: 40px; border: 2px solid rgba(255, 255, 255, .8); transform: translate(-50%, -50%); }
+.reel-frame .hero-chip--a { left: -1.5%; top: 8%; } .reel-frame .hero-chip--b { right: -1.5%; top: 42%; } .reel-frame .hero-chip--c { right: 7%; bottom: -3.5%; }
+.reel-frame .hero-chip { z-index: 5; }
+.reel-frame .hero-play { left: clamp(16px, 2.2vw, 34px); bottom: clamp(16px, 2.2vw, 34px); z-index: 3; }
+.lowfx .reel-halo, .lowfx .reel-glint { display: none; }
+.lowfx .reel-aura::before { animation-duration: 24s; }
+@media (max-width: 920px) {
+  .hero--reel .hero-inner { grid-template-columns: 1fr; align-items: start; }
+  .hero--reel .hero-copy .display-1 { max-width: none; }
+  .reel-frame { width: 94vw; }
+  .reel-frame .hero-chip--a { left: 2%; top: -6%; } .reel-frame .hero-chip--b { right: 2%; top: 38%; }
+  .reel-halo { aspect-ratio: 1; width: 120vw; }
+}
+@media (hover: none), (pointer: coarse) { .reel-aura::before { animation-duration: 18s; } }
+@media (max-width: 640px) { .reel-frame .hero-chip { display: none; } .hero--reel .hero-ctas { flex-wrap: wrap; } }
+
 /* ---------- Hero des pages secondaires ---------- */
 .page-hero {
   position: relative; isolation: isolate; overflow: hidden;
