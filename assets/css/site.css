@@ -1018,3 +1018,82 @@ html.anim .btn-sun { animation: ascGlow 3.4s ease-in-out infinite; }
 /* ---------- appareils modestes / mobile ---------- */
 .lowfx .asc-rays, .lowfx .asc-cloud, .lowfx .asc-plane, .lowfx .asc-shoot, .lowfx .asc-tint { display: none; }
 @media (max-width: 860px) { .asc-tint { opacity: .7; } }
+
+/* Growthline — langage de mouvement unifié (v3.1).
+   Principe : 3 durées (rapide .25 s, standard .55 s, lente 1 s), UNE courbe (--ease-out), uniquement transform/opacity/translate
+   (propriétés composées par le GPU, légères sur PC faible). Tout est réservé à html.anim (absent si « réduire les animations »). */
+:root { --mo-fast: .25s; --mo-base: .55s; --mo-slow: 1s; --mo-ease: var(--ease-out, cubic-bezier(.16, 1, .3, 1)); }
+
+@media (prefers-reduced-motion: no-preference) {
+
+  /* ---- 1. Cartes : même relief au survol partout (translate = propriété indépendante de transform : pas de conflit avec le tilt) ---- */
+  html.anim :is(.pb-card, .sol-card, .proj-card, .price-card, .proc-h-step, .stat, .audit-card) {
+    transition: translate var(--mo-base) var(--mo-ease), box-shadow var(--mo-base) var(--mo-ease), border-color var(--mo-fast), background-color var(--mo-fast);
+  }
+  html.anim :is(.pb-card, .sol-card, .proj-card, .price-card, .proc-h-step, .stat, .audit-card):hover { translate: 0 -6px; }
+
+  /* halo qui suit le curseur (variables posées par motion2.js, souris uniquement) */
+  html.anim.has-pointer :is(.sol-card, .pb-card, .price-card, .proc-h-step):hover {
+    background-image: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(98, 84, 231, .09), transparent 65%);
+  }
+
+  /* ---- 2. Icônes de cartes : petit mouvement de vie au survol ---- */
+  html.anim .pb-card-icon { transition: rotate var(--mo-base) var(--mo-ease), scale var(--mo-base) var(--mo-ease); }
+  html.anim .pb-card:hover .pb-card-icon, html.anim .sol-card:hover .pb-card-icon { rotate: -8deg; scale: 1.12; }
+  html.anim .sol-card-price, html.anim .proj-card-type { transition: translate var(--mo-base) var(--mo-ease); }
+  html.anim .sol-card:hover .sol-card-price, html.anim .proj-card:hover .proj-card-type { translate: 4px 0; }
+
+  /* ---- 3. Titres de section : filet qui se trace + mot d'accent souligné quand la section entre à l'écran ---- */
+  html.anim .section-head { position: relative; }
+  html.anim .section-head::after {
+    content: ""; display: block; width: 64px; height: 3px; margin-top: 20px; border-radius: 3px;
+    background: linear-gradient(90deg, var(--sun, #ffb547), var(--blue, #2257d9));
+    transform: scaleX(0); transform-origin: left; transition: transform var(--mo-slow) var(--mo-ease) .25s;
+  }
+  html.anim .section-head--center::after { margin-inline: auto; transform-origin: center; }
+  html.anim .section.in-view .section-head::after, html.anim .section-head.in-view::after { transform: scaleX(1); }
+
+  html.anim h2 em { background: linear-gradient(90deg, currentColor, currentColor) 0 100% / 0 .06em no-repeat; transition: background-size var(--mo-slow) var(--mo-ease) .5s; padding-bottom: .04em; }
+  html.anim .section.in-view h2 em { background-size: 100% .06em; }
+
+  /* ---- 4. Pastille des eyebrows : onde douce (compositeur seulement) ---- */
+  html.anim .eyebrow { position: relative; }
+  html.anim .eyebrow::before { position: relative; }
+  html.anim .eyebrow::after {
+    content: ""; position: absolute; left: 14px; top: 50%; width: 8px; height: 8px; margin-top: -4px; border-radius: 50%;
+    background: var(--sun, #ffb547); opacity: 0; pointer-events: none;
+    animation: mo-ping 3.2s var(--mo-ease) infinite;
+  }
+  @keyframes mo-ping { 0% { transform: scale(1); opacity: .55; } 70%, 100% { transform: scale(3.2); opacity: 0; } }
+
+  /* ---- 5. Boutons : retour tactile à l'appui + flèche + onde au clic ---- */
+  html.anim .btn { position: relative; overflow: hidden; }
+  html.anim .btn:active { scale: .97; }
+  .mo-ripple { position: absolute; border-radius: 50%; pointer-events: none; background: rgba(255, 255, 255, .45); transform: scale(0); animation: mo-ripple .7s var(--mo-ease) forwards; }
+  @keyframes mo-ripple { to { transform: scale(1); opacity: 0; } }
+
+  /* ---- 6. Liens : soulignement qui se dessine ---- */
+  html.anim :is(.site-footer a, .faq-a a, .legal-content a) { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size var(--mo-base) var(--mo-ease); text-decoration: none; }
+  html.anim :is(.site-footer a, .faq-a a, .legal-content a):is(:hover, :focus-visible) { background-size: 100% 1px; }
+
+  /* ---- 7. Bandeaux : pause quand on les survole (le visiteur lit) ---- */
+  html.anim .marquee:hover .marquee-track { animation-play-state: paused; }
+
+  /* ---- 8. Formulaires : focus lumineux et confirmation ---- */
+  html.anim .audit-field input, html.anim .audit-field textarea, html.anim .audit-field select { transition: box-shadow var(--mo-fast), border-color var(--mo-fast), translate var(--mo-fast); }
+  html.anim .audit-field :is(input, textarea, select):focus { translate: 0 -1px; box-shadow: 0 0 0 4px rgba(98, 84, 231, .16); }
+  html.anim .form-confirm-dot { animation: mo-pop var(--mo-base) var(--mo-ease) both; }
+  @keyframes mo-pop { 0% { transform: scale(0); } 60% { transform: scale(1.25); } 100% { transform: scale(1); } }
+
+  /* ---- 9. Images de réalisations : dévoilement en rideau à l'entrée ---- */
+  html.anim:not(.anim-failed) .proj-card-img { clip-path: inset(0 0 100% 0); transition: clip-path var(--mo-slow) var(--mo-ease); }
+  html.anim:not(.anim-failed) .proj-card.in-view .proj-card-img, html.anim:not(.anim-failed) .proj-card-img.in-view { clip-path: inset(0); }
+
+  /* ---- 10. Pied de page : apparition échelonnée des colonnes ---- */
+  html.anim:not(.anim-failed) .site-footer :is(.footer-brand, .footer-grid > div:not(.footer-brand)) { opacity: 0; translate: 0 14px; transition: opacity var(--mo-base) var(--mo-ease), translate var(--mo-base) var(--mo-ease); transition-delay: calc(var(--i, 0) * 90ms); }
+  html.anim:not(.anim-failed) .site-footer.in-view :is(.footer-brand, .footer-grid > div:not(.footer-brand)) { opacity: 1; translate: 0 0; }
+
+  /* ---- 11. Barre de progression de lecture : même courbe, légère lueur ---- */
+  html.anim .scroll-progress { filter: drop-shadow(0 0 6px rgba(98, 84, 231, .45)); }
+}
+@media (hover: none) { html.anim :is(.pb-card, .sol-card, .proj-card, .price-card, .proc-h-step, .stat, .audit-card):hover { translate: 0 0; } }
