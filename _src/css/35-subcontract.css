@@ -1,0 +1,16 @@
+/* Page « Sous-traitance » : bloc « Tarifs sur devis » (affiché tant qu'aucun prix n'est renseigné dans _src/data/tarifs_sous_traitance.json) */
+.sub-quote {
+  display: grid; justify-items: start; gap: 18px; max-width: 760px; padding: clamp(28px, 4vw, 48px); border-radius: var(--r-xl, 36px);
+  background: linear-gradient(160deg, rgba(255, 255, 255, .92), rgba(236, 244, 255, .86)); border: 1px solid rgba(255, 255, 255, .9);
+  box-shadow: 0 30px 70px -30px rgba(20, 50, 120, .35), inset 0 0 0 1px rgba(120, 160, 230, .18);
+}
+.sub-quote h3 { font-size: var(--fs-4, 1.6rem); margin: 0; }
+.sub-quote p { margin: 0; color: var(--ink-2); max-width: 56ch; }
+
+/* En-tête à 7 liens : jamais de retour à la ligne ; le numéro passe en pastille d'icône quand la place manque */
+.main-nav a { white-space: nowrap; }
+@media (max-width: 1280px) {
+  .nav-phone span { display: none; }
+  .nav-phone { padding: 10px 12px; }
+  .main-nav a { padding-inline: 10px; }
+}

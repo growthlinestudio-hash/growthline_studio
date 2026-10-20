@@ -1,0 +1,247 @@
+/* Growthline — ciel et nuages en WebGL (shader de fragment, sans dépendance).
+   Port JavaScript natif du composant « CloudShader » : mêmes uniforms (vitesse, nombre de nuages,
+   couleurs), plus : DPR plafonné, pause hors écran / onglet masqué, rendu statique si
+   prefers-reduced-motion, récupération de contexte perdu, repli CSS si WebGL est indisponible.
+
+   Usage : GLCloudShader.mount(canvas, { speed: 1, count: 6, cloudColor: "#fbf8f2",
+            skyTopColor: "#4f93dd", skyBottomColor: "#b9dcf7" }) -> { destroy(), update(opts) } | null */
+(function () {
+  'use strict';
+
+  var VERT = 'attribute vec2 a_pos;varying vec2 v_uv;void main(){v_uv=a_pos*0.5+0.5;gl_Position=vec4(a_pos,0.0,1.0);}';
+
+  var FRAG = [
+    'precision highp float;',
+    'varying vec2 v_uv;',
+    'uniform vec2 u_res;uniform float u_time;uniform float u_count;',
+    'uniform vec3 u_cloud;uniform vec3 u_skyTop;uniform vec3 u_skyBottom;uniform float u_alt;uniform float u_warm;',
+    'const mat2 R=mat2(0.80,0.60,-0.60,0.80);',
+    'float hash(vec2 p){return fract(sin(dot(p,vec2(41.31,289.17)))*26737.367);}',
+    'float vnoise(vec2 p){vec2 i=floor(p);vec2 f=fract(p);f=f*f*(3.0-2.0*f);',
+    ' float a=hash(i);float b=hash(i+vec2(1.0,0.0));float c=hash(i+vec2(0.0,1.0));float d=hash(i+vec2(1.0,1.0));',
+    ' return mix(mix(a,b,f.x),mix(c,d,f.x),f.y);}',
+    'float fbm(vec2 p){float s=0.0;float a=0.5;for(int i=0;i<4;i++){s+=a*vnoise(p);p=R*p*2.03+19.19;a*=0.5;}return s;}',
+    'float billow(vec2 p){float s=0.0;float a=0.5;for(int i=0;i<5;i++){s+=a*(1.0-abs(2.0*vnoise(p)-1.0));p=R*p*2.11+13.37;a*=0.5;}return s;}',
+    'float cloudDensity(vec2 p,vec2 c,vec2 r,float seed,float t){',
+    ' vec2 q=p-c;float ry=q.y>0.0?r.y:r.y*0.42;',
+    ' float env=1.0-length(vec2(q.x/r.x,q.y/ry));if(env<-0.35)return 0.0;',
+    ' vec2 dp=q*(2.4/r.x)+seed;',
+    ' dp+=0.6*vec2(fbm(dp*1.4+t*0.04),fbm(dp*1.4+7.7-t*0.03));',
+    ' float detail=billow(dp*1.6);return env+(detail-0.62)*0.62;}',
+    'vec3 shadeCloud(vec3 color,vec3 sky,vec2 p,vec2 c,vec2 r,float seed,float t,float dist){',
+    ' float d=cloudDensity(p,c,r,seed,t);if(d<0.02)return color;',
+    ' float dUp=cloudDensity(p+vec2(0.0,r.y*0.55),c,r,seed,t);',
+    ' float occl=clamp((dUp-d)*1.1+d*0.55,0.0,1.0);',
+    ' vec3 lit=u_cloud*1.04;vec3 shadow=mix(u_cloud*0.60,sky,0.38);',
+    ' vec3 cloudCol=mix(lit,shadow,occl*0.85);',
+    ' float alpha=smoothstep(0.02,0.38,d);',
+    ' float rim=smoothstep(0.02,0.14,d)*(1.0-smoothstep(0.14,0.40,d));cloudCol+=rim*0.10;',
+    ' cloudCol=mix(cloudCol,sky,dist*0.35);alpha*=mix(1.0,0.8,dist);',
+    ' return mix(color,cloudCol,alpha);}',
+    'vec3 cloudPass(vec3 color,vec3 sky,vec2 p,float aspect,float t,float spd,float phase,float y,vec2 r,float seed,float dist){',
+    ' float cx=mix(-r.x-0.25,aspect+r.x+0.25,fract(t*spd+phase));',
+    ' float cy=y+sin(t*0.05+phase*6.2831)*0.012;',
+    ' return shadeCloud(color,sky,p,vec2(cx,cy),r,seed,t,dist);}',
+    'void main(){',
+    ' float aspect=u_res.x/u_res.y;vec2 p=vec2(v_uv.x*aspect,v_uv.y);float t=u_time;',
+    ' vec2 pc=vec2(p.x,p.y+u_alt*0.85);',
+    ' vec3 sky=mix(u_skyBottom,u_skyTop,v_uv.y);',
+    ' sky=mix(sky,vec3(1.0,0.70,0.36),u_warm*smoothstep(0.85,0.0,v_uv.y)*0.62);vec3 color=sky;',
+    ' color=mix(color,u_skyBottom*1.06,smoothstep(0.35,0.0,v_uv.y)*0.5);',
+    ' vec2 sunPos=vec2(aspect*0.78,0.92-u_warm*0.5-u_alt*0.2);float sunDist=length(p-sunPos);',
+    ' color+=mix(vec3(1.0,0.95,0.82),vec3(1.0,0.62,0.25),u_warm)*exp(-sunDist*sunDist*5.0)*(0.28+u_warm*0.32);',
+    ' float cirrusBand=smoothstep(0.55,0.8,v_uv.y)*(1.0-smoothstep(0.9,1.0,v_uv.y));',
+    ' if(cirrusBand>0.01){float streak=fbm(vec2(p.x*1.6-t*0.006,p.y*12.0));',
+    '  float wisp=smoothstep(0.52,0.78,streak)*cirrusBand;color=mix(color,u_cloud*0.98,wisp*0.35);}',
+    ' if(u_count>5.5){color=cloudPass(color,sky,pc,aspect,t,0.006,0.10,0.84,vec2(0.20,0.10),43.7,1.0);}',
+    ' if(u_count>4.5){color=cloudPass(color,sky,pc,aspect,t,0.008,0.62,0.73,vec2(0.24,0.12),71.3,0.85);}',
+    ' if(u_count>3.5){color=cloudPass(color,sky,pc,aspect,t,0.011,0.33,0.60,vec2(0.34,0.16),17.3,0.55);}',
+    ' if(u_count>2.5){color=cloudPass(color,sky,pc,aspect,t,0.013,0.80,0.47,vec2(0.30,0.15),29.9,0.45);}',
+    ' if(u_count>1.5){color=cloudPass(color,sky,pc,aspect,t,0.016,0.05,0.35,vec2(0.46,0.20),91.1,0.15);}',
+    ' color=cloudPass(color,sky,pc,aspect,t,0.020,0.48,0.20,vec2(0.56,0.24),57.2,0.0);',
+    ' gl_FragColor=vec4(color,1.0);}'
+  ].join('\n');
+
+  function parseColor(color) {
+    var v = String(color || '').trim();
+    if (v.charAt(0) === '#') {
+      var h = v.slice(1);
+      if (h.length === 3) h = h.charAt(0) + h.charAt(0) + h.charAt(1) + h.charAt(1) + h.charAt(2) + h.charAt(2);
+      return [parseInt(h.slice(0, 2), 16) / 255, parseInt(h.slice(2, 4), 16) / 255, parseInt(h.slice(4, 6), 16) / 255];
+    }
+    var m = v.match(/[\d.]+/g);
+    if (m && m.length >= 3) return [+m[0] / 255, +m[1] / 255, +m[2] / 255];
+    return [0.95, 0.95, 0.95];
+  }
+
+  function compile(gl, type, src) {
+    var s = gl.createShader(type);
+    if (!s) return null;
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { gl.deleteShader(s); return null; }
+    return s;
+  }
+
+  function mount(canvas, options) {
+    if (!canvas) return null;
+    var gl = null;
+    try {
+      gl = canvas.getContext('webgl', { alpha: false, antialias: false, premultipliedAlpha: false, powerPreference: 'low-power' });
+    } catch (e) { gl = null; }
+    if (!gl) return null;
+    // Rendu logiciel (SwiftShader, llvmpipe, machines virtuelles, outils de test) : le shader serait trop lourd,
+    // on garde le ciel CSS de repli. ?forcegl dans l'URL force le shader (démo / débogage).
+    try {
+      var dbg = gl.getExtension('WEBGL_debug_renderer_info');
+      var gpu = dbg ? String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)) : '';
+      if (/swiftshader|llvmpipe|software|basic render/i.test(gpu) && !/forcegl/.test(location.search)) return null;
+    } catch (e) {}
+
+    var params = {
+      speed: 1, count: 6, cloudColor: '#fbf8f2', skyTopColor: '#4f93dd', skyBottomColor: '#b9dcf7', maxDpr: 2,
+      scale: 0.6   // part de la résolution rendue : les nuages sont doux, inutile de calculer chaque pixel
+    };
+    function merge(o) { if (o) for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) params[k] = o[k]; }
+    merge(options);
+
+    var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    var program, buffer, vert, frag, loc;
+    var raf = 0, running = false, visible = true, destroyed = false, startAt = performance.now(), pausedAt = 0, offset = 0;
+
+    function build() {
+      vert = compile(gl, gl.VERTEX_SHADER, VERT);
+      frag = compile(gl, gl.FRAGMENT_SHADER, FRAG);
+      if (!vert || !frag) return false;
+      program = gl.createProgram();
+      gl.attachShader(program, vert);
+      gl.attachShader(program, frag);
+      gl.bindAttribLocation(program, 0, 'a_pos');
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return false;
+      gl.useProgram(program);
+      buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+      gl.enableVertexAttribArray(0);
+      gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+      loc = {
+        res: gl.getUniformLocation(program, 'u_res'), time: gl.getUniformLocation(program, 'u_time'),
+        count: gl.getUniformLocation(program, 'u_count'), cloud: gl.getUniformLocation(program, 'u_cloud'),
+        skyTop: gl.getUniformLocation(program, 'u_skyTop'), skyBottom: gl.getUniformLocation(program, 'u_skyBottom'),
+        alt: gl.getUniformLocation(program, 'u_alt'), warm: gl.getUniformLocation(program, 'u_warm')
+      };
+      return true;
+    }
+    if (!build()) return null;
+
+    function resize() {
+      var dpr = Math.min(window.devicePixelRatio || 1, params.maxDpr) * params.scale;
+      var w = Math.max(2, Math.floor(canvas.clientWidth * dpr));
+      var h = Math.max(2, Math.floor(canvas.clientHeight * dpr));
+      if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+      gl.viewport(0, 0, w, h);
+      gl.uniform2f(loc.res, w, h);
+    }
+
+    function draw(now) {
+      if (destroyed) return;
+      var elapsed = reduceMotion ? 6 : ((now - startAt) / 1000 - offset) * params.speed + 6; // décalage : un joli ciel dès la première image
+      var c = parseColor(params.cloudColor), t = parseColor(params.skyTopColor), b = parseColor(params.skyBottomColor);
+      gl.uniform1f(loc.time, elapsed);
+      gl.uniform1f(loc.count, Math.min(6, Math.max(1, params.count)));
+      gl.uniform3f(loc.cloud, c[0], c[1], c[2]);
+      gl.uniform3f(loc.skyTop, t[0], t[1], t[2]);
+      gl.uniform3f(loc.skyBottom, b[0], b[1], b[2]);
+      var drive = window.__glSky || {};   // piloté par le défilement (ascent.js) : altitude 0..1, chaleur du ciel 0..1
+      gl.uniform1f(loc.alt, drive.alt || 0);
+      gl.uniform1f(loc.warm, drive.warm || 0);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    }
+
+    // Qualité adaptative : si l'appareil peine (images > 28 ms en moyenne), on réduit la résolution du ciel.
+    var lastT = 0, slow = 0, frames = 0;
+    function adapt(now) {
+      if (lastT) {
+        var dt = now - lastT;
+        if (dt > 28 && dt < 500) slow++;
+        frames++;
+        if (frames >= 40) {
+          if (slow > 24 && params.scale > 0.3) { params.scale = Math.max(0.3, params.scale * 0.75); resize(); }
+          frames = 0; slow = 0;
+        }
+      }
+      lastT = now;
+    }
+    function loop(now) {
+      if (!running) return;
+      adapt(now);
+      draw(now);
+      raf = requestAnimationFrame(loop);
+    }
+    function start() {
+      if (running || destroyed || reduceMotion) return;
+      running = true;
+      if (pausedAt) { offset += (performance.now() - pausedAt) / 1000; pausedAt = 0; }
+      raf = requestAnimationFrame(loop);
+    }
+    function stop() {
+      if (!running) return;
+      running = false;
+      cancelAnimationFrame(raf);
+      lastT = 0;
+      pausedAt = performance.now();
+    }
+    function sync() { if (visible && !document.hidden) start(); else stop(); }
+
+    var ro = ('ResizeObserver' in window) ? new ResizeObserver(function () { resize(); if (!running) draw(performance.now()); }) : null;
+    if (ro) ro.observe(canvas); else window.addEventListener('resize', resize);
+    resize();
+    draw(performance.now());   // une première image immédiatement, même en mouvement réduit
+
+    var io = ('IntersectionObserver' in window) ? new IntersectionObserver(function (entries) {
+      visible = entries[0].isIntersecting; sync();
+    }, { threshold: 0 }) : null;
+    if (io) io.observe(canvas);
+    document.addEventListener('visibilitychange', sync);
+
+    canvas.addEventListener('webglcontextlost', function (e) { e.preventDefault(); stop(); canvas.classList.add('is-lost'); });
+    canvas.addEventListener('webglcontextrestored', function () { if (build()) { resize(); canvas.classList.remove('is-lost'); sync(); } });
+    sync();
+
+    return {
+      update: function (o) { merge(o); if (!running) draw(performance.now()); },
+      destroy: function () {
+        destroyed = true; stop();
+        if (ro) ro.disconnect(); else window.removeEventListener('resize', resize);
+        if (io) io.disconnect();
+        document.removeEventListener('visibilitychange', sync);
+        try { gl.deleteBuffer(buffer); gl.deleteProgram(program); gl.deleteShader(vert); gl.deleteShader(frag); } catch (e) {}
+      }
+    };
+  }
+
+  /* Montage automatique : <canvas data-cloud-shader data-count="6" data-speed="1"> dans un .sky.
+     Les appareils modestes (peu de cœurs) reçoivent moins de nuages et un DPR réduit. */
+  function auto() {
+    var lowEnd = (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) || (window.innerWidth < 700);
+    document.querySelectorAll('canvas[data-cloud-shader]').forEach(function (cv) {
+      var count = parseInt(cv.getAttribute('data-count') || '6', 10);
+      var inst = mount(cv, {
+        speed: parseFloat(cv.getAttribute('data-speed') || '1'),
+        count: lowEnd ? Math.min(count, 4) : count,
+        maxDpr: lowEnd ? 1.25 : 2,
+        scale: lowEnd ? 0.45 : 0.6
+      });
+      if (inst) { cv.parentElement.classList.add('has-webgl'); }
+    });
+  }
+
+  window.GLCloudShader = { mount: mount, auto: auto };
+  // Montage différé : le ciel ne doit jamais retarder le premier affichage ni les interactions.
+  function defer() {
+    var go = function () { (window.requestIdleCallback || function (f) { setTimeout(f, 200); })(auto, { timeout: 1500 }); };
+    if (document.readyState === 'complete') go(); else window.addEventListener('load', go, { once: true });
+  }
+  defer();
+})();
