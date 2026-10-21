@@ -181,6 +181,20 @@ def home(b):
   </div>
 </section>
 
+<section class="section section--tight bg-aurora" id="inclus">
+  <div class="container">
+    <div class="inc">
+      <div class="inc-big" data-reveal>0&nbsp;€<small>d'abonnement. Un paiement unique, tout compris.</small></div>
+      <div class="inc-list" data-stagger>
+        <div class="inc-item"><i>{ic("check")}</i><div><b>Audit gratuit</b><span>Ce qui bloque vos demandes, sans engagement.</span></div></div>
+        <div class="inc-item"><i>{ic("check")}</i><div><b>Maquette avant développement</b><span>Vous validez le rendu avant qu'on construise.</span></div></div>
+        <div class="inc-item"><i>{ic("check")}</i><div><b>Réponse sous 24h</b><span>Un interlocuteur, pas un ticket.</span></div></div>
+        <div class="inc-item"><i>{ic("check")}</i><div><b>Optimisé conversion et SEO</b><span>Pensé pour générer des contacts.</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="section section--tight bg-sunset" id="realisations">
   <div class="container">
     <div class="section-head"><h2 class="display-2" data-split>Quelques <em>réalisations</em></h2></div>

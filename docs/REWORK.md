@@ -170,3 +170,7 @@ on vole, on monte au septième ciel) et ajouter les tarifs de sous-traitance.
 * **Légèreté** : transform / opacity uniquement ; animations en pause hors écran (IntersectionObserver) ; moitié moins de décors sur PC faible ; aucun requestAnimationFrame
   permanent ; rien si « réduire les animations » (`html.anim` absent) ; décors masqués en CSS pour `prefers-reduced-motion`.
 * **Vérifié** : captures headless (bureau et mobile 390 px) de toutes les sections, tests `hero_visible`, `nav`, `warn` OK, aucune erreur console.
+
+## v6 (octobre 2026) : services en bento, halo des cartes, realisations en cascade, bloc "0 euro d abonnement", bouton flottant Audit gratuit
+
+Fichiers : `_src/css/60-rework.css`, `_src/js/motion4.js`, section `#inclus` dans `_src/pages.py`. Le bouton flottant est absent de contact, outil-audit et mentions legales.

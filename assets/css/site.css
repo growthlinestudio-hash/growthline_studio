@@ -1237,3 +1237,64 @@ main > .section:not([class*="bg-"]):not(.section--night):not(.film-section):nth-
 /* sans animation : aucun de ces décors n'est créé (motion3.js ne s'exécute pas), mais on masque au cas où */
 @media (prefers-reduced-motion: reduce) { .fx-layer { display: none; } }
 @media (max-width: 720px) { .fx-shoot, .fx-float { display: none; } }
+
+/* Growthline — rework v6 : bento des services, cartes à halo, réalisations décalées, bloc « tout est inclus », bouton flottant. */
+
+/* Halo qui suit le curseur sur les cartes (--mx/--my posés par motion4.js) */
+.sol-card, .stat, .inc-item { --mx: 50%; --my: 0%; }
+.sol-card::after, .stat::after, .inc-item::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .35s;
+  background: radial-gradient(260px circle at var(--mx) var(--my), rgba(255, 181, 71, .20), transparent 70%);
+}
+.sol-card:hover::after, .stat:hover::after, .inc-item:hover::after { opacity: 1; }
+
+/* Services en bento : une grande carte à gauche, deux empilées à droite */
+@media (min-width: 861px) {
+  .sol-grid { grid-template-columns: 1.25fr 1fr; grid-template-rows: auto auto; gap: 20px; }
+  .sol-card:nth-child(1) { grid-row: 1 / span 2; min-height: 100%; padding: 44px 40px; background: linear-gradient(160deg, #0b1633 0%, #1b3a8f 70%, #6552e8 130%); border-color: transparent; }
+  .sol-card:nth-child(1) h3 { color: #fff; font-size: clamp(1.9rem, 1.4rem + 1.6vw, 2.8rem); max-width: 14ch; }
+  .sol-card:nth-child(1) p { color: #c4d2f5; font-size: 1.1rem; max-width: 34ch; }
+  .sol-card:nth-child(1)::before { -webkit-text-stroke-color: rgba(255, 255, 255, .18); font-size: 11rem; }
+  .sol-card:nth-child(2) { background: var(--white); border-color: var(--line); min-height: 240px; }
+  .sol-card:nth-child(2) h3 { color: var(--ink); }
+  .sol-card:nth-child(2) p { color: var(--muted); }
+  .sol-card:nth-child(2)::before { -webkit-text-stroke-color: rgba(34, 87, 217, .16); }
+  .sol-card:nth-child(3) { min-height: 240px; background: linear-gradient(135deg, var(--sun-soft), #fff 70%); }
+}
+
+/* Réalisations : cartes décalées en cascade, légèrement penchées au survol */
+@media (min-width: 861px) {
+  .proj-grid { align-items: start; }
+  .proj-grid .proj-card:nth-child(2) { margin-top: 48px; }
+  .proj-grid .proj-card:nth-child(3) { margin-top: 96px; }
+  .proj-card:hover { transform: translateY(-8px) rotate(-.6deg); }
+}
+.proj-card-body { position: relative; }
+.proj-card-body::after { content: "→"; position: absolute; right: 24px; top: 24px; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; background: var(--ink); color: #fff; transform: translateX(-8px) scale(.8); opacity: 0; transition: transform .4s var(--ease-out), opacity .3s; }
+.proj-card:hover .proj-card-body::after { transform: none; opacity: 1; }
+
+/* « Tout est inclus » */
+.inc { display: grid; grid-template-columns: 1fr 1.3fr; gap: clamp(28px, 5vw, 72px); align-items: center; }
+.inc-big { font-family: var(--font-display); font-weight: 800; font-size: clamp(4.2rem, 3rem + 7vw, 9rem); line-height: .9; letter-spacing: -.06em; color: var(--ink); }
+.inc-big small { display: block; margin-top: 14px; font-size: clamp(1rem, .9rem + .5vw, 1.35rem); font-weight: 600; letter-spacing: -.01em; color: var(--ink-2); }
+.inc-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.inc-item { position: relative; overflow: hidden; display: flex; gap: 14px; align-items: flex-start; padding: 20px 20px 22px; border-radius: 18px; background: var(--white); border: 1px solid var(--line); box-shadow: var(--shadow-s); }
+.inc-item i { flex: none; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; background: var(--blue); color: #fff; }
+.inc-item i svg { width: 18px; height: 18px; }
+.inc-item b { display: block; font-family: var(--font-display); font-size: 1.1rem; letter-spacing: -.02em; }
+.inc-item span { display: block; margin-top: 4px; color: var(--muted); font-size: var(--fs-0); }
+@media (max-width: 860px) { .inc { grid-template-columns: 1fr; } .inc-list { grid-template-columns: 1fr; } }
+
+/* Bouton flottant « Audit gratuit » (créé par motion4.js) */
+.float-cta {
+  position: fixed; z-index: 60; right: 18px; bottom: 18px; display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px;
+  font-weight: 700; font-size: var(--fs-0); color: var(--ink); border-radius: var(--r-pill);
+  background: linear-gradient(135deg, #ffd27a, #ffb547); box-shadow: 0 14px 38px rgba(255, 181, 71, .5), 0 2px 0 rgba(255, 255, 255, .6) inset;
+  transform: translateY(140%); opacity: 0; transition: transform .5s var(--ease-out), opacity .3s; pointer-events: none;
+}
+.float-cta.is-on { transform: none; opacity: 1; pointer-events: auto; }
+.float-cta.is-on:hover { transform: translateY(-3px); }
+.float-cta::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: #1a9e5a; box-shadow: 0 0 0 0 rgba(26, 158, 90, .6); animation: live 2s infinite; }
+@keyframes live { 70% { box-shadow: 0 0 0 10px rgba(26, 158, 90, 0); } 100% { box-shadow: 0 0 0 0 rgba(26, 158, 90, 0); } }
+@media (max-width: 560px) { .float-cta { left: 16px; right: 16px; justify-content: center; bottom: 14px; } }
+@media (prefers-reduced-motion: reduce) { .float-cta, .float-cta::before { animation: none; transition: none; } }
