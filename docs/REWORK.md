@@ -157,3 +157,16 @@ on vole, on monte au septième ciel) et ajouter les tarifs de sous-traitance.
 ### Limites connues (version 3)
 * Rendu vérifié en logiciel (SwiftShader) ; fluidité réelle de Lenis et des couches fixes non mesurée sur GPU ni sur Intel HD 530 (garde-fou `lowfx` en secours).
 * Les photos de captures du dossier `growthline-apercu/v3/` sont des images fixes : le mouvement (nuages, avions, confettis) ne s'y voit pas.
+
+## v5 — fonds variés et décors vivants (branche `rework-v5-fonds-animations`)
+
+* **6 ambiances de fond** (`_src/css/50-fonds.css`, 100 % CSS, aucune image) : `bg-aurora` (halos bleu / violet / menthe), `bg-grid` (trame + halo qui suit le curseur),
+  `bg-warm` (papier crème, halos pêche, grain), `bg-sunset` (lilas → pêche, disque solaire), `bg-mint` (menthe + cercles), `bg-nebula` (nuit, nébuleuse violet / rose).
+  Elles sont posées par section dans `_src/pages.py` ; les pages sans classes explicites alternent automatiquement (bleuté / crème).
+  Les sections se chevauchent légèrement (coins arrondis en haut) : effet de panneaux empilés.
+* **Décors vivants** (`_src/js/motion3.js` + `_src/css/55-fonds-mouvement.css`) : impulsions lumineuses sur la grille, bulles de lumière qui montent (coucher de soleil),
+  ondes qui s'étendent (menthe), cercles qui flottent (papier), étoiles filantes (nébuleuse), halos qui dérivent et montent plus lentement que la page (parallaxe CSS
+  `animation-timeline: view()` quand le navigateur la gère), bandeaux dont la vitesse suit celle du défilement.
+* **Légèreté** : transform / opacity uniquement ; animations en pause hors écran (IntersectionObserver) ; moitié moins de décors sur PC faible ; aucun requestAnimationFrame
+  permanent ; rien si « réduire les animations » (`html.anim` absent) ; décors masqués en CSS pour `prefers-reduced-motion`.
+* **Vérifié** : captures headless (bureau et mobile 390 px) de toutes les sections, tests `hero_visible`, `nav`, `warn` OK, aucune erreur console.

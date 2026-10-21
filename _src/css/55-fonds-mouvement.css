@@ -1,0 +1,30 @@
+/* Growthline — décors vivants (v5), styles. Éléments créés par _src/js/motion3.js ; animations en pause tant que la section est hors écran
+   (la classe .fx-on est posée par IntersectionObserver). transform / opacity uniquement. */
+.fx-layer { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.fx-layer > i { position: absolute; display: block; animation-play-state: paused; }
+.fx-on .fx-layer > i { animation-play-state: running; }
+
+/* grille : impulsion lumineuse sur un croisement */
+.fx-pulse { width: 7px; height: 7px; margin: -3px 0 0 -3px; border-radius: 50%; background: #6552e8; box-shadow: 0 0 0 0 rgba(101, 82, 232, .45), 0 0 18px 4px rgba(101, 82, 232, .35); opacity: 0; animation: fx-pulse 5s ease-in-out infinite; }
+@keyframes fx-pulse { 0%, 100% { opacity: 0; transform: scale(.4); } 45% { opacity: .9; transform: scale(1); } 70% { opacity: 0; transform: scale(2.4); } }
+
+/* coucher de soleil : bulles de lumière qui montent en dérivant */
+.fx-bokeh { bottom: -90px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, .95), rgba(255, 214, 150, .38) 55%, rgba(255, 190, 120, 0) 72%); opacity: 0; animation: fx-rise 20s linear infinite; }
+@keyframes fx-rise { 0% { transform: translate3d(0, 0, 0) scale(.7); opacity: 0; } 12% { opacity: .75; } 80% { opacity: .5; } 100% { transform: translate3d(var(--dx, 20px), -112vh, 0) scale(1.15); opacity: 0; } }
+
+/* menthe : onde qui s'étend et s'efface */
+.fx-ring { width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%; border: 2px solid rgba(24, 160, 128, .30); opacity: 0; animation: fx-ripple 9.6s ease-out infinite; }
+@keyframes fx-ripple { 0% { transform: scale(.2); opacity: .8; } 70%, 100% { transform: scale(4.2); opacity: 0; } }
+
+/* papier chaud : cercle doux qui flotte */
+.fx-float { border-radius: 50%; background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, .75), rgba(255, 200, 160, .22) 60%, transparent 72%); animation: fx-bob 16s ease-in-out infinite alternate; }
+@keyframes fx-bob { from { transform: translate3d(-12px, 10px, 0) scale(1); } to { transform: translate3d(18px, -26px, 0) scale(1.14); } }
+
+/* nébuleuse : étoile filante */
+.fx-shoot { width: 140px; height: 2px; border-radius: 2px; background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .95)); opacity: 0; transform: rotate(24deg); animation: fx-shoot 13s ease-in infinite; }
+.fx-shoot::after { content: ""; position: absolute; right: -2px; top: -2px; width: 6px; height: 6px; border-radius: 50%; background: #fff; box-shadow: 0 0 12px 3px rgba(190, 200, 255, .9); }
+@keyframes fx-shoot { 0% { opacity: 0; transform: translate3d(-80px, -40px, 0) rotate(24deg); } 3% { opacity: 1; } 11% { opacity: 0; transform: translate3d(520px, 235px, 0) rotate(24deg); } 100% { opacity: 0; transform: translate3d(520px, 235px, 0) rotate(24deg); } }
+
+/* sans animation : aucun de ces décors n'est créé (motion3.js ne s'exécute pas), mais on masque au cas où */
+@media (prefers-reduced-motion: reduce) { .fx-layer { display: none; } }
+@media (max-width: 720px) { .fx-shoot, .fx-float { display: none; } }

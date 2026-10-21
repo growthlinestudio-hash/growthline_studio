@@ -147,7 +147,7 @@ def home(b):
 
 <div class="marquee-wrap"><div class="marquee" aria-label="Les six catégories analysées à chaque audit"><div class="marquee-track" data-marquee-track data-marquee-speed="38">{marquee}</div></div></div>
 
-<section class="section" id="chiffres" aria-label="En bref">
+<section class="section bg-aurora" id="chiffres" aria-label="En bref">
   <div class="container">
     <div class="stats" data-stagger>
       <div class="stat"><b><span data-count="24">24</span><small>h</small></b><span>pour recevoir la réponse à votre demande</span></div>
@@ -158,7 +158,7 @@ def home(b):
   </div>
 </section>
 
-<section class="section section--tight" id="probleme">
+<section class="section section--tight bg-warm" id="probleme">
   <div class="container">
     <div class="section-head"><h2 class="display-2" data-split>Pourquoi votre site peut <em>freiner</em> votre croissance</h2></div>
     <div class="pb-grid" data-stagger>
@@ -169,7 +169,7 @@ def home(b):
   </div>
 </section>
 
-<section class="section section--tight" id="services">
+<section class="section section--tight bg-grid" id="services">
   <div class="container">
     <div class="section-head"><h2 class="display-2" data-split>Des solutions adaptées à <em>votre activité</em></h2></div>
     <div class="sol-grid" data-stagger>
@@ -181,7 +181,7 @@ def home(b):
   </div>
 </section>
 
-<section class="section section--tight" id="realisations">
+<section class="section section--tight bg-sunset" id="realisations">
   <div class="container">
     <div class="section-head"><h2 class="display-2" data-split>Quelques <em>réalisations</em></h2></div>
     <div class="proj-grid" data-stagger>{projs}</div>
@@ -190,7 +190,7 @@ def home(b):
   </div>
 </section>
 
-<section class="section section--tight section--night" id="processus">
+<section class="section section--tight section--night bg-nebula" id="processus">
   <div class="container">
     <div class="section-head"><h2 class="display-2" data-split>Comment se déroule <em>un projet</em></h2></div>
     <div class="proc-h-grid">
@@ -208,7 +208,7 @@ def home(b):
 </section>
 {film_modal(b, "processModal", "Processus Growthline", "images/process-poster.jpg", "video/growthline-process.mp4")}
 
-<section class="section section--tight" id="faq">
+<section class="section section--tight bg-mint" id="faq">
   <div class="container">
     <div class="section-head section-head--center">
       <span class="eyebrow">Questions fréquentes</span>
@@ -218,7 +218,7 @@ def home(b):
   </div>
 </section>
 
-<section class="section section--tight" id="audit">
+<section class="section section--tight bg-aurora" id="audit">
   <div class="container">
     <div class="audit-panel" data-reveal>
       <div class="audit-panel-head">
@@ -322,7 +322,7 @@ def services(b):
   </div>
 </section>
 
-<section class="section" id="tarifs">
+<section class="section bg-warm" id="tarifs">
   <div class="container">
     <div class="section-head">
       <div><span class="eyebrow">Tarifs</span><h2 class="display-2" data-split style="margin-top:16px;">Un prix simple, <em>transparent.</em></h2></div>
@@ -332,7 +332,7 @@ def services(b):
   </div>
 </section>
 
-<section class="section" id="faq">
+<section class="section bg-mint" id="faq">
   <div class="container">
     <div class="section-head section-head--center"><span class="eyebrow">FAQ</span><h2 class="display-2" data-split>Questions <em>fréquentes.</em></h2></div>
     {faq_html(b, FAQ_SERVICES)}
@@ -499,7 +499,7 @@ def about(b):
   </div>
 </section>
 
-<section class="section" id="faq">
+<section class="section bg-mint" id="faq">
   <div class="container">
     <div class="section-head section-head--center"><span class="eyebrow">FAQ</span><h2 class="display-2" data-split>Questions <em>fréquentes.</em></h2></div>
     {faq_html(b, FAQ_HOME)}

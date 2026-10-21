@@ -1,0 +1,108 @@
+/* ==========================================================================
+   Growthline — FONDS variés (v5)
+   Chaque section a sa propre ambiance au lieu du même aplat bleu pâle : aurore, grille, papier chaud, coucher de soleil, menthe, nébuleuse.
+   Les décors sont des pseudo-éléments qui ne bougent que par transform / opacity (animation GPU) ; sans animation (prefers-reduced-motion),
+   ils restent fixes. Aucune image : tout est en dégradés CSS, donc 0 octet de plus à télécharger.
+   Classes posées dans _src/pages.py : bg-aurora, bg-grid, bg-warm, bg-sunset, bg-mint, bg-nebula (+ défauts alternés pour les autres pages).
+   ========================================================================== */
+
+:root {
+  --fx-radius: clamp(26px, 4vw, 48px);
+}
+
+/* ---------- Base commune : panneaux qui se chevauchent légèrement (coins arrondis en haut) ---------- */
+.bg-aurora, .bg-grid, .bg-warm, .bg-sunset, .bg-mint, .bg-nebula {
+  position: relative; isolation: isolate; overflow: clip;
+  border-radius: var(--fx-radius) var(--fx-radius) 0 0;
+  margin-top: calc(var(--fx-radius) * -.8);
+  padding-top: calc(var(--section-y) + var(--fx-radius) * .8);
+}
+.bg-aurora::before, .bg-warm::before, .bg-sunset::before, .bg-mint::before, .bg-grid::before, .bg-grid::after {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+}
+.bg-aurora::before, .bg-warm::before, .bg-sunset::before, .bg-mint::before { inset: -12% -8%; will-change: transform; }
+
+/* ---------- Aurore : trois halos bleu / violet / menthe qui dérivent lentement ---------- */
+.bg-aurora { background-color: #f1f6ff; }
+.bg-aurora::before {
+  background:
+    radial-gradient(38% 46% at 16% 28%, rgba(112, 166, 255, .58), transparent 72%),
+    radial-gradient(34% 42% at 84% 22%, rgba(190, 158, 255, .48), transparent 72%),
+    radial-gradient(42% 44% at 62% 88%, rgba(120, 232, 208, .42), transparent 72%);
+}
+
+/* ---------- Grille : trame fine + halo qui suit le curseur ---------- */
+.bg-grid { background-color: #edf3fc; }
+.bg-grid::before {
+  inset: 0;
+  background-image: linear-gradient(rgba(34, 87, 217, .085) 1px, transparent 1px), linear-gradient(90deg, rgba(34, 87, 217, .085) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(75% 70% at 50% 40%, #000 30%, transparent 100%); mask-image: radial-gradient(75% 70% at 50% 40%, #000 30%, transparent 100%);
+}
+.bg-grid::after {
+  inset: 0;
+  background: radial-gradient(460px circle at var(--mx, 50%) var(--my, 28%), rgba(101, 82, 232, .13), transparent 70%);
+  transition: background-position .3s;
+}
+
+/* ---------- Papier chaud : crème, halos pêche / rose, grain léger ---------- */
+.bg-warm { background-color: #fbf5ec; }
+.bg-warm::before {
+  background:
+    radial-gradient(36% 44% at 14% 20%, rgba(255, 190, 142, .50), transparent 72%),
+    radial-gradient(34% 40% at 88% 30%, rgba(255, 168, 190, .38), transparent 72%),
+    radial-gradient(44% 42% at 55% 92%, rgba(255, 222, 160, .46), transparent 72%);
+}
+.bg-warm::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .5; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .36  0 0 0 0 .25  0 0 0 .14 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* ---------- Coucher de soleil : lilas vers pêche, disque solaire flou ---------- */
+.bg-sunset { background: linear-gradient(180deg, #efe8ff 0%, #ffe9dd 100%); }
+.bg-sunset::before {
+  background:
+    radial-gradient(26% 34% at 80% 18%, rgba(255, 181, 71, .62), transparent 70%),
+    radial-gradient(34% 40% at 12% 78%, rgba(150, 118, 255, .34), transparent 72%),
+    radial-gradient(30% 34% at 50% 100%, rgba(255, 142, 120, .34), transparent 72%);
+}
+
+/* ---------- Menthe : dégradé frais + cercles concentriques discrets ---------- */
+.bg-mint { background: linear-gradient(180deg, #eaf8f3 0%, #e6f0ff 100%); }
+.bg-mint::before {
+  inset: -4%;
+  background:
+    repeating-radial-gradient(circle at 92% 14%, rgba(24, 150, 120, .10) 0 1px, transparent 1px 44px),
+    radial-gradient(40% 42% at 10% 90%, rgba(120, 220, 200, .36), transparent 72%);
+  -webkit-mask-image: radial-gradient(90% 80% at 70% 20%, #000 20%, transparent 100%); mask-image: radial-gradient(90% 80% at 70% 20%, #000 20%, transparent 100%);
+}
+
+/* ---------- Nébuleuse (sections « nuit ») : halos violet et rose sur le bleu nuit, étoiles existantes conservées ---------- */
+.bg-nebula.section--night {
+  background:
+    radial-gradient(52% 46% at 18% 22%, rgba(110, 86, 240, .46), transparent 72%),
+    radial-gradient(46% 44% at 88% 68%, rgba(255, 120, 176, .26), transparent 72%),
+    radial-gradient(90% 70% at 50% 0%, #17306f 0%, var(--night) 72%);
+}
+
+/* ---------- Défauts pour les pages sans classes explicites : les sections claires alternent sans jamais se répéter deux fois de suite ---------- */
+main > .section:not([class*="bg-"]):not(.section--night):not(.film-section):nth-of-type(4n + 1) { background-image: radial-gradient(60% 50% at 12% 10%, rgba(120, 170, 255, .22), transparent 70%), radial-gradient(50% 46% at 90% 80%, rgba(190, 160, 255, .2), transparent 70%); }
+main > .section:not([class*="bg-"]):not(.section--night):not(.film-section):nth-of-type(4n + 3) { background-color: #fbf6ee; background-image: radial-gradient(56% 50% at 90% 10%, rgba(255, 190, 150, .28), transparent 70%); }
+
+/* ---------- Mouvement des fonds (réservé à html.anim ; sans animation : décor fixe) ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  html.anim .bg-aurora::before { animation: fx-drift-a 28s ease-in-out infinite alternate; }
+  html.anim .bg-warm::before { animation: fx-drift-b 32s ease-in-out infinite alternate; }
+  html.anim .bg-sunset::before { animation: fx-drift-a 36s ease-in-out infinite alternate-reverse; }
+  html.anim .bg-mint::before { animation: fx-drift-b 40s ease-in-out infinite alternate; }
+  @keyframes fx-drift-a { from { transform: translate3d(-2.5%, 1.5%, 0) scale(1) rotate(0deg); } to { transform: translate3d(3%, -2.5%, 0) scale(1.1) rotate(2.5deg); } }
+  @keyframes fx-drift-b { from { transform: translate3d(2%, -1.5%, 0) scale(1.04); } to { transform: translate3d(-3%, 2%, 0) scale(1.12) rotate(-2deg); } }
+
+  /* parallaxe au défilement (navigateurs compatibles) : les halos montent plus lentement que la page */
+  @supports (animation-timeline: view()) {
+    html.anim .bg-aurora::before, html.anim .bg-warm::before, html.anim .bg-sunset::before, html.anim .bg-mint::before {
+      animation: fx-drift-a 30s ease-in-out infinite alternate, fx-scroll linear both; animation-timeline: auto, view(); animation-range: normal, cover 0% cover 100%;
+    }
+    @keyframes fx-scroll { from { translate: 0 6%; } to { translate: 0 -6%; } }
+  }
+}

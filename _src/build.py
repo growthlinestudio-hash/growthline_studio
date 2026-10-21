@@ -134,7 +134,7 @@ def build_assets():
     for v in ("gsap.min.js", "ScrollTrigger.min.js", "SplitText.min.js", "lenis.min.js"):
         parts.append((ROOT / "assets" / "vendor" / v).read_text(encoding="utf-8"))
     own = []
-    for f in ("cloud-shader.js", "core.js", "ascent.js", "motion.js", "motion2.js"):
+    for f in ("cloud-shader.js", "core.js", "ascent.js", "motion.js", "motion2.js", "motion3.js"):
         own.append((SRC / "js" / f).read_text(encoding="utf-8"))
     own_js = "\n;\n".join(own)
     esbuild = shutil.which("esbuild") or os.environ.get("ESBUILD")
