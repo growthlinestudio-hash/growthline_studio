@@ -22,11 +22,11 @@
   a.href = page === 'index.html' ? '#audit' : 'index.html#audit';
   a.textContent = 'Audit gratuit';
   document.body.appendChild(a);
-  var hidden = 0;
-  function refresh() { a.classList.toggle('is-on', window.scrollY > 700 && hidden <= 0); }
+  var seen = new Set();
+  function refresh() { a.classList.toggle('is-on', window.scrollY > 700 && seen.size === 0); }
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (es) {
-      es.forEach(function (e) { hidden += e.isIntersecting ? 1 : -1; });
+      es.forEach(function (e) { if (e.isIntersecting) seen.add(e.target); else seen.delete(e.target); });
       refresh();
     });
     $$('#audit, footer, .cta-final').forEach(function (el) { io.observe(el); });

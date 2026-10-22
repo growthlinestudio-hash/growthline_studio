@@ -18,6 +18,7 @@
   var cap = function (n) { return weak ? Math.ceil(n / 2) : n; };
 
   function add(sec, cls, n, setup) {
+    return; // v8 : décors de fond retirés (trop d'effets) ; seuls restent les fonds et les bandeaux liés au défilement
     var box = document.createElement('div');
     box.className = 'fx-layer'; box.setAttribute('aria-hidden', 'true');
     for (var i = 0; i < n; i++) { var e = document.createElement('i'); e.className = cls; setup(e, i, n); box.appendChild(e); }

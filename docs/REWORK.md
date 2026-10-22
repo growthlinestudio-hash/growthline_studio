@@ -176,3 +176,5 @@ on vole, on monte au septième ciel) et ajouter les tarifs de sous-traitance.
 Fichiers : `_src/css/60-rework.css`, `_src/js/motion4.js`, section `#inclus` dans `_src/pages.py`. Le bouton flottant est absent de contact, outil-audit et mentions legales.
 
 ## v7 : bouton Audit gratuit du pied de page corrige (le soulignement des liens effacait son fond), defilement Lenis plus fluide (lerp .075, scrub 1.1), fonds varies par page
+
+## v8 : site epure (plus de rayons de soleil, avions, etoiles filantes, bulles, confettis, pastilles qui pulsent), bouton flottant masque au pied de page, __pycache__ retire du depot
