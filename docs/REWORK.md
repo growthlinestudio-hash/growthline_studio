@@ -178,3 +178,5 @@ Fichiers : `_src/css/60-rework.css`, `_src/js/motion4.js`, section `#inclus` dan
 ## v7 : bouton Audit gratuit du pied de page corrige (le soulignement des liens effacait son fond), defilement Lenis plus fluide (lerp .075, scrub 1.1), fonds varies par page
 
 ## v8 : site epure (plus de rayons de soleil, avions, etoiles filantes, bulles, confettis, pastilles qui pulsent), bouton flottant masque au pied de page, __pycache__ retire du depot
+
+## v9 : correction des cartes coupees sur Contact et autres pages (le padding-top:0 en ligne ecrasait l espace du panneau de fond)

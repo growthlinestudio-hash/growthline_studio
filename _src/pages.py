@@ -329,7 +329,7 @@ def services(b):
     body = f'''
 {page_hero("Services", "Mesurer, puis <em>corriger</em> ce qui compte.", "Trois étapes, un même principe : aucune décision n'est prise sans données. Paiement unique, sans abonnement, à chaque étape.")}
 
-<section class="section bg-grid" id="detail" style="padding-top:0;">
+<section class="section bg-grid" id="detail">
   <div class="container">
     <div class="services-signature" data-reveal>{b.pic("images/services-signature.png", "Illustration : les fondations d'une présence digitale Growthline — stratégie, design, technologie, croissance.", widths=(640, 1280), sizes="(max-width: 1280px) 92vw, 1240px")}</div>
     <div class="service-list" data-stagger>{rows_html}</div>
@@ -411,7 +411,7 @@ def realisations(b):
   </div>
 </section>
 
-<section class="section bg-grid" style="padding-top:0;">
+<section class="section bg-grid">
   <div class="container">
     <div class="section-head">
       <div><span class="eyebrow">Exemples par secteur</span><h2 class="display-2" data-split style="margin-top:16px;">À quoi pourrait ressembler <em>votre nouveau site.</em></h2></div>
@@ -422,7 +422,7 @@ def realisations(b):
   </div>
 </section>
 
-<section class="section bg-aurora" style="padding-top:0;">
+<section class="section bg-aurora">
   <div class="container">
     <div class="section-head">
       <div><span class="eyebrow">Exemples d'audits</span><h2 class="display-2" data-split style="margin-top:16px;">Voici le type de <em>diagnostic</em> que Growthline produit.</h2></div>
@@ -485,7 +485,7 @@ def about(b):
     body = f'''
 {page_hero("À propos", "Une agence qui <em>mesure</em> avant d'agir.", "Growthline est née d'un constat simple : la plupart des sites d'entreprise perdent des clients pour des raisons identifiables, mais rarement mesurées. Nous avons construit un moteur d'audit pour les révéler, puis une équipe pour les corriger.")}
 
-<section class="section bg-warm" style="padding-top:0;">
+<section class="section bg-warm">
   <div class="container orbit-wrap" data-reveal>
     <div class="orbit" role="img" aria-label="Schéma : votre entreprise au centre, reliée aux 6 catégories analysées par Growthline — site web, SEO, conversion, SEO local, réseaux sociaux, performance.">
       <span class="orbit-ring"></span><span class="orbit-ring orbit-ring--2"></span>
@@ -495,7 +495,7 @@ def about(b):
   </div>
 </section>
 
-<section class="section bg-mint" style="padding-top:0;">
+<section class="section bg-mint">
   <div class="container"><p class="statement statement--wide" data-split>On ne vend pas une refonte. <em>On révèle d'abord ce qui bloque</em>, puis on corrige uniquement ce qui compte.</p></div>
 </section>
 
@@ -541,7 +541,7 @@ def contact(b):
     body = f'''
 {page_hero("Contact", "Parlons de <em>votre projet.</em>", "Un devis pour une correction, une refonte, ou simplement une question sur votre audit : écrivez-nous directement.", bubbles)}
 
-<section class="section bg-aurora" style="padding-top:0;padding-bottom:0;">
+<section class="section bg-aurora">
   <div class="container">
     <div class="journey" data-stagger role="list" aria-label="Trois étapes : vous écrivez, on reçoit votre message, on répond personnellement sous 24h.">
       <div class="journey-stop" role="listitem"><div class="journey-dot">{ic("pen")}</div><b>Vous écrivez</b><span>Email direct, sans formulaire à rallonge</span></div>
@@ -582,7 +582,7 @@ def contact(b):
   </div>
 </section>
 
-<section class="section bg-mint" style="padding-top:0;" id="rendez-vous">
+<section class="section bg-mint" id="rendez-vous">
   <div class="container">
     <div class="tool-card" data-reveal>
       <span class="eyebrow">Rendez-vous</span>
@@ -650,7 +650,7 @@ def intelligence(b):
     body = f'''
 {page_hero("Growthline Intelligence™", "Voyez comment on <em>analyse</em> un site.", "Choisissez un secteur, regardez l'analyse se dérouler — même format que le vrai rapport que vous recevez après un audit.")}
 
-<section class="section bg-grid" id="intelligence" style="padding-top:0;">
+<section class="section bg-grid" id="intelligence">
   <div class="container">
     <div class="intel-demo-controls" data-reveal>
       <span class="intel-demo-label">Simuler un audit pour :</span>
@@ -671,7 +671,7 @@ def intelligence(b):
   </div>
 </section>
 
-<section class="section bg-aurora" style="padding-top:0;">
+<section class="section bg-aurora">
   <div class="container">
     <div class="section-head">
       <div><span class="eyebrow">Ce qu'on regarde</span><h2 class="display-2" data-split style="margin-top:16px;">Six axes, à chaque audit, <em>sans exception.</em></h2></div>
@@ -693,7 +693,7 @@ def tool(b):
     body = f'''
 {page_hero("Outil interne · usage local", "Analyser un site <em>en profondeur.</em>", "Entrez une adresse de site : des agents IA (qui tournent en local sur cet ordinateur, gratuitement, via Ollama) l'examinent sur 6 catégories et rédigent un rapport en français simple, sans jargon.")}
 
-<section class="section bg-warm" style="padding-top:0;">
+<section class="section bg-warm">
   <div class="container">
     <h2 class="sr-only">Lancer une analyse.</h2>
     <div class="tool-card" data-reveal>
