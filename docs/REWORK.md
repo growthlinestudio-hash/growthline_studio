@@ -174,3 +174,5 @@ on vole, on monte au septième ciel) et ajouter les tarifs de sous-traitance.
 ## v6 (octobre 2026) : services en bento, halo des cartes, realisations en cascade, bloc "0 euro d abonnement", bouton flottant Audit gratuit
 
 Fichiers : `_src/css/60-rework.css`, `_src/js/motion4.js`, section `#inclus` dans `_src/pages.py`. Le bouton flottant est absent de contact, outil-audit et mentions legales.
+
+## v7 : bouton Audit gratuit du pied de page corrige (le soulignement des liens effacait son fond), defilement Lenis plus fluide (lerp .075, scrub 1.1), fonds varies par page

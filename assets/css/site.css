@@ -1073,8 +1073,8 @@ html.anim .btn-sun { animation: ascGlow 3.4s ease-in-out infinite; }
   @keyframes mo-ripple { to { transform: scale(1); opacity: 0; } }
 
   /* ---- 6. Liens : soulignement qui se dessine ---- */
-  html.anim :is(.site-footer a, .faq-a a, .legal-content a) { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size var(--mo-base) var(--mo-ease); text-decoration: none; }
-  html.anim :is(.site-footer a, .faq-a a, .legal-content a):is(:hover, :focus-visible) { background-size: 100% 1px; }
+  html.anim :is(.site-footer a:not(.btn), .faq-a a, .legal-content a) { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size var(--mo-base) var(--mo-ease); text-decoration: none; }
+  html.anim :is(.site-footer a:not(.btn), .faq-a a, .legal-content a):is(:hover, :focus-visible) { background-size: 100% 1px; }
 
   /* ---- 7. Bandeaux : pause quand on les survole (le visiteur lit) ---- */
   html.anim .marquee:hover .marquee-track { animation-play-state: paused; }
